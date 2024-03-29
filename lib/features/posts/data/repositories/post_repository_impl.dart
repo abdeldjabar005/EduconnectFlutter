@@ -5,6 +5,7 @@ import 'package:quotes/core/error/failures.dart';
 import 'package:quotes/core/network/netwok_info.dart';
 import 'package:quotes/features/posts/data/datasources/post_local_data_source.dart';
 import 'package:quotes/features/posts/data/datasources/post_remote_data_source.dart';
+import 'package:quotes/features/posts/domain/entities/comment.dart';
 import 'package:quotes/features/posts/domain/entities/post.dart';
 import 'package:quotes/features/posts/domain/repositories/post_repository.dart';
 
@@ -20,10 +21,10 @@ class PostRepositoryImpl implements PostRepository {
   });
 
   @override
-  Future<Either<Failure, List<Post>>> getPosts() async {
+  Future<Either<Failure, List<Post>>> getPosts(int page) async {
     if (await networkInfo.isConnected) {
       try {
-        final remotePosts = await remoteDataSource.getPosts();
+        final remotePosts = await remoteDataSource.getPosts(page);
         return Right(remotePosts);
       } on ServerException {
         return Left(ServerFailure());
@@ -32,4 +33,18 @@ class PostRepositoryImpl implements PostRepository {
       return Left(NetworkFailure());
     }
   }
+    @override
+  Future<Either<Failure, List<Comment>>> getComments(int postId) async {
+    if (await networkInfo.isConnected) {
+      try {
+        final remoteComments = await remoteDataSource.getComments(postId);
+        return Right(remoteComments);
+      } on ServerException {
+        return Left(ServerFailure());
+      }
+    } else {
+      return Left(NetworkFailure());
+    }
+  }
+
 }

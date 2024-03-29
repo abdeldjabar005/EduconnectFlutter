@@ -102,7 +102,7 @@ class DioConsumer implements ApiConsumer {
       case DioErrorType.connectTimeout:
       case DioErrorType.sendTimeout:
       case DioErrorType.receiveTimeout:
-        throw const FetchDataException();
+        // throw const FetchDataException();
       case DioErrorType.response:
         switch (error.response?.statusCode) {
           case StatusCode.badRequest:

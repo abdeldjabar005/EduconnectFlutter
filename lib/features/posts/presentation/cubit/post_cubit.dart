@@ -1,4 +1,3 @@
-// post_cubit.dart
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:quotes/core/error/failures.dart';
 import 'package:quotes/core/usecases/usecase.dart';
@@ -10,11 +9,13 @@ part 'post_state.dart';
 class PostCubit extends Cubit<PostState> {
   final GetPosts getPostsUseCase;
 
-  PostCubit({required this.getPostsUseCase}) : super(PostInitial());
+  PostCubit({
+    required this.getPostsUseCase,
+  }) : super(PostInitial());
 
-  Future<void> getPosts() async {
+  Future<void> getPosts(int page) async {
     emit(PostLoading());
-    final response = await getPostsUseCase(NoParams());
+    final response = await getPostsUseCase(Params(page: page));
     emit(response.fold(
       (failure) => PostError(message: _mapFailureToMessage(failure)),
       (posts) => PostLoaded(posts: posts),

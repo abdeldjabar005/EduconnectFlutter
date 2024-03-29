@@ -10,3 +10,13 @@ class NoParams extends Equatable {
   @override
   List<Object?> get props => [];
 }
+
+
+class Params extends Equatable {
+  final int page;
+
+  Params({required this.page});
+
+  @override
+  List<Object> get props => [page];
+}

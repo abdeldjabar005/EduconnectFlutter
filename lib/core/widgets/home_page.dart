@@ -41,51 +41,44 @@ class _HomeScreenBodyState extends State<_HomeScreenBody>
     super.dispose();
   }
 
- 
- @override
+  @override
   Widget build(BuildContext context) {
     return BlocBuilder<TabCubit, int>(
       builder: (context, state) {
-        return MaterialApp(
-          navigatorKey: navigatorKey,
-          home: DefaultTabController(
-            length: 3,
-            child: Scaffold(
-              backgroundColor: AppColors.gray500,
-              appBar: AppBar(
-                backgroundColor: AppColors.whiteA700,
-                elevation: 0,
-                title: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    _buildSearchWidget(),
-                    _buildEduConnectText(),
-                    _buildMessengerWidget(),
-                  ],
-                ),
-                bottom: PreferredSize(
-                  preferredSize: Size.fromHeight(kToolbarHeight),
-                  child: AnimatedBuilder(
-                    animation: _tabController.animation!,
-                    builder: (BuildContext context, Widget? child) {
-                      double tabIndex = _tabController.animation!.value;
-                      int roundedTabIndex = tabIndex.round();
-                      return TabBar(
-                        tabs: Constants.getHomeScreenTabs(roundedTabIndex),
-                        controller: _tabController,
-                        onTap: (index) {
-                          context.read<TabCubit>().changeTab(index);
-                        },
-                      );
+        return Scaffold(
+          backgroundColor: AppColors.gray500,
+          appBar: AppBar(
+            backgroundColor: AppColors.whiteA700,
+            elevation: 0,
+            title: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                _buildSearchWidget(),
+                _buildEduConnectText(),
+                _buildMessengerWidget(),
+              ],
+            ),
+            bottom: PreferredSize(
+              preferredSize: Size.fromHeight(kToolbarHeight),
+              child: AnimatedBuilder(
+                animation: _tabController.animation!,
+                builder: (BuildContext context, Widget? child) {
+                  double tabIndex = _tabController.animation!.value;
+                  int roundedTabIndex = tabIndex.round();
+                  return TabBar(
+                    tabs: Constants.getHomeScreenTabs(roundedTabIndex),
+                    controller: _tabController,
+                    onTap: (index) {
+                      context.read<TabCubit>().changeTab(index);
                     },
-                  ),
-                ),
-              ),
-              body: TabBarView(
-                controller: _tabController,
-                children: Constants.screens,
+                  );
+                },
               ),
             ),
+          ),
+          body: TabBarView(
+            controller: _tabController,
+            children: Constants.screens,
           ),
         );
       },

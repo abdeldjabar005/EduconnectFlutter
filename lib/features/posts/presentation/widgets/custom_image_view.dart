@@ -112,6 +112,14 @@ class CustomImageView extends StatelessWidget {
           );
         case ImageType.network:
           return CachedNetworkImage(
+            memCacheWidth: 700,
+            memCacheHeight: 500,
+            // maxHeightDiskCache: 183,
+            // maxWidthDiskCache: 329,
+            
+
+            imageBuilder: (context, imageProvider) =>
+                Image(image: imageProvider),
             height: height,
             width: width,
             fit: fit,

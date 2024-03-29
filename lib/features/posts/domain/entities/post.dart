@@ -1,5 +1,7 @@
 // post.dart
 import 'package:equatable/equatable.dart';
+import 'package:quotes/features/posts/data/models/comment_model.dart';
+import 'package:quotes/features/posts/domain/entities/comment.dart';
 
 class Post extends Equatable {
   final int id;

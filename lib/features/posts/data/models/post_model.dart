@@ -1,4 +1,5 @@
 // post_model.dart
+import 'package:quotes/features/posts/data/models/comment_model.dart';
 import 'package:quotes/features/posts/domain/entities/post.dart';
 
 class PostModel extends Post {
@@ -17,6 +18,7 @@ class PostModel extends Post {
     required String classname,
     required bool isSaved,
     required List<String> content,
+    
   }) : super(
           id: id,
           userId: userId,
@@ -39,13 +41,15 @@ class PostModel extends Post {
     switch (json['type']) {
       case 'poll':
         content = (json['poll'] as List)
-            .map((item) => item['url'])
+            .map((item) => item is Map ? item['url'] : null)
+            .where((item) => item != null)
             .toList()
             .cast<String>();
         break;
       case 'picture':
         content = (json['pictures'] as List)
-            .map((item) => item['url'])
+            .map((item) => item is Map ? item['url'] : null)
+            .where((item) => item != null)
             .toList()
             .cast<String>();
         break;
@@ -68,7 +72,7 @@ class PostModel extends Post {
 
       classname: json["classname"],
       isSaved: json["isSaved"],
-      content: content, // Add this line
+      content: content, 
     );
   }
 

@@ -1,4 +1,5 @@
-part of 'post_cubit.dart'; 
+// post_cubit.dart
+part of 'post_cubit.dart';
 
 abstract class PostState extends Equatable {
   const PostState();
@@ -13,11 +14,20 @@ class PostLoading extends PostState {}
 
 class PostLoaded extends PostState {
   final List<Post> posts;
+  final bool hasReachedMax;
+  const PostLoaded({required this.posts, this.hasReachedMax = false});
 
-  const PostLoaded({required this.posts});
+  PostLoaded copyWith({
+    List<Post>? posts,
+  }) {
+    return PostLoaded(
+      posts: posts ?? this.posts,
+      
+    );
+  }
 
   @override
-  List<Object> get props => [posts];
+  List<Object> get props => [posts, hasReachedMax];
 }
 
 class PostError extends PostState {

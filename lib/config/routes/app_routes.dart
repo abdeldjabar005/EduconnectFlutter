@@ -5,13 +5,9 @@ import 'package:quotes/core/widgets/RootScreen.dart';
 import 'package:quotes/core/widgets/home_page.dart';
 import 'package:quotes/features/auth/presentation/pages/login_screen.dart';
 import 'package:quotes/features/auth/presentation/pages/signup_screen.dart';
-import 'package:quotes/features/random_quote/presentation/cubit/random_quote_cubit.dart';
 import '../../features/posts/presentation/cubit/post_cubit.dart';
-import '../../features/random_quote/presentation/screens/quote_screen.dart';
 import 'package:quotes/injection_container.dart' as di;
-import 'package:quotes/features/auth/presentation/pages/sign_up.dart';
 import 'package:quotes/features/posts/presentation/pages/post_screen.dart';
-import 'package:quotes/features/auth/presentation/pages/login_page.dart';
 
 
 
@@ -23,7 +19,6 @@ class Routes {
   
   static const String homeRoute = '/home';
   static const String defaultWidget = '/defaultWidget';
-  static const String randomQuoteRoute = '/randomQuote';
   static const String postRoute = '/posts';
   static const String rootScreen = '/rootScreen';
 }
@@ -47,13 +42,6 @@ class AppRoutes {
           return SignupScreen();
         });
         
-      case Routes.randomQuoteRoute:
-        return MaterialPageRoute(builder: ((context) {
-          return BlocProvider(
-            create: ((context) => di.sl<RandomQuoteCubit>()),
-            child: const QuoteScreen(),
-          );
-        }));
       case Routes.postRoute:
         return MaterialPageRoute(builder: ((context) {
           return BlocProvider(

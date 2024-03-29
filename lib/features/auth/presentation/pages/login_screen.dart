@@ -53,14 +53,14 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: Container(
                     width: double.maxFinite,
                     padding:
-                        EdgeInsets.only(left: 10.h, top: 34.v, right: 10.h),
+                        EdgeInsets.only(left: 10.h, top: 42.v, right: 10.h),
                     child: Column(children: [
                       Text("EduConnect",
                           style: CustomTextStyles.displayMedium45),
-                      SizedBox(height: 27.v),
+                      SizedBox(height: 35.v),
                       Text("Login",
                           style: CustomTextStyles.titleMediumPoppinsBlack),
-                      SizedBox(height: 22.v),
+                      SizedBox(height: 30.v),
                       Align(
                         alignment: Alignment.centerLeft,
                         child: Padding(

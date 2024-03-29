@@ -1,9 +1,7 @@
 // post_item.dart
 import 'dart:math';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:quotes/config/themes/app_decoration.dart';
 import 'package:quotes/config/themes/custom_text_style.dart';
 import 'package:quotes/config/themes/theme_helper.dart';
 import 'package:quotes/core/api/end_points.dart';
@@ -13,30 +11,32 @@ import 'package:quotes/core/utils/size_utils.dart';
 import 'package:quotes/features/posts/domain/entities/post.dart';
 import 'package:intl/intl.dart';
 import 'package:quotes/features/posts/presentation/widgets/custom_image_view.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:quotes/features/posts/presentation/widgets/image_detail.dart';
 
-class PostItem extends StatelessWidget {
+class PostDetails extends StatelessWidget {
   final Post post;
 
-  const PostItem({Key? key, required this.post}) : super(key: key);
+  const PostDetails({Key? key, required this.post}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     var date = post.createdAt;
-    var time = DateFormat.jm().format(date); // Time in AM/PM format
-    var restOfDate = DateFormat.yMMMMd().format(date); // Rest of the date
+    var time = DateFormat.jm().format(date);
+    var restOfDate = DateFormat.yMMMMd().format(date);
 
     return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(
+          20.h,
+        ),
+      ),
       padding: EdgeInsets.symmetric(
         horizontal: 13.h,
         vertical: 10.h,
       ),
       margin: EdgeInsets.all(
         8.h,
-      ),
-      decoration: AppDecoration.fillWhiteA.copyWith(
-        borderRadius: BorderRadiusStyle.roundedBorder21,
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -83,7 +83,7 @@ class PostItem extends StatelessWidget {
             ),
           ),
           SizedBox(height: 12.v),
-          post.content.isNotEmpty
+                    post.content.isNotEmpty
               ? post.content.length == 1
                   ? GestureDetector(
                       onTap: () {
@@ -256,6 +256,7 @@ class PostItem extends StatelessWidget {
                       },
                     )
               : SizedBox.shrink(),
+
           SizedBox(height: 12.v),
           Container(
             width: 297.h,
@@ -270,57 +271,7 @@ class PostItem extends StatelessWidget {
             ),
           ),
           SizedBox(height: 11.v),
-          Row(
-            children: [
-              CustomImageView(
-                imagePath: ImageConstant.img32Heart,
-                height: 32.adaptSize,
-                width: 32.adaptSize,
-              ),
-              Padding(
-                padding: EdgeInsets.only(
-                  top: 5.v,
-                  bottom: 7.v,
-                ),
-                child: Text(
-                  post.likesCount.toString(),
-                  style: theme.textTheme.bodyLarge,
-                ),
-              ),
-              CustomImageView(
-                imagePath: ImageConstant.img32Chat,
-                height: 32.adaptSize,
-                width: 32.adaptSize,
-                margin: EdgeInsets.only(left: 8.h),
-              ),
-              Padding(
-                padding: EdgeInsets.only(
-                  top: 5.v,
-                  bottom: 7.v,
-                ),
-                child: Text(
-                  post.commentsCount.toString(),
-                  style: theme.textTheme.bodyLarge,
-                ),
-              ),
-              // IconButton(
-              //   onPressed: () {
-              //     // Save post
-              //   },
-              //   icon: Icon(
-              //     Icons.save,
-              //     color: post.isSaved ? Colors.yellow : Colors.grey,
-              //   ),
-              // ),
-              CustomImageView(
-                imagePath: ImageConstant.imgBookmark,
-                height: 32.adaptSize,
-                width: 32.adaptSize,
-                margin: EdgeInsets.only(left: 8.h),
-              ),
-            ],
-          ),
-          SizedBox(height: 13.v),
+
           Row(
             children: [
               Text(
@@ -340,55 +291,69 @@ class PostItem extends StatelessWidget {
             ],
           ),
           SizedBox(height: 10.v),
+          // devider
+          Container(
+            padding: EdgeInsets.symmetric(
+              horizontal: 10.h,
+            ),
+            height: 1.h,
+            color: AppColors.gray200,
+          ),
+          SizedBox(height: 10.v),
+          Row(
+            children: [
+              Padding(
+                padding: EdgeInsets.only(
+                  top: 5.v,
+                  bottom: 7.v,
+                ),
+                child: Text(
+                  post.likesCount.toString(),
+                  style: theme.textTheme.bodyLarge,
+                ),
+              ),
+              Text(
+                'Likes',
+                style: theme.textTheme.bodyMedium,
+              ),
+
+              Padding(
+                padding: EdgeInsets.only(
+                  top: 5.v,
+                  bottom: 7.v,
+                ),
+                child: Text(
+                  post.commentsCount.toString(),
+                  style: theme.textTheme.bodyLarge,
+                ),
+              ),
+
+              Text(
+                'Comments',
+                style: theme.textTheme.bodyMedium,
+              ),
+              // TODO : implement the bookmarks count
+              Text(
+                '0',
+                style: theme.textTheme.bodyLarge,
+              ),
+              Text(
+                'Saves',
+                style: theme.textTheme.bodyMedium,
+              ),
+            ],
+          ),
+          SizedBox(height: 10.v),
+          // devider
+          Container(
+            padding: EdgeInsets.symmetric(
+              horizontal: 10.h,
+            ),
+            height: 1.h,
+            color: AppColors.gray200,
+          ),
         ],
       ),
     );
   }
-
-  // _buildImageLayout(BuildContext context, List<String> images) {
-  //   int imageCount = images.length;
-
-  //   return GridView.builder(
-  //     physics: const NeverScrollableScrollPhysics(),
-  //     shrinkWrap: true,
-  //     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-  //         crossAxisCount:
-  //             imageCount == 2 || imageCount == 3 || imageCount == 4 ? 2 : 1,
-  //         crossAxisSpacing: 8,
-  //         mainAxisSpacing: 8,
-  //         childAspectRatio: 1),
-  //     itemCount: imageCount,
-  //     itemBuilder: (context, index) {
-  //       String imageUrl = images[index];
-  //       print(images);
-  //       return GestureDetector(
-  //         onTap: () {
-  //           Navigator.push(
-  //               context,
-  //               MaterialPageRoute(
-  //                 builder: (context) => ImageDetailPage(imageUrl: imageUrl),
-  //                 fullscreenDialog: true,
-  //               ));
-  //         },
-  //         child: Hero(
-  //           tag: imageUrl,
-  //           child: CachedNetworkImage(
-  //             imageUrl: 'http://10.0.2.2:8000/storage/$imageUrl',
-  //             imageBuilder: (context, imageProvider) => Container(
-  //               decoration: BoxDecoration(
-  //                 // shape: BoxShape.rectangle,
-  //                 image: DecorationImage(
-  //                   image: imageProvider,
-  //                   fit: BoxFit.contain,
-  //                 ),
-  //               ),
-  //             ),
-  //             placeholder: (context, url) => CircularProgressIndicator(),
-  //             errorWidget: (context, url, error) => Icon(Icons.error),
-  //           ),
-  //         ),
-  //       );
-  //     },
-  //   );
-  // }
 }
