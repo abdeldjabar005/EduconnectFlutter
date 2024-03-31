@@ -40,10 +40,14 @@ class CommentModel extends Comment {
       updatedAt: DateTime.parse(json["updated_at"]),
       likesCount: json["likes_count"],
       repliesCount: json["replies_count"],
-      replies: (json["replies"] as List).map((item) => CommentModel.fromJson(item)).toList(),
+      replies: (json["replies"] as List)
+          .map((item) => CommentModel.fromJson(item))
+          .toList(),
       firstName: json["first_name"],
       lastName: json["last_name"],
-      profilePicture: json["profile_picture"],
+      profilePicture: json["profile_picture"]?.isNotEmpty == true
+          ? json["profile_picture"]
+          : 'assets/images/edu.png',
     );
   }
 

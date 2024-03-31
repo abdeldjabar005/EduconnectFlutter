@@ -36,6 +36,8 @@ class Post extends Equatable {
     required this.content,
   });
 
+  
+
   @override
   List<Object?> get props => [
         id,

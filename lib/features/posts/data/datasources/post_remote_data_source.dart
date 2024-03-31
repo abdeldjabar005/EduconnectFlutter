@@ -7,6 +7,8 @@ import 'package:quotes/features/posts/data/models/post_model.dart';
 abstract class PostRemoteDataSource {
   Future<List<PostModel>> getPosts(int page);
   Future<List<CommentModel>> getComments(int postId);
+  Future<void> postComment(int postId, String comment);
+  Future<PostModel> getPost(int id);
 }
 
 class PostRemoteDataSourceImpl implements PostRemoteDataSource {
@@ -32,5 +34,22 @@ class PostRemoteDataSourceImpl implements PostRemoteDataSource {
     return (response['data']['data'] as List)
         .map((i) => CommentModel.fromJson(i))
         .toList();
+  }
+
+  @override
+  Future<void> postComment(int postId, String comment) async {
+    await apiConsumer.post(
+      EndPoints.postComment(postId),
+      body: {
+        'text': comment,
+      },
+    );
+  }
+  @override
+  Future<PostModel> getPost(int id) async {
+    final response = await apiConsumer.get(
+      EndPoints.post(id),
+    );
+    return PostModel.fromJson(response['data']['data']);
   }
 }

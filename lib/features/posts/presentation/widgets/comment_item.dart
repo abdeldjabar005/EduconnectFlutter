@@ -14,13 +14,17 @@ import 'package:quotes/features/posts/domain/entities/comment.dart';
 class CommentItem extends StatelessWidget {
   final Comment comment;
 
-  final OverlayPortalController _tooltipController = OverlayPortalController();
-
-  CommentItem({Key? key, required this.comment}) : super(key: key);
+  const CommentItem({Key? key, required this.comment}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(
+          20.h,
+        ),
+      ),
       padding: EdgeInsets.symmetric(
         horizontal: 13.h,
         vertical: 10.h,
@@ -63,7 +67,16 @@ class CommentItem extends StatelessWidget {
                             '${comment.firstName} ${comment.lastName}',
                             style: CustomTextStyles.bodyMediumRobotoGray900,
                           ),
-                          Text(timeAgo(comment.createdAt)),
+                          CustomImageView(
+                            imagePath: ImageConstant.imgUser,
+                            height: 10.adaptSize,
+                            width: 10.adaptSize,
+                            margin: EdgeInsets.symmetric(vertical: 3.v),
+                          ),
+                          Text(
+                            timeAgo(comment.createdAt),
+                            style: CustomTextStyles.bodyMediumRobotoGray500,
+                          ),
                         ],
                       ),
                       SizedBox(height: 3.v),
@@ -81,7 +94,6 @@ class CommentItem extends StatelessWidget {
                   shape: BeveledRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
-      
                   elevation: 0,
                   icon: Icon(Icons.more_vert, size: 20),
                   itemBuilder: (context) => [
@@ -114,9 +126,12 @@ class CommentItem extends StatelessWidget {
               comment.text,
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
-              style: theme.textTheme.bodyMedium!.copyWith(
-                height: 1.38,
-              ),
+              // style: theme.textTheme.bodyMedium!.copyWith(
+              //   height: 1.38,
+              // ),
+              style: CustomTextStyles.bodyMediumRobotoGray900big,
+
+              // style: CustomTextStyles.titleMediumPoppinsblacksmall,
             ),
           ),
 
@@ -158,13 +173,13 @@ class CommentItem extends StatelessWidget {
           ),
           SizedBox(height: 5.v),
           // devider
-          Container(
-            padding: EdgeInsets.symmetric(
-              horizontal: 10.h,
-            ),
-            height: 1.h,
-            color: AppColors.gray200,
-          ),
+          // Container(
+          //   padding: EdgeInsets.symmetric(
+          //     horizontal: 10.h,
+          //   ),
+          //   height: 1.h,
+          //   color: AppColors.gray300,
+          // ),
         ],
       ),
     );

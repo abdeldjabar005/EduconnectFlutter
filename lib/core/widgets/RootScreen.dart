@@ -51,7 +51,6 @@ class _RootScreenState extends State<RootScreen> {
           return false;
         }
         context.read<AuthCubit>().reset();
-
         return true;
       },
       child: Scaffold(

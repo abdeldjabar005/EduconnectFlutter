@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:quotes/core/error/exceptions.dart';
@@ -16,7 +18,19 @@ class AuthCubit extends Cubit<AuthState> {
   Future<void> login(String email, String password) async {
     emit(AuthLoading());
     final result = await authRepository.login(email, password);
-    _eitherLoadedOrErrorState(result);
+    result.fold((failure) {
+      if (failure is InvalidCredentialsException) {
+        emit(AuthError(
+            message: _mapFailureToMessage(InvalidCredentialsFailure())));
+      } else {
+        emit(AuthError(message: _mapFailureToMessage(failure)));
+      }
+    }, (user) {
+      currentUser = user;
+      log("loginsuccesfully");
+      emit(AuthAuthenticated(user: user));
+      log(state.toString());
+    });
   }
 
   // Future<void> signUp(String firstName, String lastName, String role,
@@ -53,6 +67,12 @@ class AuthCubit extends Cubit<AuthState> {
     emit(AuthLoading());
     final result = await authRepository.verifyEmail(email, verificationCode);
     _eitherLoadedOrErrorState2(result);
+  }
+
+  User? getCurrentUser() {
+    return state is AuthAuthenticated
+        ? (state as AuthAuthenticated).user
+        : null;
   }
 
   void emitAuthenticated() {

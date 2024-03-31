@@ -18,7 +18,6 @@ class PostModel extends Post {
     required String classname,
     required bool isSaved,
     required List<String> content,
-    
   }) : super(
           id: id,
           userId: userId,
@@ -69,10 +68,43 @@ class PostModel extends Post {
       profilePicture: json["profile_picture"]?.isNotEmpty == true
           ? json["profile_picture"]
           : 'assets/images/edu.png',
-
       classname: json["classname"],
       isSaved: json["isSaved"],
-      content: content, 
+      content: content,
+    );
+  }
+
+  PostModel copyWith({
+    int? id,
+    int? userId,
+    int? classOrSchoolId,
+    String? text,
+    String? type,
+    DateTime? createdAt,
+    int? commentsCount,
+    int? likesCount,
+    String? firstName,
+    String? lastName,
+    String? profilePicture,
+    String? classname,
+    bool? isSaved,
+    List<String>? content,
+  }) {
+    return PostModel(
+      id: id ?? this.id,
+      userId: userId ?? this.userId,
+      classOrSchoolId: classOrSchoolId ?? this.classOrSchoolId,
+      text: text ?? this.text,
+      type: type ?? this.type,
+      createdAt: createdAt ?? this.createdAt,
+      commentsCount: commentsCount ?? this.commentsCount,
+      likesCount: likesCount ?? this.likesCount,
+      firstName: firstName ?? this.firstName,
+      lastName: lastName ?? this.lastName,
+      profilePicture: profilePicture ?? this.profilePicture,
+      classname: classname ?? this.classname,
+      isSaved: isSaved ?? this.isSaved,
+      content: content ?? this.content,
     );
   }
 

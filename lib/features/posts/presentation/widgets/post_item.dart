@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:quotes/config/themes/app_decoration.dart';
 import 'package:quotes/config/themes/custom_text_style.dart';
 import 'package:quotes/config/themes/theme_helper.dart';
@@ -12,6 +13,7 @@ import 'package:quotes/core/utils/image_constant.dart';
 import 'package:quotes/core/utils/size_utils.dart';
 import 'package:quotes/features/posts/domain/entities/post.dart';
 import 'package:intl/intl.dart';
+import 'package:quotes/features/posts/presentation/cubit/post_cubit.dart';
 import 'package:quotes/features/posts/presentation/widgets/custom_image_view.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:quotes/features/posts/presentation/widgets/image_detail.dart';
@@ -99,7 +101,9 @@ class PostItem extends StatelessWidget {
                         );
                       },
                       child: Hero(
-                        tag: post.content[0],
+                        // tag: post.content[0],
+                        tag: '${post.content[0]}_0',
+
                         child: Material(
                           color: Colors.transparent,
                           child: CustomImageView(
@@ -293,15 +297,31 @@ class PostItem extends StatelessWidget {
                 width: 32.adaptSize,
                 margin: EdgeInsets.only(left: 8.h),
               ),
+
               Padding(
                 padding: EdgeInsets.only(
                   top: 5.v,
                   bottom: 7.v,
                 ),
-                child: Text(
-                  post.commentsCount.toString(),
-                  style: theme.textTheme.bodyLarge,
+                child: BlocBuilder<PostCubit, PostState>(
+                  builder: (context, state) {
+                    if (state is PostLoaded2 && state.post.id == post.id) {
+                      return Text(
+                        state.post.commentsCount.toString(),
+                        style: theme.textTheme.bodyLarge,
+                      );
+                    } else {
+                      return Text(
+                        post.commentsCount.toString(),
+                        style: theme.textTheme.bodyLarge,
+                      );
+                    }
+                  },
                 ),
+                // child: Text(
+                //   post.commentsCount.toString(),
+                //   style: theme.textTheme.bodyLarge,
+                // ),
               ),
               // IconButton(
               //   onPressed: () {

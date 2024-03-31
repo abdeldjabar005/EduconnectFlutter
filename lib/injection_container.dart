@@ -10,6 +10,8 @@ import 'package:quotes/features/auth/data/repositories/auth_repository_impl.dart
 import 'package:quotes/features/auth/data/repositories/token_repository.dart';
 import 'package:quotes/features/auth/domain/repositories/auth_repository.dart';
 import 'package:quotes/features/posts/data/datasources/post_local_data_source.dart';
+import 'package:quotes/features/posts/domain/usecases/get_post.dart';
+import 'package:quotes/features/posts/domain/usecases/post_comment.dart';
 import 'package:quotes/features/posts/presentation/cubit/comment_cubit.dart';
 import 'package:quotes/features/splash/data/datasources/lang_local_data_source.dart';
 import 'package:quotes/features/splash/data/repositories/lang_repository_impl.dart';
@@ -35,20 +37,26 @@ Future<void> init() async {
   // Blocs
   sl.registerFactory<LocaleCubit>(
       () => LocaleCubit(getSavedLangUseCase: sl(), changeLangUseCase: sl()));
-  sl.registerFactory<AuthCubit>(() => AuthCubit(authRepository: sl()));
+  sl.registerLazySingleton<AuthCubit>(() => AuthCubit(authRepository: sl()));
   sl.registerFactory<PostCubit>(() => PostCubit(
         getPostsUseCase: sl(),
+        getPostUseCase: sl(),
       ));
-  sl.registerFactory<CommentsCubit>(() => CommentsCubit(getCommentsUseCase: sl()));
-
+  sl.registerFactory<CommentsCubit>(() => CommentsCubit(
+      getCommentsUseCase: sl(),
+      postComment: sl(),
+      authCubit: sl(),
+      postCubit: sl()));
   // Use cases
   sl.registerLazySingleton<GetSavedLangUseCase>(
       () => GetSavedLangUseCase(langRepository: sl()));
   sl.registerLazySingleton<ChangeLangUseCase>(
       () => ChangeLangUseCase(langRepository: sl()));
   sl.registerLazySingleton<GetPosts>(() => GetPosts(postRepository: sl()));
-sl.registerLazySingleton<GetComments>(() => GetComments(commentRepository: sl()));
-
+  sl.registerLazySingleton<GetComments>(
+      () => GetComments(commentRepository: sl()));
+  sl.registerLazySingleton<PostComment>(() => PostComment(sl()));
+  sl.registerLazySingleton<GetPost>(() => GetPost(postRepository: sl()));
   // Repository
   sl.registerLazySingleton<AuthRepository>(
       () => AuthRepositoryImpl(remoteDataSource: sl(), secureStorage: sl()));

@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:quotes/core/utils/app_colors.dart';
+import 'package:quotes/features/posts/data/models/post_model.dart';
 import 'package:quotes/features/posts/domain/entities/post.dart';
 import 'package:quotes/features/posts/presentation/cubit/post_cubit.dart';
 import 'package:quotes/features/posts/presentation/pages/post_details.dart';
@@ -17,7 +18,7 @@ class PostScreen extends StatefulWidget {
 
 class _PostScreenState extends State<PostScreen>
     with AutomaticKeepAliveClientMixin {
-  final _pagingController = PagingController<int, Post>(
+  final _pagingController = PagingController<int, PostModel>(
     firstPageKey: 1,
   );
 
@@ -61,9 +62,9 @@ class _PostScreenState extends State<PostScreen>
               }
             }
           },
-          child: PagedListView<int, Post>(
+          child: PagedListView<int, PostModel>(
             pagingController: _pagingController,
-            builderDelegate: PagedChildBuilderDelegate<Post>(
+            builderDelegate: PagedChildBuilderDelegate<PostModel>(
               itemBuilder: (context, post, index) => GestureDetector(
                 onTap: () {
                   Navigator.push(

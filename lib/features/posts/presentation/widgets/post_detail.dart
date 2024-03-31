@@ -1,7 +1,9 @@
 // post_item.dart
 import 'dart:math';
+import 'dart:developer' as dev;
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:quotes/config/themes/custom_text_style.dart';
 import 'package:quotes/config/themes/theme_helper.dart';
 import 'package:quotes/core/api/end_points.dart';
@@ -10,6 +12,7 @@ import 'package:quotes/core/utils/image_constant.dart';
 import 'package:quotes/core/utils/size_utils.dart';
 import 'package:quotes/features/posts/domain/entities/post.dart';
 import 'package:intl/intl.dart';
+import 'package:quotes/features/posts/presentation/cubit/post_cubit.dart';
 import 'package:quotes/features/posts/presentation/widgets/custom_image_view.dart';
 import 'package:quotes/features/posts/presentation/widgets/image_detail.dart';
 
@@ -27,9 +30,6 @@ class PostDetails extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(
-          20.h,
-        ),
       ),
       padding: EdgeInsets.symmetric(
         horizontal: 13.h,
@@ -83,7 +83,7 @@ class PostDetails extends StatelessWidget {
             ),
           ),
           SizedBox(height: 12.v),
-                    post.content.isNotEmpty
+          post.content.isNotEmpty
               ? post.content.length == 1
                   ? GestureDetector(
                       onTap: () {
@@ -99,7 +99,8 @@ class PostDetails extends StatelessWidget {
                         );
                       },
                       child: Hero(
-                        tag: post.content[0],
+                        // tag: post.content[0],
+                        tag: '${post.content[0]}_0',
                         child: Material(
                           color: Colors.transparent,
                           child: CustomImageView(
@@ -297,60 +298,87 @@ class PostDetails extends StatelessWidget {
               horizontal: 10.h,
             ),
             height: 1.h,
-            color: AppColors.gray200,
+            color: AppColors.gray250,
           ),
-          SizedBox(height: 10.v),
+          SizedBox(height: 14.v),
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              Padding(
-                padding: EdgeInsets.only(
-                  top: 5.v,
-                  bottom: 7.v,
-                ),
-                child: Text(
-                  post.likesCount.toString(),
-                  style: theme.textTheme.bodyLarge,
-                ),
-              ),
-              Text(
-                'Likes',
-                style: theme.textTheme.bodyMedium,
-              ),
-
-              Padding(
-                padding: EdgeInsets.only(
-                  top: 5.v,
-                  bottom: 7.v,
-                ),
-                child: Text(
-                  post.commentsCount.toString(),
-                  style: theme.textTheme.bodyLarge,
+              Expanded(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      // "222",
+                      post.likesCount.toString(),
+                      style: theme.textTheme.bodyLarge,
+                    ),
+                    SizedBox(width: 5.v),
+                    Text(
+                      'Likes',
+                      style: theme.textTheme.bodyMedium,
+                    ),
+                  ],
                 ),
               ),
-
-              Text(
-                'Comments',
-                style: theme.textTheme.bodyMedium,
+              Expanded(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    
+                    BlocBuilder<PostCubit, PostState>(
+                      builder: (context, state) {
+                        if (state is PostLoaded2 && state.post.id == post.id) {
+                          return Text(
+                            state.post.commentsCount.toString(),
+                            style: theme.textTheme.bodyLarge,
+                          );
+                        } else {
+                          return Text(
+                            post.commentsCount.toString(),
+                            style: theme.textTheme.bodyLarge,
+                          );
+                        }
+                      },
+                    ),
+                    // Text(
+                    //   post.commentsCount.toString(),
+                    //   style: theme.textTheme.bodyLarge,
+                    // ),
+                    SizedBox(width: 5.v),
+                    Text(
+                      'Comments',
+                      style: theme.textTheme.bodyMedium,
+                    ),
+                  ],
+                ),
               ),
-              // TODO : implement the bookmarks count
-              Text(
-                '0',
-                style: theme.textTheme.bodyLarge,
-              ),
-              Text(
-                'Saves',
-                style: theme.textTheme.bodyMedium,
+              Expanded(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      '0', // TODO: Replace with actual bookmarks count
+                      style: theme.textTheme.bodyLarge,
+                    ),
+                    SizedBox(width: 5.v),
+                    Text(
+                      'Saves',
+                      style: theme.textTheme.bodyMedium,
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
-          SizedBox(height: 10.v),
+          SizedBox(height: 14.v),
           // devider
           Container(
             padding: EdgeInsets.symmetric(
               horizontal: 10.h,
             ),
             height: 1.h,
-            color: AppColors.gray200,
+            color: AppColors.gray250,
           ),
         ],
       ),

@@ -9,6 +9,11 @@ import 'package:quotes/core/utils/size_utils.dart';
 
 class CustomTextStyles {
   // Body text style
+  static get bodyMediumRobotoGray500 =>
+      theme.textTheme.bodyMedium!.roboto.copyWith(
+        color: postTheme.gray500,
+        fontSize: 13.fSize,
+      );
   static get bodyMediumRobotoGray700 =>
       theme.textTheme.bodyMedium!.roboto.copyWith(
         color: postTheme.gray700,
@@ -18,6 +23,12 @@ class CustomTextStyles {
       theme.textTheme.bodyMedium!.roboto.copyWith(
         color: postTheme.gray900,
         fontSize: 13.fSize,
+      );
+      
+  static get bodyMediumRobotoGray900big =>
+      theme.textTheme.bodyMedium!.roboto.copyWith(
+        color: postTheme.gray900,
+        fontSize: 14.fSize,
       );
   static get bodyMediumRobotoGray2 =>
       theme.textTheme.bodyMedium!.poppins.copyWith(
@@ -40,6 +51,13 @@ class CustomTextStyles {
         color: postTheme.gray90001,
         fontSize: 16.v,
         fontWeight: FontWeight.w600,
+      );
+
+  static get titleMediumPoppinsblacksmall =>
+      theme.textTheme.bodySmall!.poppins.copyWith(
+        color: postTheme.gray900,
+        fontSize: 14.v,
+        // fontWeight: FontWeight.w300,
       );
   static get titleMediumPoppinsblack =>
       theme.textTheme.titleLarge!.poppins.copyWith(
