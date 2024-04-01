@@ -38,6 +38,15 @@ class PostLoaded2 extends PostState {
   List<Object> get props => [post];
 }
 
+class PostLiked extends PostState {
+  final String postId;
+  final bool isLiked;
+
+  PostLiked({required this.postId, required this.isLiked});
+
+  @override
+  List<Object> get props => [postId, isLiked];
+}
 class PostError extends PostState {
   final String message;
 

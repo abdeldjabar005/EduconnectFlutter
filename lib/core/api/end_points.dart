@@ -13,6 +13,10 @@ class EndPoints {
 
   static const String users = '${baseUrl}users';
   static const String verifyEmail = '${baseUrl}verify';
+
   static String comments(int postId) => '${baseUrl}posts/$postId/all-comments';
   static String postComment(int postId) => '${baseUrl}posts/$postId/comments';
+  static String likePost(int postId) => '${baseUrl}posts/$postId/likes';
+  static String checkIfPostIsLiked(int postId) =>
+      '${baseUrl}posts/$postId/isliked';
 }

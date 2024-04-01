@@ -10,7 +10,9 @@ import 'package:quotes/features/auth/data/repositories/auth_repository_impl.dart
 import 'package:quotes/features/auth/data/repositories/token_repository.dart';
 import 'package:quotes/features/auth/domain/repositories/auth_repository.dart';
 import 'package:quotes/features/posts/data/datasources/post_local_data_source.dart';
+import 'package:quotes/features/posts/domain/usecases/check_liked.dart';
 import 'package:quotes/features/posts/domain/usecases/get_post.dart';
+import 'package:quotes/features/posts/domain/usecases/like_post.dart';
 import 'package:quotes/features/posts/domain/usecases/post_comment.dart';
 import 'package:quotes/features/posts/presentation/cubit/comment_cubit.dart';
 import 'package:quotes/features/splash/data/datasources/lang_local_data_source.dart';
@@ -41,6 +43,8 @@ Future<void> init() async {
   sl.registerFactory<PostCubit>(() => PostCubit(
         getPostsUseCase: sl(),
         getPostUseCase: sl(),
+        likePostUseCase: sl(),
+        checkIfPostIsLikedUseCase: sl(),
       ));
   sl.registerFactory<CommentsCubit>(() => CommentsCubit(
       getCommentsUseCase: sl(),
@@ -57,6 +61,10 @@ Future<void> init() async {
       () => GetComments(commentRepository: sl()));
   sl.registerLazySingleton<PostComment>(() => PostComment(sl()));
   sl.registerLazySingleton<GetPost>(() => GetPost(postRepository: sl()));
+  sl.registerLazySingleton<LikePost>(() => LikePost(postRepository: sl()));
+  sl.registerLazySingleton<CheckIfPostIsLiked>(
+      () => CheckIfPostIsLiked(postRepository: sl()));
+
   // Repository
   sl.registerLazySingleton<AuthRepository>(
       () => AuthRepositoryImpl(remoteDataSource: sl(), secureStorage: sl()));

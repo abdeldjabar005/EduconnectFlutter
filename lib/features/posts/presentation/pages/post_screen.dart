@@ -3,11 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:quotes/core/utils/app_colors.dart';
 import 'package:quotes/features/posts/data/models/post_model.dart';
-import 'package:quotes/features/posts/domain/entities/post.dart';
+import 'package:quotes/features/posts/presentation/cubit/comment_cubit.dart';
 import 'package:quotes/features/posts/presentation/cubit/post_cubit.dart';
 import 'package:quotes/features/posts/presentation/pages/post_details.dart';
 import 'package:quotes/features/posts/presentation/widgets/post_item.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:quotes/injection_container.dart';
 
 class PostScreen extends StatefulWidget {
   const PostScreen({super.key});
@@ -55,29 +56,30 @@ class _PostScreenState extends State<PostScreen>
                     state.hasReachedMax
                         ? null
                         : _pagingController.nextPageKey! + 1);
-              }
-              else {
+              } else {
                 _pagingController.appendLastPage(state.posts);
-                
               }
             }
           },
-          child: PagedListView<int, PostModel>(
-            pagingController: _pagingController,
-            builderDelegate: PagedChildBuilderDelegate<PostModel>(
-              itemBuilder: (context, post, index) => GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => PostDetailPage(post: post),
-                    ),
-                  );
-                },
-                child: PostItem(post: post),
+          // child: BlocProvider<CommentsCubit>(
+          //   create: (context) => sl<CommentsCubit>(),
+            child: PagedListView<int, PostModel>(
+              pagingController: _pagingController,
+              builderDelegate: PagedChildBuilderDelegate<PostModel>(
+                itemBuilder: (context, post, index) => GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => PostDetailPage(post: post),
+                      ),
+                    );
+                  },
+                  child: PostItem(post: post),
+                ),
               ),
             ),
-          ),
+          // ),
         ),
       ),
     );

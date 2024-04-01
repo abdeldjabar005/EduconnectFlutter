@@ -12,6 +12,7 @@ class Post extends Equatable {
   final DateTime createdAt;
   final int commentsCount;
   final int likesCount;
+  final bool isLiked;
   final String firstName;
   final String lastName;
   final String profilePicture;
@@ -28,6 +29,7 @@ class Post extends Equatable {
     required this.createdAt,
     required this.commentsCount,
     required this.likesCount,
+    required this.isLiked,
     required this.firstName,
     required this.lastName,
     required this.profilePicture,
@@ -35,8 +37,6 @@ class Post extends Equatable {
     required this.isSaved,
     required this.content,
   });
-
-  
 
   @override
   List<Object?> get props => [
@@ -48,6 +48,7 @@ class Post extends Equatable {
         createdAt,
         commentsCount,
         likesCount,
+        isLiked,
         firstName,
         lastName,
         profilePicture,

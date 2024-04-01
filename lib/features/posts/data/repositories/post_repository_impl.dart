@@ -7,6 +7,7 @@ import 'package:quotes/features/posts/data/datasources/post_local_data_source.da
 import 'package:quotes/features/posts/data/datasources/post_remote_data_source.dart';
 import 'package:quotes/features/posts/data/models/post_model.dart';
 import 'package:quotes/features/posts/domain/entities/comment.dart';
+import 'package:quotes/features/posts/domain/entities/like.dart';
 import 'package:quotes/features/posts/domain/entities/post.dart';
 import 'package:quotes/features/posts/domain/repositories/post_repository.dart';
 
@@ -67,6 +68,32 @@ class PostRepositoryImpl implements PostRepository {
       try {
         final remotePost = await remoteDataSource.getPost(id);
         return Right(remotePost);
+      } on ServerException {
+        return Left(ServerFailure());
+      }
+    } else {
+      return Left(NetworkFailure());
+    }
+  }
+  @override
+  Future<Either<Failure, LikePostResponse>> likePost(int id) async {
+    if (await networkInfo.isConnected) {
+      try {
+        final remoteLike = await remoteDataSource.likePost(id);
+        return Right(remoteLike);
+      } on ServerException {
+        return Left(ServerFailure());
+      }
+    } else {
+      return Left(NetworkFailure());
+    }
+  }
+  @override
+  Future<Either<Failure, LikePostResponse>> checkIfPostIsLiked(int postId) async {
+    if (await networkInfo.isConnected) {
+      try {
+        final remoteLike = await remoteDataSource.checkIfPostIsLiked(postId);
+        return Right(remoteLike);
       } on ServerException {
         return Left(ServerFailure());
       }

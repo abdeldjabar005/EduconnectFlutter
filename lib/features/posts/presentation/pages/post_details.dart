@@ -31,85 +31,82 @@ class _PostDetailPageState extends State<PostDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<CommentsCubit>(
-      create: (context) => sl<CommentsCubit>(),
-      child: Builder(builder: (context) {
-        context.read<CommentsCubit>().getComments(widget.post.id);
-        return Scaffold(
-          appBar: AppBar(
-            backgroundColor: Colors.white,
-            automaticallyImplyLeading: false,
-            leading: const BackButton(
-              color: Colors.black,
-              style: ButtonStyle(),
-            ),
-            elevation: 0,
-            title: const Text(
-              'Post',
-              style: TextStyle(color: Colors.black),
-            ),
+    return Builder(builder: (context) {
+      // context.read<CommentsCubit>().getComments(widget.post.id);
+      return Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.white,
+          automaticallyImplyLeading: false,
+          leading: const BackButton(
+            color: Colors.black,
+            style: ButtonStyle(),
           ),
-          body: Column(
-            children: [
-              Expanded(
-                child: BlocBuilder<CommentsCubit, CommentsState>(
-                  builder: (context, state) {
-                    return SingleChildScrollView(
-                      child: Column(
-                        children: [
-                          // BlocProvider<CommentsCubit>(
-                          //   create: (context) => sl<CommentsCubit>(),
-                          //   child: PostDetails(post: widget.post),
-                          // ),
-                          PostDetails(post: widget.post),
-                          if (state is CommentsLoading)
-                            const CircularProgressIndicator(),
-                          if (state is CommentsError) Text(state.message),
-                          if (state is CommentsLoaded)
-                            ValueListenableBuilder(
-                              valueListenable:
-                                  context.read<CommentsCubit>().commentsCache,
-                              builder:
-                                  (context, Map<int, List<Comment>> cache, _) {
-                                return ListView.builder(
-                                  shrinkWrap: true,
-                                  physics: const NeverScrollableScrollPhysics(),
-                                  itemCount: cache[widget.post.id]!.length,
-                                  itemBuilder: (context, index) => CommentItem(
-                                      comment: cache[widget.post.id]![index]),
-                                );
-                              },
-                            ),
-                        ],
-                      ),
-                    );
-                  },
-                ),
-              ),
-              Container(
-                padding: const EdgeInsets.all(8.0),
-                child: TextField(
-                  controller: _commentController,
-                  decoration: InputDecoration(
-                    labelText: 'Write a comment...',
-                    border: const OutlineInputBorder(),
-                    suffixIcon: IconButton(
-                      icon: const Icon(Icons.send),
-                      onPressed: () {
-                        context.read<CommentsCubit>().postComments(
-                            widget.post.id, _commentController.text);
-                        final postCubit = context.read<PostCubit>();
-                        postCubit.getPost(widget.post.id);
-                        _commentController.clear();
-                      },
+          elevation: 0,
+          title: const Text(
+            'Post',
+            style: TextStyle(color: Colors.black),
+          ),
+        ),
+        body: Column(
+          children: [
+            Expanded(
+              child: BlocBuilder<CommentsCubit, CommentsState>(
+                builder: (context, state) {
+                  return SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        // BlocProvider<PostCubit>(
+                        //   create: (context) => sl<PostCubit>(),
+                        //   child: PostDetails(post: widget.post),
+                        // ),
+                        PostDetails(post: widget.post),
+                        if (state is CommentsLoading)
+                          const CircularProgressIndicator(),
+                        if (state is CommentsError) Text(state.message),
+                        if (state is CommentsLoaded)
+                          ValueListenableBuilder(
+                            valueListenable:
+                                context.read<CommentsCubit>().commentsCache,
+                            builder:
+                                (context, Map<int, List<Comment>> cache, _) {
+                              return ListView.builder(
+                                shrinkWrap: true,
+                                physics: const NeverScrollableScrollPhysics(),
+                                itemCount: cache[widget.post.id]!.length,
+                                itemBuilder: (context, index) => CommentItem(
+                                    comment: cache[widget.post.id]![index]),
+                              );
+                            },
+                          ),
+                      ],
                     ),
+                  );
+                },
+              ),
+            ),
+            Container(
+              padding: const EdgeInsets.all(8.0),
+              child: TextField(
+                controller: _commentController,
+                decoration: InputDecoration(
+                  labelText: 'Write a comment...',
+                  border: const OutlineInputBorder(),
+                  suffixIcon: IconButton(
+                    icon: const Icon(Icons.send),
+                    onPressed: () {
+                      context.read<CommentsCubit>().postComments(
+                          widget.post.id, _commentController.text);
+                      final postCubit = context.read<PostCubit>();
+                      postCubit.getPost(widget.post.id);
+                      _commentController.clear();
+                    },
                   ),
                 ),
               ),
-            ],
-          ),
-        );
-      }),
-    );
+            ),
+          ],
+        ),
+      );
+    });
   }
 }
