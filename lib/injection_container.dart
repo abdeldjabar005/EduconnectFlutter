@@ -45,6 +45,7 @@ Future<void> init() async {
         getPostUseCase: sl(),
         likePostUseCase: sl(),
         checkIfPostIsLikedUseCase: sl(),
+        postRepository: sl(),
       ));
   sl.registerFactory<CommentsCubit>(() => CommentsCubit(
       getCommentsUseCase: sl(),

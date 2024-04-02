@@ -6,6 +6,7 @@ import 'package:quotes/core/usecases/usecase.dart';
 import 'package:quotes/features/posts/data/models/post_model.dart';
 import 'package:quotes/features/posts/domain/entities/like.dart';
 import 'package:quotes/features/posts/domain/entities/post.dart';
+import 'package:quotes/features/posts/domain/repositories/post_repository.dart';
 import 'package:quotes/features/posts/domain/usecases/check_liked.dart';
 import 'package:quotes/features/posts/domain/usecases/get_post.dart';
 import 'package:quotes/features/posts/domain/usecases/get_posts.dart';
@@ -18,11 +19,14 @@ class PostCubit extends Cubit<PostState> {
   final GetPost getPostUseCase;
   final LikePost likePostUseCase;
   final CheckIfPostIsLiked checkIfPostIsLikedUseCase;
+  final PostRepository postRepository;
+
   PostCubit({
     required this.getPostsUseCase,
     required this.getPostUseCase,
     required this.likePostUseCase,
     required this.checkIfPostIsLikedUseCase,
+    required this.postRepository,
   }) : super(PostInitial());
 
   Future<void> getPosts(int page) async {
@@ -46,29 +50,28 @@ class PostCubit extends Cubit<PostState> {
     });
   }
 
-  Future<void> likePost(int id ) async {
+  Future<void> likePost(Post post) async {
+    final response = await likePostUseCase(post.id);
 
-    final response = await likePostUseCase(id);
-    response.fold(
-      (failure) => emit(PostError(message: _mapFailureToMessage(failure))),
-      (likePostResponse) {
-        emit(PostLiked(postId: likePostResponse.postId, isLiked: likePostResponse.isLiked));
-      }
-    );
+    // final postResult = await postRepository.getPost(post.id);
 
+    final isLiked = !post.isLiked;
+    final likesCount = isLiked ? post.likesCount + 1 : post.likesCount - 1;
+    emit(PostLiked(
+        postId: post.id.toString(), isLiked: isLiked, likesCount: likesCount));
+
+    // postResult.fold(
+    //     (failure) => emit(PostError(message: _mapFailureToMessage(failure))),
+    //     (post) {
+    //   final isLiked = !post.isLiked;
+    //   final likesCount = isLiked
+    //       ? post.likesCount + 1
+    //       : post.likesCount -
+    //           1;
+    //   emit(PostLiked(
+    //       postId: post.id.toString(), isLiked: isLiked, likesCount: likesCount));
+    // });
   }
-  
-
-void checkIfPostIsLiked(int postId) async {
-    final response = await checkIfPostIsLikedUseCase(postId);
-    response.fold(
-      (failure) => emit(PostError(message: _mapFailureToMessage(failure))),
-      (likePostResponse) {
-        emit(PostLiked(postId: likePostResponse.postId, isLiked: likePostResponse.isLiked));
-      }
-    );
-  }
-
 
   String _mapFailureToMessage(Failure failure) {
     switch (failure.runtimeType) {

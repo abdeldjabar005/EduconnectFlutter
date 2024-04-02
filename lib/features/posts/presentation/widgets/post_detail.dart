@@ -17,9 +17,9 @@ import 'package:quotes/features/posts/presentation/widgets/custom_image_view.dar
 import 'package:quotes/features/posts/presentation/widgets/image_detail.dart';
 
 class PostDetails extends StatelessWidget {
-  final Post post;
+  late Post post;
 
-  const PostDetails({Key? key, required this.post}) : super(key: key);
+  PostDetails({Key? key, required this.post}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -304,28 +304,65 @@ class PostDetails extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
+              // Expanded(
+              //   child: Row(
+              //     mainAxisAlignment: MainAxisAlignment.center,
+              //     children: [
+              //       Text(
+              //         // "222",
+              //         post.likesCount.toString(),
+              //         style: theme.textTheme.bodyLarge,
+              //       ),
+              //       SizedBox(width: 5.v),
+              //       Text(
+              //         'Likes',
+              //         style: theme.textTheme.bodyMedium,
+              //       ),
+              //     ],
+              //   ),
+              // ),
+
               Expanded(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      // "222",
-                      post.likesCount.toString(),
-                      style: theme.textTheme.bodyLarge,
-                    ),
-                    SizedBox(width: 5.v),
-                    Text(
-                      'Likes',
-                      style: theme.textTheme.bodyMedium,
-                    ),
-                  ],
+                child: InkWell(
+                  onTap: () {
+                    context.read<PostCubit>().likePost(post);
+                  },
+                  child: BlocBuilder<PostCubit, PostState>(
+                    key: ValueKey(DateTime.now()),
+                    builder: (context, state) {
+                      if (state is PostLiked &&
+                          int.parse(state.postId) == post.id) {
+                        post = post.copyWith(
+                          isLiked: state.isLiked,
+                          likesCount: state.likesCount,
+                        );
+                      }
+                      return Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            post.likesCount.toString(),
+                            style: theme.textTheme.bodyLarge?.copyWith(
+                              color: post.isLiked ? Colors.blue : null,
+                            ),
+                          ),
+                          SizedBox(width: 5.v),
+                          Text(
+                            'Likes',
+                            style: theme.textTheme.bodyMedium?.copyWith(
+                              color: post.isLiked ? Colors.blue : null,
+                            ),
+                          ),
+                        ],
+                      );
+                    },
+                  ),
                 ),
               ),
               Expanded(
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    
                     BlocBuilder<PostCubit, PostState>(
                       builder: (context, state) {
                         if (state is PostLoaded2 && state.post.id == post.id) {

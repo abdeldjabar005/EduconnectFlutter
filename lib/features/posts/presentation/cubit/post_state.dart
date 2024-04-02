@@ -41,12 +41,14 @@ class PostLoaded2 extends PostState {
 class PostLiked extends PostState {
   final String postId;
   final bool isLiked;
-
-  PostLiked({required this.postId, required this.isLiked});
+  final int likesCount;
+  PostLiked({required this.postId, required this.isLiked, required this.likesCount});
 
   @override
   List<Object> get props => [postId, isLiked];
 }
+
+
 class PostError extends PostState {
   final String message;
 

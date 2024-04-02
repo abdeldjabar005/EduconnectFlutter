@@ -19,9 +19,9 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:quotes/features/posts/presentation/widgets/image_detail.dart';
 
 class PostItem extends StatelessWidget {
-  final Post post;
+  late Post post;
 
-  const PostItem({Key? key, required this.post}) : super(key: key);
+  PostItem({Key? key, required this.post}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -276,21 +276,60 @@ class PostItem extends StatelessWidget {
           SizedBox(height: 11.v),
           Row(
             children: [
-              CustomImageView(
-                imagePath: ImageConstant.img32Heart,
-                height: 32.adaptSize,
-                width: 32.adaptSize,
-              ),
-              Padding(
-                padding: EdgeInsets.only(
-                  top: 5.v,
-                  bottom: 7.v,
+              // CustomImageView(
+              //   imagePath: ImageConstant.img32Heart,
+              //   height: 32.adaptSize,
+              //   width: 32.adaptSize,
+              // ),
+              // Padding(
+              //   padding: EdgeInsets.only(
+              //     top: 5.v,
+              //     bottom: 7.v,
+              //   ),
+              //   child: Text(
+              //     post.likesCount.toString(),
+              //     style: theme.textTheme.bodyLarge,
+              //   ),
+              // ),
+
+              InkWell(
+                onTap: () {
+                  context.read<PostCubit>().likePost(post);
+                },
+                child: BlocBuilder<PostCubit, PostState>(
+                  key: ValueKey(DateTime.now()),
+                  builder: (context, state) {
+                    if (state is PostLiked &&
+                        int.parse(state.postId) == post.id) {
+                      post = post.copyWith(
+                        isLiked: state.isLiked,
+                        likesCount: state.likesCount,
+                      );
+                    }
+                    return Row(
+                      children: [
+                        CustomImageView(
+                          color: post.isLiked
+                              ? AppColors.blueA200
+                              : AppColors.black900,
+                          imagePath: ImageConstant.img32Heart,
+                          height: 32.adaptSize,
+                          width: 32.adaptSize,
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(
+                            top: 5.v,
+                            bottom: 7.v,
+                          ),
+                          child: Text(post.likesCount.toString(),
+                              style: theme.textTheme.bodyLarge),
+                        ),
+                      ],
+                    );
+                  },
                 ),
-                child: Text(
-                  post.likesCount.toString(),
-                  style: theme.textTheme.bodyLarge,
-                ),
               ),
+
               CustomImageView(
                 imagePath: ImageConstant.img32Chat,
                 height: 32.adaptSize,

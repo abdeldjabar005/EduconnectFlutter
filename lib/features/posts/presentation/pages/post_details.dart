@@ -1,16 +1,11 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:quotes/features/posts/data/models/post_model.dart';
 import 'package:quotes/features/posts/domain/entities/comment.dart';
-import 'package:quotes/features/posts/domain/entities/post.dart';
-import 'package:quotes/features/posts/domain/usecases/post_comment.dart';
 import 'package:quotes/features/posts/presentation/cubit/comment_cubit.dart';
 import 'package:quotes/features/posts/presentation/cubit/post_cubit.dart';
 import 'package:quotes/features/posts/presentation/widgets/comment_item.dart';
 import 'package:quotes/features/posts/presentation/widgets/post_detail.dart';
-import 'package:quotes/injection_container.dart';
 
 class PostDetailPage extends StatefulWidget {
   final PostModel post;

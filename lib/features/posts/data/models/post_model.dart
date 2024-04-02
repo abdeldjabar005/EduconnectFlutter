@@ -3,7 +3,7 @@ import 'package:quotes/features/posts/data/models/comment_model.dart';
 import 'package:quotes/features/posts/domain/entities/post.dart';
 
 class PostModel extends Post {
-  const PostModel({
+  PostModel({
     required int id,
     required int userId,
     required int classOrSchoolId,

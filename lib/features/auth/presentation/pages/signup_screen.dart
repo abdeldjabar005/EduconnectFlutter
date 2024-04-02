@@ -1,17 +1,12 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:quotes/config/routes/app_routes.dart';
-import 'package:quotes/config/themes/app_decoration.dart';
 import 'package:quotes/config/themes/custom_text_style.dart';
-import 'package:quotes/config/themes/theme_helper.dart';
 import 'package:quotes/core/utils/app_colors.dart';
 import 'package:quotes/core/utils/image_constant.dart';
 import 'package:quotes/core/utils/size_utils.dart';
 import 'package:quotes/core/widgets/RootScreen.dart';
 import 'package:quotes/features/auth/presentation/cubit/auth_cubit.dart';
-import 'package:quotes/features/auth/presentation/pages/login_screen.dart';
 import 'package:quotes/features/auth/presentation/widgets/custom_drop_down.dart';
 import 'package:quotes/features/auth/presentation/widgets/custom_elevated_button.dart';
 import 'package:quotes/features/auth/presentation/widgets/custom_pin_code_text_field.dart';
@@ -48,9 +43,9 @@ class _SignupScreenState extends State<SignupScreen> {
 
   TextEditingController confirmpasswordController = TextEditingController();
 
-  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  GlobalKey<FormState> _formKey2 = GlobalKey<FormState>();
-  GlobalKey<FormState> _formKey3 = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formKey2 = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formKey3 = GlobalKey<FormState>();
 
   bool isPasswordVisible = false;
 
@@ -69,12 +64,12 @@ class _SignupScreenState extends State<SignupScreen> {
                 // );
               } else if (state is AuthEmailVerificationNeeded) {
                 _pageController.nextPage(
-                  duration: Duration(milliseconds: 300),
+                  duration: const Duration(milliseconds: 300),
                   curve: Curves.easeIn,
                 );
               } else if (state is AuthEmailVerified) {
                 _pageController.nextPage(
-                  duration: Duration(milliseconds: 300),
+                  duration: const Duration(milliseconds: 300),
                   curve: Curves.easeIn,
                 );
               } else if (state is AuthAuthenticated) {
@@ -89,7 +84,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 onWillPop: () async {
                   if (_pageController.page != 0.0) {
                     _pageController.previousPage(
-                      duration: Duration(milliseconds: 300),
+                      duration: const Duration(milliseconds: 300),
                       curve: Curves.easeIn,
                     );
                     return false; // Prevents the route from being popped
@@ -98,7 +93,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 },
                 child: PageView(
                   controller: _pageController,
-                  physics: NeverScrollableScrollPhysics(),
+                  physics: const NeverScrollableScrollPhysics(),
                   children: [
                     _buildFirstPage(context, state),
                     _buildSecondPage(context, state),

@@ -33,13 +33,12 @@ class QuoteApp extends StatelessWidget {
                     popupMenuTheme: PopupMenuThemeData(
                       elevation: 2.0, // This controls the shadow.
                       shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(
-                              4.0)), // This controls the shape.
+                        borderRadius: BorderRadius.circular(4.0),
+                      ), // This controls the shape.
                     ),
                   ),
                   debugShowCheckedModeBanner: false,
                   // theme: theme,
-
                   onGenerateRoute: AppRoutes.onGenerateRoute,
                 );
               },

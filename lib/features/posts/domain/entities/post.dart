@@ -11,8 +11,8 @@ class Post extends Equatable {
   final String type;
   final DateTime createdAt;
   final int commentsCount;
-  final int likesCount;
-  final bool isLiked;
+   int likesCount;
+   bool isLiked;
   final String firstName;
   final String lastName;
   final String profilePicture;
@@ -20,7 +20,7 @@ class Post extends Equatable {
   final bool isSaved;
   final List<String> content;
 
-  const Post({
+ Post({
     required this.id,
     required this.userId,
     required this.classOrSchoolId,
@@ -28,8 +28,8 @@ class Post extends Equatable {
     required this.type,
     required this.createdAt,
     required this.commentsCount,
-    required this.likesCount,
-    required this.isLiked,
+     required this.likesCount,
+     required this.isLiked,
     required this.firstName,
     required this.lastName,
     required this.profilePicture,
@@ -56,4 +56,40 @@ class Post extends Equatable {
         isSaved,
         content,
       ];
+
+       Post copyWith({
+    int? id,
+    int? userId,
+    int? classOrSchoolId,
+    String? text,
+    String? type,
+    DateTime? createdAt,
+    int? commentsCount,
+    int? likesCount,
+    bool? isLiked,
+    String? firstName,
+    String? lastName,
+    String? profilePicture,
+    String? classname,
+    bool? isSaved,
+    List<String>? content,
+  }) {
+    return Post(
+      id: id ?? this.id,
+      userId: userId ?? this.userId,
+      classOrSchoolId: classOrSchoolId ?? this.classOrSchoolId,
+      text: text ?? this.text,
+      type: type ?? this.type,
+      createdAt: createdAt ?? this.createdAt,
+      commentsCount: commentsCount ?? this.commentsCount,
+      likesCount: likesCount ?? this.likesCount,
+      isLiked: isLiked ?? this.isLiked,
+      firstName: firstName ?? this.firstName,
+      lastName: lastName ?? this.lastName,
+      profilePicture: profilePicture ?? this.profilePicture,
+      classname: classname ?? this.classname,
+      isSaved: isSaved ?? this.isSaved,
+      content: content ?? this.content,
+    );
+  }
 }

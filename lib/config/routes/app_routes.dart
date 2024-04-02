@@ -9,14 +9,12 @@ import '../../features/posts/presentation/cubit/post_cubit.dart';
 import 'package:quotes/injection_container.dart' as di;
 import 'package:quotes/features/posts/presentation/pages/post_screen.dart';
 
-
-
 class Routes {
   static const String initialRoute = '/';
   static const String loginRoute = '/login';
   static const String signUpRoute = '/signUp';
   static const String forgotpasswordRoute = '/forgotpassword';
-  
+
   static const String homeRoute = '/home';
   static const String defaultWidget = '/defaultWidget';
   static const String postRoute = '/posts';
@@ -36,12 +34,12 @@ class AppRoutes {
         return MaterialPageRoute(builder: (context) {
           return SignupScreen();
         });
-      
+
       case Routes.forgotpasswordRoute:
         return MaterialPageRoute(builder: (context) {
           return SignupScreen();
         });
-        
+
       case Routes.postRoute:
         return MaterialPageRoute(builder: ((context) {
           return BlocProvider(
@@ -51,7 +49,7 @@ class AppRoutes {
         }));
       case Routes.homeRoute:
         return MaterialPageRoute(builder: (context) {
-          return HomeScreen(); // Make sure to import HomeScreen at the top
+          return HomeScreen();
         });
       case Routes.rootScreen:
         return MaterialPageRoute(builder: (context) {
@@ -69,7 +67,6 @@ class AppRoutes {
         return undefinedRoute();
     }
   }
-
 
   static Route<dynamic> undefinedRoute() {
     return MaterialPageRoute(
