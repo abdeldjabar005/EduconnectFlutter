@@ -15,6 +15,7 @@ import 'package:quotes/features/posts/domain/usecases/get_post.dart';
 import 'package:quotes/features/posts/domain/usecases/like_post.dart';
 import 'package:quotes/features/posts/domain/usecases/post_comment.dart';
 import 'package:quotes/features/posts/presentation/cubit/comment_cubit.dart';
+import 'package:quotes/features/posts/presentation/cubit/like_cubit.dart';
 import 'package:quotes/features/splash/data/datasources/lang_local_data_source.dart';
 import 'package:quotes/features/splash/data/repositories/lang_repository_impl.dart';
 import 'package:quotes/features/splash/domain/repositories/lang_repository.dart';
@@ -43,7 +44,6 @@ Future<void> init() async {
   sl.registerFactory<PostCubit>(() => PostCubit(
         getPostsUseCase: sl(),
         getPostUseCase: sl(),
-        likePostUseCase: sl(),
         checkIfPostIsLikedUseCase: sl(),
         postRepository: sl(),
       ));
@@ -52,6 +52,7 @@ Future<void> init() async {
       postComment: sl(),
       authCubit: sl(),
       postCubit: sl()));
+  sl.registerFactory<LikeCubit>(() => LikeCubit(likePostUseCase: sl()));
   // Use cases
   sl.registerLazySingleton<GetSavedLangUseCase>(
       () => GetSavedLangUseCase(langRepository: sl()));

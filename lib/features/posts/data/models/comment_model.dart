@@ -33,16 +33,17 @@ class CommentModel extends Comment {
   factory CommentModel.fromJson(Map<String, dynamic> json) {
     return CommentModel(
       id: json["id"],
-      postId: json["post_id"],
+      postId: json["post_id"] ?? json["comment_id"],
       userId: json["user_id"],
       text: json["text"],
       createdAt: DateTime.parse(json["created_at"]),
       updatedAt: DateTime.parse(json["updated_at"]),
       likesCount: json["likes_count"],
-      repliesCount: json["replies_count"],
-      replies: (json["replies"] as List)
-          .map((item) => CommentModel.fromJson(item))
-          .toList(),
+      repliesCount: json["replies_count"] ?? 0,
+      replies: (json["replies"] as List?)
+              ?.map((item) => CommentModel.fromJson(item))
+              .toList() ??
+          [],
       firstName: json["first_name"],
       lastName: json["last_name"],
       profilePicture: json["profile_picture"]?.isNotEmpty == true

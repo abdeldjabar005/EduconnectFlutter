@@ -14,5 +14,4 @@ class CheckIfPostIsLiked implements UseCase<LikePostResponse, int>{
   Future<Either<Failure, LikePostResponse>> call(int id) {
     return postRepository.checkIfPostIsLiked(id);
   }
-
 }

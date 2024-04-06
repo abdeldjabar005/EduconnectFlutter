@@ -6,6 +6,7 @@ import 'package:quotes/core/utils/app_strings.dart';
 import 'package:quotes/core/utils/size_utils.dart';
 import 'package:quotes/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:quotes/features/posts/presentation/cubit/comment_cubit.dart';
+import 'package:quotes/features/posts/presentation/cubit/like_cubit.dart';
 import 'package:quotes/features/posts/presentation/cubit/post_cubit.dart';
 import 'injection_container.dart' as di;
 
@@ -19,6 +20,7 @@ class QuoteApp extends StatelessWidget {
           BlocProvider(create: (context) => di.sl<AuthCubit>()),
           BlocProvider(create: (context) => di.sl<PostCubit>()),
           BlocProvider(create: (context) => di.sl<CommentsCubit>()),
+          BlocProvider(create: (context) => di.sl<LikeCubit>())
         ],
         child: BlocBuilder<AuthCubit, AuthState>(
           buildWhen: (previousState, currentState) {

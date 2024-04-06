@@ -17,14 +17,12 @@ part 'post_state.dart';
 class PostCubit extends Cubit<PostState> {
   final GetPosts getPostsUseCase;
   final GetPost getPostUseCase;
-  final LikePost likePostUseCase;
   final CheckIfPostIsLiked checkIfPostIsLikedUseCase;
   final PostRepository postRepository;
 
   PostCubit({
     required this.getPostsUseCase,
     required this.getPostUseCase,
-    required this.likePostUseCase,
     required this.checkIfPostIsLikedUseCase,
     required this.postRepository,
   }) : super(PostInitial());
@@ -50,28 +48,7 @@ class PostCubit extends Cubit<PostState> {
     });
   }
 
-  Future<void> likePost(Post post) async {
-    final response = await likePostUseCase(post.id);
-
-    // final postResult = await postRepository.getPost(post.id);
-
-    final isLiked = !post.isLiked;
-    final likesCount = isLiked ? post.likesCount + 1 : post.likesCount - 1;
-    emit(PostLiked(
-        postId: post.id.toString(), isLiked: isLiked, likesCount: likesCount));
-
-    // postResult.fold(
-    //     (failure) => emit(PostError(message: _mapFailureToMessage(failure))),
-    //     (post) {
-    //   final isLiked = !post.isLiked;
-    //   final likesCount = isLiked
-    //       ? post.likesCount + 1
-    //       : post.likesCount -
-    //           1;
-    //   emit(PostLiked(
-    //       postId: post.id.toString(), isLiked: isLiked, likesCount: likesCount));
-    // });
-  }
+ 
 
   String _mapFailureToMessage(Failure failure) {
     switch (failure.runtimeType) {

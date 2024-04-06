@@ -13,6 +13,7 @@ import 'package:quotes/core/utils/image_constant.dart';
 import 'package:quotes/core/utils/size_utils.dart';
 import 'package:quotes/features/posts/domain/entities/post.dart';
 import 'package:intl/intl.dart';
+import 'package:quotes/features/posts/presentation/cubit/like_cubit.dart';
 import 'package:quotes/features/posts/presentation/cubit/post_cubit.dart';
 import 'package:quotes/features/posts/presentation/widgets/custom_image_view.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
@@ -294,9 +295,9 @@ class PostItem extends StatelessWidget {
 
               InkWell(
                 onTap: () {
-                  context.read<PostCubit>().likePost(post);
+                  context.read<LikeCubit>().likePost(post);
                 },
-                child: BlocBuilder<PostCubit, PostState>(
+                child: BlocBuilder<LikeCubit, LikeState>(
                   key: ValueKey(DateTime.now()),
                   builder: (context, state) {
                     if (state is PostLiked &&
@@ -345,16 +346,14 @@ class PostItem extends StatelessWidget {
                 child: BlocBuilder<PostCubit, PostState>(
                   builder: (context, state) {
                     if (state is PostLoaded2 && state.post.id == post.id) {
-                      return Text(
-                        state.post.commentsCount.toString(),
-                        style: theme.textTheme.bodyLarge,
-                      );
-                    } else {
-                      return Text(
-                        post.commentsCount.toString(),
-                        style: theme.textTheme.bodyLarge,
+                      post = post.copyWith(
+                        commentsCount: state.post.commentsCount,
                       );
                     }
+                    return Text(
+                      post.commentsCount.toString(),
+                      style: theme.textTheme.bodyLarge,
+                    );
                   },
                 ),
                 // child: Text(
