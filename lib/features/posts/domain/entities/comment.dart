@@ -10,13 +10,14 @@ class Comment extends Equatable {
   final DateTime createdAt;
   final DateTime updatedAt;
   final int likesCount;
-  final int repliesCount;
+  int repliesCount;
   final List<CommentModel> replies;
+  final bool isLiked;
   final String firstName;
   final String lastName;
   final String? profilePicture;
 
-  const Comment({
+  Comment({
     required this.id,
     required this.postId,
     required this.userId,
@@ -26,11 +27,58 @@ class Comment extends Equatable {
     required this.likesCount,
     required this.repliesCount,
     required this.replies,
+    required this.isLiked,
     required this.firstName,
     required this.lastName,
     this.profilePicture,
   });
 
   @override
-  List<Object?> get props => [id, postId, userId, text, createdAt, updatedAt, likesCount, repliesCount, replies, firstName, lastName, profilePicture];
+  List<Object?> get props => [
+        id,
+        postId,
+        userId,
+        text,
+        createdAt,
+        updatedAt,
+        likesCount,
+        repliesCount,
+        replies,
+        isLiked,
+        firstName,
+        lastName,
+        profilePicture
+      ];
+
+  CommentModel copyWith({
+    int? id,
+    int? postId,
+    int? userId,
+    String? text,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    int? likesCount,
+    int? repliesCount,
+    List<CommentModel>? replies,
+    bool? isLiked,
+    String? firstName,
+    String? lastName,
+    String? profilePicture,
+  }) {
+    return CommentModel(
+      id: id ?? this.id,
+      postId: postId ?? this.postId,
+      userId: userId ?? this.userId,
+      text: text ?? this.text,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      likesCount: likesCount ?? this.likesCount,
+      repliesCount: repliesCount ?? this.repliesCount,
+      replies: replies ?? this.replies,
+      isLiked: isLiked ?? this.isLiked,
+      firstName: firstName ?? this.firstName,
+      lastName: lastName ?? this.lastName,
+      profilePicture: profilePicture ?? this.profilePicture,
+    );
+  }
 }

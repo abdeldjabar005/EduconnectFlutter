@@ -4,6 +4,7 @@ import 'package:quotes/features/posts/data/models/post_model.dart';
 import 'package:quotes/features/posts/domain/entities/comment.dart';
 import 'package:quotes/features/posts/presentation/cubit/comment_cubit.dart';
 import 'package:quotes/features/posts/presentation/cubit/post_cubit.dart';
+import 'package:quotes/features/posts/presentation/pages/comment_details.dart';
 import 'package:quotes/features/posts/presentation/widgets/comment_item.dart';
 import 'package:quotes/features/posts/presentation/widgets/post_detail.dart';
 
@@ -58,7 +59,7 @@ class _PostDetailPageState extends State<PostDetailPage> {
                         if (state is CommentsLoading)
                           const CircularProgressIndicator(),
                         if (state is CommentsError) Text(state.message),
-                        if (state is CommentsLoaded)
+                        if (state is CommentsLoaded || state is CommentLoaded)
                           ValueListenableBuilder(
                             valueListenable:
                                 context.read<CommentsCubit>().commentsCache,
@@ -68,8 +69,22 @@ class _PostDetailPageState extends State<PostDetailPage> {
                                 shrinkWrap: true,
                                 physics: const NeverScrollableScrollPhysics(),
                                 itemCount: cache[widget.post.id]!.length,
-                                itemBuilder: (context, index) => CommentItem(
-                                    comment: cache[widget.post.id]![index]),
+                                itemBuilder: (context, index) =>
+                                    GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => CommentDetailPage(
+                                          comment:
+                                              cache[widget.post.id]![index],
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                  child: CommentItem(
+                                      comment: cache[widget.post.id]![index]),
+                                ),
                               );
                             },
                           ),
@@ -89,8 +104,9 @@ class _PostDetailPageState extends State<PostDetailPage> {
                   suffixIcon: IconButton(
                     icon: const Icon(Icons.send),
                     onPressed: () {
-                      context.read<CommentsCubit>().postComments(
-                          widget.post.id, _commentController.text);
+                      context
+                          .read<CommentsCubit>()
+                          .postComment(widget.post.id, _commentController.text);
                       final postCubit = context.read<PostCubit>();
                       postCubit.getPost(widget.post.id);
                       _commentController.clear();

@@ -5,6 +5,7 @@ import 'package:quotes/core/error/failures.dart';
 import 'package:quotes/core/network/netwok_info.dart';
 import 'package:quotes/features/posts/data/datasources/post_local_data_source.dart';
 import 'package:quotes/features/posts/data/datasources/post_remote_data_source.dart';
+import 'package:quotes/features/posts/data/models/comment_model.dart';
 import 'package:quotes/features/posts/data/models/post_model.dart';
 import 'package:quotes/features/posts/domain/entities/comment.dart';
 import 'package:quotes/features/posts/domain/entities/like.dart';
@@ -49,12 +50,37 @@ class PostRepositoryImpl implements PostRepository {
       return Left(NetworkFailure());
     }
   }
+  @override
+  Future<Either<Failure, CommentModel>> getComment(int id) async {
+    if (await networkInfo.isConnected) {
+      try {
+        final remoteComment = await remoteDataSource.getComment(id);
+        return Right(remoteComment);
+      } on ServerException {
+        return Left(ServerFailure());
+      }
+    } else {
+      return Left(NetworkFailure());
+    }
+  }
 
   @override
   Future<Either<Failure, void>> postComment(int postId, String comment) async {
     if (await networkInfo.isConnected) {
       try {
         return Right(remoteDataSource.postComment(postId, comment));
+      } on ServerException {
+        return Left(ServerFailure());
+      }
+    } else {
+      return Left(NetworkFailure());
+    }
+  }
+  @override
+  Future<Either<Failure, void>> postReply(int id, String reply) async {
+    if (await networkInfo.isConnected) {
+      try {
+        return Right(remoteDataSource.postReply(id, reply));
       } on ServerException {
         return Left(ServerFailure());
       }
@@ -80,6 +106,32 @@ class PostRepositoryImpl implements PostRepository {
     if (await networkInfo.isConnected) {
       try {
         final remoteLike = await remoteDataSource.likePost(id);
+        return Right(remoteLike);
+      } on ServerException {
+        return Left(ServerFailure());
+      }
+    } else {
+      return Left(NetworkFailure());
+    }
+  }
+  @override
+  Future<Either<Failure, LikePostResponse>> likeComment(int id) async {
+    if (await networkInfo.isConnected) {
+      try {
+        final remoteLike = await remoteDataSource.likeComment(id);
+        return Right(remoteLike);
+      } on ServerException {
+        return Left(ServerFailure());
+      }
+    } else {
+      return Left(NetworkFailure());
+    }
+  }
+  @override 
+  Future<Either<Failure, LikePostResponse>> likeReply(int id) async {
+    if (await networkInfo.isConnected) {
+      try {
+        final remoteLike = await remoteDataSource.likeReply(id);
         return Right(remoteLike);
       } on ServerException {
         return Left(ServerFailure());

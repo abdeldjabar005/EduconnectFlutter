@@ -10,9 +10,13 @@ import 'package:quotes/features/posts/domain/entities/like.dart';
 abstract class PostRemoteDataSource {
   Future<List<PostModel>> getPosts(int page);
   Future<List<CommentModel>> getComments(int postId);
+  Future<CommentModel> getComment(int postId);
   Future<void> postComment(int postId, String comment);
+  Future<void> postReply(int id, String reply);
   Future<PostModel> getPost(int id);
   Future<LikePostResponse> likePost(int id);
+  Future<LikePostResponse> likeComment(int id);
+  Future<LikePostResponse> likeReply(int postId);
   Future<LikePostResponse> checkIfPostIsLiked(int postId);
 }
 
@@ -42,11 +46,27 @@ class PostRemoteDataSourceImpl implements PostRemoteDataSource {
   }
 
   @override
+  Future<CommentModel> getComment(int postId) async {
+    final response = await apiConsumer.get(
+      EndPoints.comment(postId),
+    );
+    return CommentModel.fromJson(response['data']);
+  }
+  @override
   Future<void> postComment(int postId, String comment) async {
     await apiConsumer.post(
       EndPoints.postComment(postId),
       body: {
         'text': comment,
+      },
+    );
+  }
+  @override
+  Future<void> postReply(int id, String reply) async {
+    await apiConsumer.post(
+      EndPoints.postReply(id),
+      body: {
+        'text': reply,
       },
     );
   }
@@ -66,15 +86,37 @@ class PostRemoteDataSourceImpl implements PostRemoteDataSource {
     );
 
     if (response['statusCode'] == 200) {
-      print('Post liked');
-      // final body = json.decode(response.body);
       return LikePostResponse.fromJson(response['data']);
     } else {
       print('Unexpected response code: ${response.statusCode}');
       throw Exception('Unexpected response code: ${response.statusCode}');
     }
   }
+  @override
+  Future<LikePostResponse> likeComment(int id) async {
+    final response = await apiConsumer.post(
+      EndPoints.likeComment(id),
+    );
 
+    if (response['statusCode'] == 200) {
+      return LikePostResponse.fromJson(response['data']);
+    } else {
+      throw Exception('Unexpected response code: ${response.statusCode}');
+    }
+  }
+
+  @override
+  Future<LikePostResponse> likeReply(int postId) async {
+    final response = await apiConsumer.post(
+      EndPoints.likeReply(postId),
+    );
+
+    if (response['statusCode'] == 200) {
+      return LikePostResponse.fromJson(response['data']);
+    } else {
+      throw Exception('Unexpected response code: ${response.statusCode}');
+    }
+  }
   @override
   Future<LikePostResponse> checkIfPostIsLiked(int postId) async {
     final response = await apiConsumer.get(

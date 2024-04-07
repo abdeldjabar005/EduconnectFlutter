@@ -14,10 +14,10 @@ import 'package:quotes/features/posts/presentation/cubit/like_cubit.dart';
 import 'package:quotes/features/posts/presentation/widgets/custom_image_view.dart';
 import 'package:quotes/features/posts/domain/entities/comment.dart';
 
-class CommentItem extends StatelessWidget {
-  late Comment comment;
+class ReplyItem extends StatelessWidget {
+  late Comment reply;
 
-  CommentItem({Key? key, required this.comment}) : super(key: key);
+  ReplyItem({Key? key, required this.reply}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +48,7 @@ class CommentItem extends StatelessWidget {
                     color: AppColors.gray200,
                     width: 1.h,
                   ),
-                  imagePath: comment.profilePicture,
+                  imagePath: reply.profilePicture,
                   height: 33.adaptSize,
                   width: 33.adaptSize,
                   radius: BorderRadius.circular(
@@ -67,7 +67,7 @@ class CommentItem extends StatelessWidget {
                       Row(
                         children: [
                           Text(
-                            '${comment.firstName} ${comment.lastName}',
+                            '${reply.firstName} ${reply.lastName}',
                             style: CustomTextStyles.bodyMediumRobotoGray900,
                           ),
                           CustomImageView(
@@ -77,14 +77,14 @@ class CommentItem extends StatelessWidget {
                             margin: EdgeInsets.symmetric(vertical: 3.v),
                           ),
                           Text(
-                            timeAgo(comment.createdAt),
+                            timeAgo(reply.createdAt),
                             style: CustomTextStyles.bodyMediumRobotoGray500,
                           ),
                         ],
                       ),
                       SizedBox(height: 3.v),
                       Text(
-                        comment.lastName,
+                        reply.lastName,
                         style: theme.textTheme.bodyMedium!.copyWith(
                           color: AppColors.gray500,
                         ),
@@ -126,7 +126,7 @@ class CommentItem extends StatelessWidget {
             width: 297.h,
             margin: EdgeInsets.only(right: 39.h),
             child: Text(
-              comment.text,
+              reply.text,
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
               // style: theme.textTheme.bodyMedium!.copyWith(
@@ -148,14 +148,13 @@ class CommentItem extends StatelessWidget {
               // ),
               InkWell(
                 onTap: () {
-                  context.read<LikeCubit>().likeComment(comment);
+                  context.read<LikeCubit>().likeReply(reply);
                 },
                 child: BlocBuilder<LikeCubit, LikeState>(
                   key: ValueKey(DateTime.now()),
                   builder: (context, state) {
-                    if (state is CommentLiked &&
-                        state.commentId == comment.id) {
-                      comment = comment.copyWith(
+                    if (state is ReplyLiked && state.replyId == reply.id) {
+                      reply = reply.copyWith(
                         isLiked: state.isLiked,
                         likesCount: state.likesCount,
                       );
@@ -163,62 +162,51 @@ class CommentItem extends StatelessWidget {
                     return Row(
                       children: [
                         CustomImageView(
-                          color: comment.isLiked
+                          color: reply.isLiked
                               ? AppColors.blueA200
                               : AppColors.black900,
                           imagePath: ImageConstant.img32Heart,
-                          height: 24.adaptSize,
-                          width: 24.adaptSize,
+                          height: 32.adaptSize,
+                          width: 32.adaptSize,
                         ),
                         Padding(
                           padding: EdgeInsets.only(
                             top: 5.v,
                             bottom: 7.v,
                           ),
-                          child: Text(comment.likesCount.toString(),
-                              style: theme.textTheme.bodySmall),
+                          child: Text(reply.likesCount.toString(),
+                              style: theme.textTheme.bodyLarge),
                         ),
                       ],
                     );
                   },
                 ),
               ),
+              // CustomImageView(
+              //   imagePath: ImageConstant.img32Chat,
+              //   height: 24.adaptSize,
+              //   width: 24.adaptSize,
+              //   margin: EdgeInsets.only(left: 8.h),
+              // ),
               // Padding(
               //   padding: EdgeInsets.only(
               //     top: 5.v,
               //     bottom: 7.v,
               //   ),
-              //   child: Text(
-              //     comment.likesCount.toString(),
-              //     style: theme.textTheme.bodySmall,
+              //   child: BlocBuilder<CommentsCubit, CommentsState>(
+              //     builder: (context, state) {
+              //       if (state is RepliesLoaded && state.id == reply.id) {
+              //         reply = reply.copyWith(
+              //           repliesCount: state.repliesCount,
+              //         );
+              //       }
+              //       return Text(
+              //         reply.repliesCount.toString(),
+              //         style: theme.textTheme.bodySmall,
+              //       );
+              //     },
               //   ),
               // ),
-              CustomImageView(
-                imagePath: ImageConstant.img32Chat,
-                height: 24.adaptSize,
-                width: 24.adaptSize,
-                margin: EdgeInsets.only(left: 8.h),
-              ),
-              Padding(
-                padding: EdgeInsets.only(
-                  top: 5.v,
-                  bottom: 7.v,
-                ),
-                child: BlocBuilder<CommentsCubit, CommentsState>(
-                  builder: (context, state) {
-                    if (state is CommentLoaded &&
-                        state.comment.id == comment.id) {
-                      comment = comment.copyWith(
-                        repliesCount: state.comment.repliesCount,
-                      );
-                    }
-                    return Text(
-                      comment.repliesCount.toString(),
-                      style: theme.textTheme.bodySmall,
-                    );
-                  },
-                ),
-              ),
             ],
           ),
           SizedBox(height: 5.v),

@@ -11,9 +11,13 @@ import 'package:quotes/features/auth/data/repositories/token_repository.dart';
 import 'package:quotes/features/auth/domain/repositories/auth_repository.dart';
 import 'package:quotes/features/posts/data/datasources/post_local_data_source.dart';
 import 'package:quotes/features/posts/domain/usecases/check_liked.dart';
+import 'package:quotes/features/posts/domain/usecases/get_comment.dart';
 import 'package:quotes/features/posts/domain/usecases/get_post.dart';
+import 'package:quotes/features/posts/domain/usecases/like_comment.dart';
 import 'package:quotes/features/posts/domain/usecases/like_post.dart';
+import 'package:quotes/features/posts/domain/usecases/like_reply.dart';
 import 'package:quotes/features/posts/domain/usecases/post_comment.dart';
+import 'package:quotes/features/posts/domain/usecases/post_reply.dart';
 import 'package:quotes/features/posts/presentation/cubit/comment_cubit.dart';
 import 'package:quotes/features/posts/presentation/cubit/like_cubit.dart';
 import 'package:quotes/features/splash/data/datasources/lang_local_data_source.dart';
@@ -49,11 +53,15 @@ Future<void> init() async {
       ));
   sl.registerFactory<CommentsCubit>(() => CommentsCubit(
       getCommentsUseCase: sl(),
-      postComment: sl(),
+      getCommentUseCase: sl(),
+      postCommentUseCase: sl(),
+      postReplyUseCase: sl(),
       authCubit: sl(),
       postCubit: sl()));
-  sl.registerFactory<LikeCubit>(() => LikeCubit(likePostUseCase: sl()));
-  // Use cases
+  sl.registerFactory<LikeCubit>(() => LikeCubit(
+      likePostUseCase: sl(),
+      likeCommentUseCase: sl(),
+      likeReplyUseCase: sl())); // Use cases
   sl.registerLazySingleton<GetSavedLangUseCase>(
       () => GetSavedLangUseCase(langRepository: sl()));
   sl.registerLazySingleton<ChangeLangUseCase>(
@@ -64,9 +72,14 @@ Future<void> init() async {
   sl.registerLazySingleton<PostComment>(() => PostComment(sl()));
   sl.registerLazySingleton<GetPost>(() => GetPost(postRepository: sl()));
   sl.registerLazySingleton<LikePost>(() => LikePost(postRepository: sl()));
+  sl.registerLazySingleton<LikeComment>(
+      () => LikeComment(postRepository: sl()));
+  sl.registerLazySingleton<LikeReply>(() => LikeReply(postRepository: sl()));
   sl.registerLazySingleton<CheckIfPostIsLiked>(
       () => CheckIfPostIsLiked(postRepository: sl()));
-
+  sl.registerLazySingleton<GetComment>(
+      () => GetComment(commentRepository: sl()));
+  sl.registerLazySingleton<PostReply>(() => PostReply(sl()));
   // Repository
   sl.registerLazySingleton<AuthRepository>(
       () => AuthRepositoryImpl(remoteDataSource: sl(), secureStorage: sl()));

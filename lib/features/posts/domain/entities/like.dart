@@ -6,7 +6,7 @@ class LikePostResponse {
 
   factory LikePostResponse.fromJson(Map<String, dynamic> json) {
     return LikePostResponse(
-      postId: json['postId'],
+      postId: json['postId'] ?? json['commentId'] ?? json['replyId'],
       isLiked: json['isLiked'],
     );
   }

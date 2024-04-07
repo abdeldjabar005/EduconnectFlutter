@@ -12,6 +12,7 @@ import 'package:quotes/core/utils/image_constant.dart';
 import 'package:quotes/core/utils/size_utils.dart';
 import 'package:quotes/features/posts/domain/entities/post.dart';
 import 'package:intl/intl.dart';
+import 'package:quotes/features/posts/presentation/cubit/comment_cubit.dart';
 import 'package:quotes/features/posts/presentation/cubit/like_cubit.dart';
 import 'package:quotes/features/posts/presentation/cubit/post_cubit.dart';
 import 'package:quotes/features/posts/presentation/widgets/custom_image_view.dart';
@@ -364,16 +365,23 @@ class PostDetails extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    BlocBuilder<PostCubit, PostState>(
-                      builder: (context, state) {
-                        if (state is PostLoaded2 && state.post.id == post.id) {
-                          post = post.copyWith(commentsCount: state.post.commentsCount);
+                    BlocListener<CommentsCubit, CommentsState>(
+                      listener: (context, state) {
+                        if (state is CommentsLoaded && state.comments.first.postId == post.id) {
+                          post = post.copyWith(commentsCount: state.commentsCount);
                         }
-                        return Text(
-                          post.commentsCount.toString(),
-                          style: theme.textTheme.bodyLarge,
-                        );
                       },
+                      child: BlocBuilder<PostCubit, PostState>(
+                        builder: (context, state) {
+                          if (state is PostLoaded2 && state.post.id == post.id) {
+                            post = post.copyWith(commentsCount: state.post.commentsCount);
+                          }
+                          return Text(
+                            post.commentsCount.toString(),
+                            style: theme.textTheme.bodyLarge,
+                          );
+                        },
+                      ),
                     ),
                     // Text(
                     //   post.commentsCount.toString(),

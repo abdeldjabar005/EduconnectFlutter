@@ -2,7 +2,7 @@
 import 'package:quotes/features/posts/domain/entities/comment.dart';
 
 class CommentModel extends Comment {
-  const CommentModel({
+   CommentModel({
     required int id,
     required int postId,
     required int userId,
@@ -12,6 +12,7 @@ class CommentModel extends Comment {
     required int likesCount,
     required int repliesCount,
     required List<CommentModel> replies,
+    required bool isLiked,
     required String firstName,
     required String lastName,
     String? profilePicture,
@@ -25,6 +26,7 @@ class CommentModel extends Comment {
           likesCount: likesCount,
           repliesCount: repliesCount,
           replies: replies,
+          isLiked: isLiked,
           firstName: firstName,
           lastName: lastName,
           profilePicture: profilePicture,
@@ -44,6 +46,7 @@ class CommentModel extends Comment {
               ?.map((item) => CommentModel.fromJson(item))
               .toList() ??
           [],
+      isLiked: json["isLiked"],
       firstName: json["first_name"],
       lastName: json["last_name"],
       profilePicture: json["profile_picture"]?.isNotEmpty == true
@@ -62,6 +65,7 @@ class CommentModel extends Comment {
         "likes_count": likesCount,
         "replies_count": repliesCount,
         "replies": replies.map((item) => item.toJson()).toList(),
+        "isLiked": isLiked,
         "first_name": firstName,
         "last_name": lastName,
         "profile_picture": profilePicture,
