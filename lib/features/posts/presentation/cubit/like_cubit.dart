@@ -20,28 +20,22 @@ class LikeCubit extends Cubit<LikeState> {
     required this.likeCommentUseCase,
     required this.likeReplyUseCase,
   }) : super(LikeInitial());
+  final Map<int, Comment> likedCommentsCache = {};
+  final Map<int, Comment> likedRepliesCache = {};
+  final Map<int, Post> likedPostsCache = {};
 
   Future<void> likePost(Post post) async {
-    final response = await likePostUseCase(post.id);
+    await likePostUseCase(post.id);
 
     // final postResult = await postRepository.getPost(post.id);
 
     final isLiked = !post.isLiked;
     final likesCount = isLiked ? post.likesCount + 1 : post.likesCount - 1;
+    likedPostsCache[post.id] =
+        post.copyWith(isLiked: isLiked, likesCount: likesCount);
+
     emit(PostLiked(
         postId: post.id.toString(), isLiked: isLiked, likesCount: likesCount));
-
-    // postResult.fold(
-    //     (failure) => emit(PostError(message: _mapFailureToMessage(failure))),
-    //     (post) {
-    //   final isLiked = !post.isLiked;
-    //   final likesCount = isLiked
-    //       ? post.likesCount + 1
-    //       : post.likesCount -
-    //           1;
-    //   emit(PostLiked(
-    //       postId: post.id.toString(), isLiked: isLiked, likesCount: likesCount));
-    // });
   }
 
   Future<void> likeComment(Comment comment) async {
@@ -50,7 +44,9 @@ class LikeCubit extends Cubit<LikeState> {
     final isLiked = !comment.isLiked;
     final likesCount =
         isLiked ? comment.likesCount + 1 : comment.likesCount - 1;
-    
+    likedCommentsCache[comment.id] =
+        comment.copyWith(isLiked: isLiked, likesCount: likesCount);
+
     emit(CommentLiked(
         commentId: comment.id, isLiked: isLiked, likesCount: likesCount));
   }
@@ -60,6 +56,10 @@ class LikeCubit extends Cubit<LikeState> {
 
     final isLiked = !reply.isLiked;
     final likesCount = isLiked ? reply.likesCount + 1 : reply.likesCount - 1;
+
+    likedRepliesCache[reply.id] =
+        reply.copyWith(isLiked: isLiked, likesCount: likesCount);
+
     emit(ReplyLiked(
         replyId: reply.id, isLiked: isLiked, likesCount: likesCount));
   }

@@ -58,6 +58,7 @@ class _PostDetailPageState extends State<PostDetailPage> {
                         PostDetails(post: widget.post),
                         if (state is CommentsLoading)
                           const CircularProgressIndicator(),
+                        if (state is NoComments) Text(state.message),
                         if (state is CommentsError) Text(state.message),
                         if (state is CommentsLoaded || state is CommentLoaded)
                           ValueListenableBuilder(
@@ -65,10 +66,15 @@ class _PostDetailPageState extends State<PostDetailPage> {
                                 context.read<CommentsCubit>().commentsCache,
                             builder:
                                 (context, Map<int, List<Comment>> cache, _) {
+                              final comments = cache[widget.post.id];
+
+                              if (comments == null) {
+                                return Text('No comments yet');
+                              }
                               return ListView.builder(
                                 shrinkWrap: true,
                                 physics: const NeverScrollableScrollPhysics(),
-                                itemCount: cache[widget.post.id]!.length,
+                                itemCount: comments.length,
                                 itemBuilder: (context, index) =>
                                     GestureDetector(
                                   onTap: () {
@@ -76,14 +82,12 @@ class _PostDetailPageState extends State<PostDetailPage> {
                                       context,
                                       MaterialPageRoute(
                                         builder: (context) => CommentDetailPage(
-                                          comment:
-                                              cache[widget.post.id]![index],
+                                          comment: comments[index],
                                         ),
                                       ),
                                     );
                                   },
-                                  child: CommentItem(
-                                      comment: cache[widget.post.id]![index]),
+                                  child: CommentItem(comment: comments[index]),
                                 ),
                               );
                             },

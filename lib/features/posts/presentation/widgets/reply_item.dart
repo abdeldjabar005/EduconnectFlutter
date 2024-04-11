@@ -153,11 +153,9 @@ class ReplyItem extends StatelessWidget {
                 child: BlocBuilder<LikeCubit, LikeState>(
                   key: ValueKey(DateTime.now()),
                   builder: (context, state) {
-                    if (state is ReplyLiked && state.replyId == reply.id) {
-                      reply = reply.copyWith(
-                        isLiked: state.isLiked,
-                        likesCount: state.likesCount,
-                      );
+                    final likeCubit = context.watch<LikeCubit>();
+                    if (likeCubit.likedRepliesCache.containsKey(reply.id)) {
+                      reply = likeCubit.likedRepliesCache[reply.id]!;
                     }
                     return Row(
                       children: [

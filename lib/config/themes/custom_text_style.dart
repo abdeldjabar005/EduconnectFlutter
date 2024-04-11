@@ -24,7 +24,7 @@ class CustomTextStyles {
         color: postTheme.gray900,
         fontSize: 13.fSize,
       );
-      
+
   static get bodyMediumRobotoGray900big =>
       theme.textTheme.bodyMedium!.roboto.copyWith(
         color: postTheme.gray900,
@@ -59,6 +59,13 @@ class CustomTextStyles {
         fontSize: 14.v,
         // fontWeight: FontWeight.w300,
       );
+  static get titleMediumPoppinsblacksmall2 =>
+      theme.textTheme.bodySmall!.poppins.copyWith(
+        color: postTheme.black900,
+        fontSize: 12.v,
+        // fontWeight: FontWeight.w300,
+      );
+
   static get titleMediumPoppinsblack =>
       theme.textTheme.titleLarge!.poppins.copyWith(
         color: postTheme.black900,
@@ -75,6 +82,18 @@ class CustomTextStyles {
         color: postTheme.whiteA700,
         fontSize: 16.v,
         fontWeight: FontWeight.w600,
+      );
+  static get titleMediumPoppins14 =>
+      theme.textTheme.titleMedium!.poppins.copyWith(
+        color: postTheme.whiteA700,
+        fontSize: 14.v,
+        fontWeight: FontWeight.w600,
+      );
+  static get titleMediumPoppins12 =>
+      theme.textTheme.titleSmall!.poppins.copyWith(
+        color: postTheme.whiteA700,
+        fontSize: 12.v,
+        fontWeight: FontWeight.w400,
       );
   static get titleMediumPoppinsgray600 =>
       theme.textTheme.titleMedium!.poppins.copyWith(

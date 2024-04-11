@@ -48,167 +48,174 @@ class MainProfile extends StatelessWidget {
   Widget _buildProfileHome(BuildContext context) {
     final user = (context.read<AuthCubit>().state as AuthAuthenticated).user;
 
-    return Container(
-      width: double.maxFinite,
-      padding: EdgeInsets.symmetric(vertical: 54.v, horizontal: 15.h),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              CustomImageView(
-                imagePath: ImageConstant.imgRectangle17100x100,
-                height: 100.adaptSize,
-                width: 100.adaptSize,
-                radius: BorderRadius.circular(
-                  50.h,
+    return SingleChildScrollView(
+      child: Container(
+        width: double.maxFinite,
+        padding: EdgeInsets.symmetric(vertical: 54.v, horizontal: 15.h),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                CustomImageView(
+                  imagePath: ImageConstant.imgRectangle17100x100,
+                  height: 100.adaptSize,
+                  width: 100.adaptSize,
+                  radius: BorderRadius.circular(
+                    50.h,
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(
+                    left: 25.h,
+                    top: 28.v,
+                    bottom: 28.v,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "${user.firstName} ${user.lastName}",
+                        style: CustomTextStyles.titleLargeRobotoGray90001,
+                      ),
+                      SizedBox(height: 2.v),
+                      Text(
+                        user.role,
+                        style: CustomTextStyles.titleGray,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 44.v),
+            InkWell(
+              borderRadius: BorderRadius.circular(29.h),
+              onTap: () {
+                navigatorKey.currentState!.push(MaterialPageRoute(
+                  builder: (context) {
+                    return DefaultWidget();
+                    // return ManageProfile();
+                  },
+                ));
+              },
+              child: Ink(
+                decoration: BoxDecoration(
+                  color: AppColors.whiteA700,
+                  borderRadius: BorderRadius.circular(29.h),
+                ),
+                width: 356 * MediaQuery.of(context).size.width / 414,
+                child: _buildFrame(
+                  context,
+                  profile: "Manage Profile",
+                  icon: ImageConstant.imgFavorite,
+                  fill: IconButtonStyleHelper.fillindigoA400,
                 ),
               ),
-              Padding(
-                padding: EdgeInsets.only(
-                  left: 25.h,
-                  top: 28.v,
-                  bottom: 28.v,
+            ),
+            SizedBox(height: 28.v),
+            InkWell(
+              borderRadius: BorderRadius.circular(29.h),
+              onTap: () {
+                navigatorKey.currentState!.push(MaterialPageRoute(
+                  builder: (context) {
+                    return DefaultWidget();
+                    // return ManageProfile();
+                  },
+                ));
+              },
+              child: Ink(
+                decoration: BoxDecoration(
+                  color: AppColors.whiteA700,
+                  borderRadius: BorderRadius.circular(29.h),
                 ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "${user.firstName} ${user.lastName}",
-                      style: CustomTextStyles.titleLargeRobotoGray90001,
-                    ),
-                    SizedBox(height: 2.v),
-                    Text(
-                      user.role,
-                      style: CustomTextStyles.titleGray,
-                    ),
-                  ],
+                width: 356 * MediaQuery.of(context).size.width / 414,
+                child: _buildFrame(
+                  context,
+                  profile: "Manage Children",
+                  icon: ImageConstant.imgClose,
+                  fill: IconButtonStyleHelper.fillLightGreen,
                 ),
               ),
-            ],
-          ),
-          SizedBox(height: 44.v),
-          InkWell(
-            borderRadius: BorderRadius.circular(29.h),
-            onTap: () {
-              navigatorKey.currentState!.push(MaterialPageRoute(
-                builder: (context) {
-                  return DefaultWidget();
-                  // return ManageProfile();
-                },
-              ));
-            },
-            child: Container(
-              margin: EdgeInsets.symmetric(
-                horizontal: 7.h,
-              ),
-              width: 326,
-              child: _buildFrame(
-                context,
-                profile: "Manage Profile",
-                icon: ImageConstant.imgFavorite,
-                fill: IconButtonStyleHelper.fillindigoA400,
+            ),
+            SizedBox(height: 28.v),
+            InkWell(
+              borderRadius: BorderRadius.circular(29.h),
+              onTap: () {
+                navigatorKey.currentState!.push(MaterialPageRoute(
+                  builder: (context) {
+                    return DefaultWidget();
+                    // return ManageProfile();
+                  },
+                ));
+              },
+              child: Ink(
+                decoration: BoxDecoration(
+                  color: AppColors.whiteA700,
+                  borderRadius: BorderRadius.circular(29.h),
+                ),
+                width: 356 * MediaQuery.of(context).size.width / 414,
+                child: _buildFrame(
+                  context,
+                  profile: "Bookmarks",
+                  icon: ImageConstant.imgBookmarkOrange300,
+                  fill: IconButtonStyleHelper.fillOrange,
+                ),
               ),
             ),
-          ),
-          SizedBox(height: 28.v),
-          InkWell(
-            borderRadius: BorderRadius.circular(29.h),
-            onTap: () {
-              navigatorKey.currentState!.push(MaterialPageRoute(
-                builder: (context) {
-                  return DefaultWidget();
-                  // return ManageProfile();
-                },
-              ));
-            },
-            child: Container(
-              margin: EdgeInsets.symmetric(
-                horizontal: 7.h,
-              ),
-              width: 326,
-              child: _buildFrame(
-                context,
-                profile: "Manage Children",
-                icon: ImageConstant.imgClose,
-                fill: IconButtonStyleHelper.fillLightGreen,
-              ),
-            ),
-          ),
-          SizedBox(height: 28.v),
-          InkWell(
-            borderRadius: BorderRadius.circular(29.h),
-            onTap: () {
-              navigatorKey.currentState!.push(MaterialPageRoute(
-                builder: (context) {
-                  return DefaultWidget();
-                  // return ManageProfile();
-                },
-              ));
-            },
-            child: Container(
-              margin: EdgeInsets.symmetric(
-                horizontal: 7.h,
-              ),
-              width: 326,
-              child: _buildFrame(
-                context,
-                profile: "Bookmarks",
-                icon: ImageConstant.imgBookmarkOrange300,
-                fill: IconButtonStyleHelper.fillOrange,
+            SizedBox(height: 28.v),
+            InkWell(
+              borderRadius: BorderRadius.circular(29.h),
+              onTap: () {
+                navigatorKey.currentState!.push(MaterialPageRoute(
+                  builder: (context) {
+                    return DefaultWidget();
+                    // return ManageProfile();
+                  },
+                ));
+              },
+              child: Ink(
+                decoration: BoxDecoration(
+                  color: AppColors.whiteA700,
+                  borderRadius: BorderRadius.circular(29.h),
+                ),
+                width: 356 * MediaQuery.of(context).size.width / 414,
+                child: _buildFrame(
+                  context,
+                  icon: ImageConstant.imgBoldDuotoneEssentional,
+                  fill: IconButtonStyleHelper.fillRed,
+                  profile: "Help",
+                ),
               ),
             ),
-          ),
-          SizedBox(height: 28.v),
-          InkWell(
-            borderRadius: BorderRadius.circular(29.h),
-            onTap: () {
-              navigatorKey.currentState!.push(MaterialPageRoute(
-                builder: (context) {
-                  return DefaultWidget();
-                  // return ManageProfile();
-                },
-              ));
-            },
-            child: Container(
-              margin: EdgeInsets.symmetric(
-                horizontal: 7.h,
-              ),
-              width: 326,
-              child: _buildFrame(
-                context,
-                icon: ImageConstant.imgBoldDuotoneEssentional,
-                fill: IconButtonStyleHelper.fillRed,
-                profile: "Help",
-              ),
-            ),
-          ),
-          SizedBox(height: 28.v),
-          InkWell(
-            borderRadius: BorderRadius.circular(29.h),
-            onTap: () {
-              navigatorKey.currentState!.push(MaterialPageRoute(
-                builder: (context) {
-                  return DefaultWidget();
-                  // return ManageProfile();
-                },
-              ));
-            },
-            child: Container(
-              margin: EdgeInsets.symmetric(
-                horizontal: 7.h,
-              ),
-              width: 326,
-              child: _buildFrame(
-                context,
-                profile: "Settings",
-                icon: ImageConstant.imgSearchLightGreen400,
-                fill: IconButtonStyleHelper.fillGreenA,
+            SizedBox(height: 28.v),
+            InkWell(
+              borderRadius: BorderRadius.circular(29.h),
+              onTap: () {
+                navigatorKey.currentState!.push(MaterialPageRoute(
+                  builder: (context) {
+                    return DefaultWidget();
+                    // return ManageProfile();
+                  },
+                ));
+              },
+              child: Ink(
+                decoration: BoxDecoration(
+                  color: AppColors.whiteA700,
+                  borderRadius: BorderRadius.circular(29.h),
+                ),
+                width: 356 * MediaQuery.of(context).size.width / 414,
+                child: _buildFrame(
+                  context,
+                  profile: "Settings",
+                  icon: ImageConstant.imgSearchLightGreen400,
+                  fill: IconButtonStyleHelper.fillGreenA,
+                ),
               ),
             ),
-          ),
-          SizedBox(height: 5.v),
-        ],
+            SizedBox(height: 5.v),
+          ],
+        ),
       ),
     );
   }

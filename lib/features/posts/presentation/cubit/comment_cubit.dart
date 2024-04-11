@@ -37,7 +37,13 @@ class CommentsCubit extends Cubit<CommentsState> {
 
   Future<void> getComments(int postId) async {
     if (commentsCache.value.containsKey(postId)) {
-      emit(CommentsLoaded(comments: commentsCache.value[postId]!,commentsCount: commentsCache.value[postId]!.length));
+      final comments = commentsCache.value[postId];
+      if (comments != null && comments.isNotEmpty) {
+        emit(
+            CommentsLoaded(comments: comments, commentsCount: comments.length));
+      } else {
+        emit(NoComments(message: "No comments found"));
+      }
     } else {
       emit(CommentsLoading());
       final response = await getCommentsUseCase(Params1(postId: postId));
@@ -45,10 +51,15 @@ class CommentsCubit extends Cubit<CommentsState> {
         (failure) => CommentsError(message: _mapFailureToMessage(failure)),
         (comments) {
           commentsCache.value[postId] = comments;
-          for (var comment in comments) {
-            repliesCache.value[comment.id] = comment.replies;
+          if (comments.isNotEmpty) {
+            for (var comment in comments) {
+              repliesCache.value[comment.id] = comment.replies;
+            }
+            return (CommentsLoaded(
+                comments: comments, commentsCount: comments.length));
+          } else {
+            return (NoComments(message: "No comments found"));
           }
-          return CommentsLoaded(comments: comments,commentsCount: commentsCache.value[postId]!.length);
         },
       ));
     }
@@ -92,26 +103,31 @@ class CommentsCubit extends Cubit<CommentsState> {
 
         commentsCache.notifyListeners();
 
-      emit(CommentsLoaded(comments: commentsCache.value[postId]!, commentsCount: commentsCache.value[postId]!.length));
-
-
+        emit(CommentsLoaded(
+            comments: commentsCache.value[postId]!,
+            commentsCount: commentsCache.value[postId]!.length));
       },
     );
   }
 
-  Future<void> postReply( int commentId, String reply) async {
+  Future<void> postReply(int commentId, String reply) async {
     // emit(CommentsLoading());
 
     // log(authCubit.state.toString());
     final user = (authCubit.state as AuthAuthenticated).user;
 
-    final failureOrVoid = await postReplyUseCase(Params2(id: commentId, reply: reply));
+    final failureOrVoid =
+        await postReplyUseCase(Params2(id: commentId, reply: reply));
 
     failureOrVoid.fold(
       (failure) => emit(CommentsError(message: _mapFailureToMessage(failure))),
       (_) {
+        final comment = commentsCache.value.values
+            .expand((i) => i)
+            .firstWhere((comment) => comment.id == commentId);
+
         final newReply = CommentModel(
-          id: repliesCache.value[commentId]!.length + 1,
+          id: comment.repliesCount + 1,
           postId: commentId,
           userId: user.id,
           text: reply,
@@ -126,21 +142,18 @@ class CommentsCubit extends Cubit<CommentsState> {
           profilePicture: user.profilePicture ?? 'assets/images/edu.png',
         );
 
-      // Find the comment in the commentsCache
-      final comment = commentsCache.value.values.expand((i) => i).firstWhere((comment) => comment.id == commentId);
+        // comment.replies.add(newReply);
+        // comment.repliesCount++;
+        if (!comment.replies.contains(newReply)) {
+          log(comment.repliesCount.toString());
 
-      // Add the new reply to the comment's replies list
-      comment.replies.add(newReply);
+          comment.replies.add(newReply);
+          comment.repliesCount++;
+          log(comment.repliesCount.toString());
+        }
+        commentsCache.notifyListeners();
 
-      // Increment the comment's repliesCount
-      comment.repliesCount++;
-
-      commentsCache.notifyListeners();
-
-        // repliesCache.value[commentId]!.add(newReply);
-        // repliesCache.notifyListeners();
-        
-      emit(RepliesLoaded(id: commentId, repliesCount: comment.repliesCount));
+        emit(RepliesLoaded(id: commentId, repliesCount: comment.repliesCount));
       },
     );
   }

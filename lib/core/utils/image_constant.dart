@@ -11,7 +11,7 @@ class ImageConstant {
 
   static String img32Heart = '$imagePath/img_32_heart.svg';
 
-  static String img32HeartRed= '$imagePath/img_32_heart_red.png';
+  static String img32HeartRed = '$imagePath/img_32_heart_red.png';
 
   static String img32Chat = '$imagePath/img_32_chat.svg';
 
@@ -77,4 +77,9 @@ class ImageConstant {
   static String imgGroup21 = '$imagePath/img_group_21.svg';
 
   static String imageNotFound = 'assets/images/image_not_found.png';
+  static String imgClass = 'assets/images/class.png';
+  static String imgSchool = 'assets/images/school.png';
+
+  static String imgClass2 = 'assets/images/class2.png';
+  static String imgSchool2 = 'assets/images/school2.png';
 }

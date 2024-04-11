@@ -42,6 +42,13 @@ class NotFoundException extends ServerException {
 class ConflictException extends ServerException {
   const ConflictException([message]) : super("Conflict Occurred");
 }
+
+class JoinedException extends ServerException {
+  const JoinedException([message]) : super("You are already joined");
+}
+class InvalidCodeException extends ServerException {
+  const InvalidCodeException([message]) : super("Invalid code");
+}
 class EmailAlreadyExistsException extends ServerException {
   const EmailAlreadyExistsException([message])
       : super("Email already exists");

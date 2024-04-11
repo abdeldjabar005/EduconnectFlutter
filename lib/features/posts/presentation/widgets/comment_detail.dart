@@ -158,7 +158,8 @@ class CommentDetails extends StatelessWidget {
                   child: BlocBuilder<LikeCubit, LikeState>(
                     key: ValueKey(DateTime.now()),
                     builder: (context, state) {
-                      if (state is CommentLiked && state.commentId == comment.id) {
+                      if (state is CommentLiked &&
+                          state.commentId == comment.id) {
                         comment = comment.copyWith(
                           isLiked: state.isLiked,
                           likesCount: state.likesCount,
@@ -192,10 +193,17 @@ class CommentDetails extends StatelessWidget {
                   children: [
                     BlocBuilder<CommentsCubit, CommentsState>(
                       builder: (context, state) {
-                        if (state is CommentLoaded && state.comment.id == comment.id) {
-                          comment = comment.copyWith(repliesCount: state.comment.repliesCount);
-                        } else if (state is RepliesLoaded && state.id == comment.id) {
-                          comment = comment.copyWith(repliesCount: state.repliesCount);
+                        // if (state is CommentLoaded &&
+                        //     state.comment.id == comment.id) {
+                        //   comment = comment.copyWith(
+                        //       repliesCount: state.comment.repliesCount);
+                        //   dev.log(comment.repliesCount.toString());
+                        // } else
+                        if (state is RepliesLoaded && state.id == comment.id) {
+                          dev.log(comment.repliesCount.toString());
+
+                          comment = comment.copyWith(
+                              repliesCount: state.repliesCount);
                         }
                         return Text(
                           comment.repliesCount.toString(),

@@ -28,7 +28,14 @@ class CommentLoaded extends CommentsState {
   @override
   List<Object> get props => [comment];
 }
+class NoComments extends CommentsState {
+  final String message;
 
+  const NoComments({required this.message});
+
+  @override
+  List<Object> get props => [message];
+}
 class CommentsError extends CommentsState {
   final String message;
 

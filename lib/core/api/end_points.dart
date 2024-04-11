@@ -23,4 +23,11 @@ class EndPoints {
   static String likeReply(int id) => '${baseUrl}posts/replies/$id/like';
   static String checkIfPostIsLiked(int postId) =>
       '${baseUrl}posts/$postId/isliked';
+
+
+
+  static const String joinSchool = '${baseUrl}school-join-requests/join-school';
+  static const String joinClass = '${baseUrl}join-requests/class/join';
+  static String getClass(int id) => '${baseUrl}posts/class/$id';
+  static String getSchool(int id) => '${baseUrl}posts/school/$id';
 }

@@ -5,6 +5,7 @@ import 'package:quotes/core/widgets/RootScreen.dart';
 import 'package:quotes/core/widgets/home_page.dart';
 import 'package:quotes/features/auth/presentation/pages/login_screen.dart';
 import 'package:quotes/features/auth/presentation/pages/signup_screen.dart';
+import 'package:quotes/features/classrooms/presentation/widgets/join.dart';
 import '../../features/posts/presentation/cubit/post_cubit.dart';
 import 'package:quotes/injection_container.dart' as di;
 import 'package:quotes/features/posts/presentation/pages/post_screen.dart';
@@ -19,6 +20,9 @@ class Routes {
   static const String defaultWidget = '/defaultWidget';
   static const String postRoute = '/posts';
   static const String rootScreen = '/rootScreen';
+
+  static const String joinSchool = '/join-school';
+  static const String joinClass = '/join-class';
 }
 
 class AppRoutes {
@@ -62,6 +66,14 @@ class AppRoutes {
               child: Text(AppStrings.noRouteFound),
             ),
           );
+        });
+      case Routes.joinSchool:
+        return MaterialPageRoute(builder: (context) {
+          return Join(type: 'school');
+        });
+      case Routes.joinClass:
+        return MaterialPageRoute(builder: (context) {
+          return Join(type: 'class');
         });
       default:
         return undefinedRoute();

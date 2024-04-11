@@ -6,6 +6,7 @@ import 'package:quotes/core/utils/constants.dart';
 import 'package:quotes/core/widgets/custom_bottom_bar.dart';
 import 'package:quotes/core/widgets/home_page.dart';
 import 'package:quotes/features/auth/presentation/cubit/auth_cubit.dart';
+import 'package:quotes/features/classrooms/presentation/pages/main_classroom.dart';
 import 'package:quotes/features/profile/presentation/pages/main_profile.dart';
 
 class RootScreen extends StatefulWidget {
@@ -18,7 +19,7 @@ class _RootScreenState extends State<RootScreen> {
   final List<Widget> pages = [
     HomeScreen(),
     DefaultWidget(),
-    DefaultWidget(),
+    MainClassroom(),
     DefaultWidget(),
     MainProfile(),
   ];

@@ -9,6 +9,11 @@ import 'package:quotes/features/auth/data/datasources/auth_remote_data_source.da
 import 'package:quotes/features/auth/data/repositories/auth_repository_impl.dart';
 import 'package:quotes/features/auth/data/repositories/token_repository.dart';
 import 'package:quotes/features/auth/domain/repositories/auth_repository.dart';
+import 'package:quotes/features/classrooms/data/datasources/classroom_remote_data_source.dart';
+import 'package:quotes/features/classrooms/data/repositories/classroom_repository_impl.dart';
+import 'package:quotes/features/classrooms/domain/repositories/classroom_repository.dart';
+import 'package:quotes/features/classrooms/domain/usecases/get_class.dart';
+import 'package:quotes/features/classrooms/presentation/cubit/class_cubit.dart';
 import 'package:quotes/features/posts/data/datasources/post_local_data_source.dart';
 import 'package:quotes/features/posts/domain/usecases/check_liked.dart';
 import 'package:quotes/features/posts/domain/usecases/get_comment.dart';
@@ -50,6 +55,7 @@ Future<void> init() async {
         getPostUseCase: sl(),
         checkIfPostIsLikedUseCase: sl(),
         postRepository: sl(),
+        getClassroomPostsUseCase: sl(),
       ));
   sl.registerFactory<CommentsCubit>(() => CommentsCubit(
       getCommentsUseCase: sl(),
@@ -59,9 +65,9 @@ Future<void> init() async {
       authCubit: sl(),
       postCubit: sl()));
   sl.registerFactory<LikeCubit>(() => LikeCubit(
-      likePostUseCase: sl(),
-      likeCommentUseCase: sl(),
-      likeReplyUseCase: sl())); // Use cases
+      likePostUseCase: sl(), likeCommentUseCase: sl(), likeReplyUseCase: sl()));
+  sl.registerFactory<ClassCubit>(() => ClassCubit(classroomRepository: sl()));
+  // Use cases
   sl.registerLazySingleton<GetSavedLangUseCase>(
       () => GetSavedLangUseCase(langRepository: sl()));
   sl.registerLazySingleton<ChangeLangUseCase>(
@@ -80,11 +86,17 @@ Future<void> init() async {
   sl.registerLazySingleton<GetComment>(
       () => GetComment(commentRepository: sl()));
   sl.registerLazySingleton<PostReply>(() => PostReply(sl()));
+  sl.registerLazySingleton<GetPostsUseCase>(
+      () => GetPostsUseCase(classroomRepository: sl()));
   // Repository
   sl.registerLazySingleton<AuthRepository>(
       () => AuthRepositoryImpl(remoteDataSource: sl(), secureStorage: sl()));
   sl.registerLazySingleton<PostRepository>(() => PostRepositoryImpl(
       networkInfo: sl(), remoteDataSource: sl(), localDataSource: sl()));
+  sl.registerLazySingleton<ClassroomRepository>(() => ClassroomRepositoryImpl(
+        networkInfo: sl(),
+        remoteDataSource: sl(),
+      ));
 
   sl.registerLazySingleton<LangRepository>(
       () => LangRepositoryImpl(langLocalDataSource: sl()));
@@ -98,6 +110,8 @@ Future<void> init() async {
       () => PostRemoteDataSourceImpl(apiConsumer: sl()));
   sl.registerLazySingleton<PostLocalDataSource>(
       () => PostLocalDataSourceImpl(sharedPreferences: sl()));
+  sl.registerLazySingleton<ClassroomRemoteDataSource>(
+      () => ClassroomRemoteDataSourceImpl(apiConsumer: sl()));
   //! Core
   sl.registerLazySingleton<NetworkInfo>(
       () => NetworkInfoImpl(connectionChecker: sl()));

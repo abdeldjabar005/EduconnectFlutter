@@ -14,3 +14,7 @@ class ServerFailure extends Failure {}
 class CacheFailure extends Failure {}
 
 class NetworkFailure extends Failure {}
+
+class JoinedFailure extends Failure {}
+
+class InvalidCodeFailure extends Failure {}

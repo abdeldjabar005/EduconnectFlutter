@@ -88,7 +88,7 @@ class _HomeScreenBodyState extends State<_HomeScreenBody>
   Widget _buildEduConnectText() => Text(
         'EduConnect',
         style: TextStyle(
-          color: AppColors.lightBlue500,
+          color: AppColors.indigoA400,
           fontSize: 30,
           fontWeight: FontWeight.bold,
         ),

@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
-import 'package:quotes/features/auth/domain/entities/class.dart';
-import 'package:quotes/features/auth/domain/entities/school.dart';
+import 'package:quotes/features/classrooms/data/models/class_model.dart';
+import 'package:quotes/features/classrooms/data/models/school_nodel.dart';
 
 class User extends Equatable {
   final int id;
@@ -12,8 +12,8 @@ class User extends Equatable {
   final String? profilePicture;
   final String? bio;
   final String? contactInformation;
-  final List<School> schools;
-  final List<Class> classes;
+  final List<SchoolModel> schools;
+  final List<ClassModel> classes;
 
   User({
     required this.id,

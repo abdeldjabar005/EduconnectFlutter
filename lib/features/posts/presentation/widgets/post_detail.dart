@@ -332,12 +332,9 @@ class PostDetails extends StatelessWidget {
                   child: BlocBuilder<LikeCubit, LikeState>(
                     key: ValueKey(DateTime.now()),
                     builder: (context, state) {
-                      if (state is PostLiked &&
-                          int.parse(state.postId) == post.id) {
-                        post = post.copyWith(
-                          isLiked: state.isLiked,
-                          likesCount: state.likesCount,
-                        );
+                      final likeCubit = context.watch<LikeCubit>();
+                      if (likeCubit.likedPostsCache.containsKey(post.id)) {
+                        post = likeCubit.likedPostsCache[post.id]!;
                       }
                       return Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -367,14 +364,18 @@ class PostDetails extends StatelessWidget {
                   children: [
                     BlocListener<CommentsCubit, CommentsState>(
                       listener: (context, state) {
-                        if (state is CommentsLoaded && state.comments.first.postId == post.id) {
-                          post = post.copyWith(commentsCount: state.commentsCount);
+                        if (state is CommentsLoaded &&
+                            state.comments.first.postId == post.id) {
+                          post =
+                              post.copyWith(commentsCount: state.commentsCount);
                         }
                       },
                       child: BlocBuilder<PostCubit, PostState>(
                         builder: (context, state) {
-                          if (state is PostLoaded2 && state.post.id == post.id) {
-                            post = post.copyWith(commentsCount: state.post.commentsCount);
+                          if (state is PostLoaded2 &&
+                              state.post.id == post.id) {
+                            post = post.copyWith(
+                                commentsCount: state.post.commentsCount);
                           }
                           return Text(
                             post.commentsCount.toString(),
