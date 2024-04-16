@@ -20,7 +20,6 @@ class _RootScreenState extends State<RootScreen> {
     HomeScreen(),
     DefaultWidget(),
     MainClassroom(),
-    DefaultWidget(),
     MainProfile(),
   ];
   DateTime? lastPressedAt;
@@ -55,10 +54,7 @@ class _RootScreenState extends State<RootScreen> {
         return true;
       },
       child: Scaffold(
-        body: IndexedStack(
-          index: selectedIndex,
-          children: pages,
-        ),
+        body: IndexedStack(index: selectedIndex, children: pages),
         bottomNavigationBar: _buildBottomBar(context),
       ),
     );
@@ -77,11 +73,8 @@ class _RootScreenState extends State<RootScreen> {
           case BottomBarEnum.Schools:
             selectedIndex = 2;
             break;
-          case BottomBarEnum.Classes:
-            selectedIndex = 3;
-            break;
           case BottomBarEnum.Profile:
-            selectedIndex = 4;
+            selectedIndex = 3;
             break;
         }
       });

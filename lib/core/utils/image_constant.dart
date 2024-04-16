@@ -46,6 +46,9 @@ class ImageConstant {
   static String imgArrowRight = '$imagePath/img_arrow_right.svg';
 
   static String imgClose = '$imagePath/img_close.png';
+  static String school = '$imagePath/school.svg';
+  static String cap = '$imagePath/cap.svg';
+  
 
   static String imgBookmarkOrange300 = '$imagePath/img_bookmark_orange_300.png';
 

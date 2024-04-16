@@ -87,9 +87,9 @@ class _SignupScreenState extends State<SignupScreen> {
                       duration: const Duration(milliseconds: 300),
                       curve: Curves.easeIn,
                     );
-                    return false; // Prevents the route from being popped
+                    return false; 
                   }
-                  return true; // Allows the route to be popped
+                  return true; 
                 },
                 child: PageView(
                   controller: _pageController,

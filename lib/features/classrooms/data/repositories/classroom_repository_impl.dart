@@ -4,7 +4,10 @@ import 'package:quotes/core/error/exceptions.dart';
 import 'package:quotes/core/error/failures.dart';
 import 'package:quotes/core/network/netwok_info.dart';
 import 'package:quotes/features/classrooms/data/datasources/classroom_remote_data_source.dart';
+import 'package:quotes/features/classrooms/data/models/class_m.dart';
+import 'package:quotes/features/classrooms/data/models/class_member.dart';
 import 'package:quotes/features/classrooms/data/models/class_model.dart';
+import 'package:quotes/features/classrooms/data/models/member_model.dart';
 import 'package:quotes/features/classrooms/data/models/school_nodel.dart';
 import 'package:quotes/features/classrooms/domain/repositories/classroom_repository.dart';
 import 'package:quotes/features/posts/data/models/post_model.dart';
@@ -62,6 +65,46 @@ class ClassroomRepositoryImpl implements ClassroomRepository {
         return Left(InvalidCodeFailure());
       }
       on ServerException {
+        return Left(ServerFailure());
+      }
+    } else {
+      return Left(NetworkFailure());
+    }
+  }
+  @override
+  Future<Either<Failure, List<MemberModel>>> getMembers(int id, String type) async {
+    if (await networkInfo.isConnected) {
+      try {
+        final remoteResponse = await remoteDataSource.getMembers(id, type);
+        return Right(remoteResponse);
+      } on ServerException {
+        return Left(ServerFailure());
+      }
+    } else {
+      return Left(NetworkFailure());
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<ClassMemberModel>>> getClasses(int id) async {
+    if (await networkInfo.isConnected) {
+      try {
+        final remoteResponse = await remoteDataSource.getClasses(id);
+        return Right(remoteResponse);
+      } on ServerException {
+        return Left(ServerFailure());
+      }
+    } else {
+      return Left(NetworkFailure());
+    }
+  }
+  @override
+  Future<Either<Failure, ClassModel>> addClass(ClassM classModel) async {
+    if (await networkInfo.isConnected) {
+      try {
+        final remoteResponse = await remoteDataSource.addClass(classModel);
+        return Right(remoteResponse);
+      } on ServerException {
         return Left(ServerFailure());
       }
     } else {

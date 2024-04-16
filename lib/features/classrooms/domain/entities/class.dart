@@ -5,27 +5,27 @@ class Class extends Equatable {
   final int id;
   final String name;
   final int? schoolId;
-  final int teacherId;
-  final int grade;
+  final int? teacherId;
+  final String grade;
   final String subject;
-  final String code;
-  final String teacherFirstName;
-  final String teacherLastName;
-  final int membersCount;
-  final String image;
+  final String? code;
+  final String? teacherFirstName;
+  final String? teacherLastName;
+  final int? membersCount;
+  final String? image;
 
   const Class({
     required this.id,
     required this.name,
     this.schoolId,
-    required this.teacherId,
+    this.teacherId,
     required this.grade,
     required this.subject,
-    required this.code,
-    required this.teacherFirstName,
-    required this.teacherLastName,
-    required this.membersCount,
-    required this.image,
+    this.code,
+    this.teacherFirstName,
+    this.teacherLastName,
+    this.membersCount,
+    this.image,
   });
 
   @override

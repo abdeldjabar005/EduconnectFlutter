@@ -12,8 +12,9 @@ class User extends Equatable {
   final String? profilePicture;
   final String? bio;
   final String? contactInformation;
-  final List<SchoolModel> schools;
-  final List<ClassModel> classes;
+   List<SchoolModel> schools;
+  
+   List<ClassModel> classes;
 
   User({
     required this.id,

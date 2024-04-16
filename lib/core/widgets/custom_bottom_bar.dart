@@ -34,11 +34,6 @@ class CustomBottomBarState extends State<CustomBottomBar> {
       type: BottomBarEnum.Schools,
     ),
     BottomMenuModel(
-      icon: ImageConstant.imgUserGray40028x28,
-      activeIcon: ImageConstant.imgUserGray40028x28,
-      type: BottomBarEnum.Classes,
-    ),
-    BottomMenuModel(
       icon: ImageConstant.imgLock,
       activeIcon: ImageConstant.imgLock,
       type: BottomBarEnum.Profile,
@@ -102,7 +97,6 @@ enum BottomBarEnum {
   Home,
   Messages,
   Schools,
-  Classes,
   Profile,
 }
 

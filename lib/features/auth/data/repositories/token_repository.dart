@@ -12,4 +12,10 @@ class TokenProvider {
   Future<void> setToken(String token) async {
     await secureStorage.write(key: 'token', value: token);
   }
+
+  Future<void> logout() async {
+    await secureStorage.delete(key: 'token');
+  }
 }
+
+

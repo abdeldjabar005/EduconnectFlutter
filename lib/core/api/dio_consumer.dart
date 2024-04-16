@@ -13,10 +13,9 @@ import 'package:quotes/injection_container.dart' as di;
 
 class DioConsumer implements ApiConsumer {
   final Dio client;
-  final TokenProvider tokenProvider; // Modify this line
+  final TokenProvider tokenProvider; 
 
   DioConsumer({required this.client, required this.tokenProvider}) {
-    // Modify this line
     (client.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate =
         (HttpClient client) {
       client.badCertificateCallback =

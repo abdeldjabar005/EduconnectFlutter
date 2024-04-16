@@ -2,6 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:quotes/core/utils/app_colors.dart';
+import 'package:quotes/features/classrooms/presentation/pages/classroom_posts.dart';
+import 'package:quotes/features/classrooms/presentation/widgets/classes.dart';
+import 'package:quotes/features/classrooms/presentation/widgets/members.dart';
 import 'package:quotes/features/posts/presentation/pages/post_screen.dart';
 
 class Constants {
@@ -70,6 +73,67 @@ class Constants {
       ),
     ];
   }
+
+  static List<Tab> getHomeScreenTabs2(int index) {
+    return [
+      Tab(
+        child: Text(
+          'Posts',
+          style: TextStyle(
+            fontFamily: 'Poppins',
+            fontWeight: FontWeight.bold,
+            color: index == 0 ? AppColors.blueA200 : Colors.black,
+          ),
+        ),
+      ),
+      Tab(
+        child: Text(
+          'Classes',
+          style: TextStyle(
+            fontFamily: 'Poppins',
+            fontWeight: FontWeight.bold,
+            color: index == 1 ? AppColors.blueA200 : Colors.black,
+          ),
+        ),
+      ),
+      Tab(
+        child: Text(
+          'Members',
+          style: TextStyle(
+            fontFamily: 'Poppins',
+            fontWeight: FontWeight.bold,
+            color: index == 2 ? AppColors.blueA200 : Colors.black,
+          ),
+        ),
+      ),
+    ];
+  }
+
+  static List<Tab> getHomeScreenTabs3(int index) {
+    return [
+      Tab(
+        child: Text(
+          'Posts',
+          style: TextStyle(
+            fontFamily: 'Poppins',
+            fontWeight: FontWeight.bold,
+            color: index == 0 ? AppColors.blueA200 : Colors.black,
+          ),
+        ),
+      ),
+      Tab(
+        child: Text(
+          'Members',
+          style: TextStyle(
+            fontFamily: 'Poppins',
+            fontWeight: FontWeight.bold,
+            color: index == 1 ? AppColors.blueA200 : Colors.black,
+          ),
+        ),
+      ),
+    ];
+  }
+
   static const List<Widget> screens = [
     PostScreen(),
     Center(
@@ -78,6 +142,21 @@ class Constants {
     Center(
       child: Text('Class Screen'),
     ),
-   
   ];
+  static List<Widget> screens2(int id) {
+    return [
+      ClassroomPosts(id: id, type: "school"),
+      ClassesScreen(
+        id: id,
+      ),
+      MembersScreen(id: id, type: "school"),
+    ];
+  }
+
+  static List<Widget> screens3(int id) {
+    return [
+      ClassroomPosts(id: id, type: "class"),
+      MembersScreen(id: id, type: "class"),
+    ];
+  }
 }

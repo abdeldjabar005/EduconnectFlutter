@@ -11,6 +11,8 @@ import 'package:quotes/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:quotes/features/auth/presentation/widgets/custom_elevated_button.dart';
 import 'package:quotes/features/auth/presentation/widgets/custom_text_form_field.dart';
 import 'package:quotes/features/classrooms/presentation/cubit/class_cubit.dart';
+import 'package:quotes/features/classrooms/presentation/pages/school_details.dart';
+import 'package:quotes/features/classrooms/presentation/pages/main_classroom.dart';
 import 'package:quotes/features/posts/presentation/widgets/custom_image_view.dart';
 import 'package:quotes/injection_container.dart';
 
@@ -65,14 +67,8 @@ class _JoinState extends State<Join> {
                 setState(() {
                   errorMessage = state.message;
                 });
-              } else if (state is ClassLoaded) {
-                SnackBar(
-                  content: const Text("Joined successfully"),
-                  backgroundColor: AppColors.black900,
-                );
-                // Navigator.pop(context);
-              } else if (state is SchoolLoaded) {
-                Navigator.pop(context);
+              } else if (state is ClassLoaded || state is SchoolLoaded) {
+                Navigator.pop(context2);
               }
             },
             builder: (context, state) {
@@ -229,7 +225,6 @@ class _JoinState extends State<Join> {
 
   Widget _buildButton(BuildContext context, String buttonText) {
     ClassState state = context.watch<ClassCubit>().state;
-    log(state.toString());
 
     return Center(
       child: CustomElevatedButton(
@@ -243,6 +238,7 @@ class _JoinState extends State<Join> {
             });
             if (widget.type == "school") {
               context.read<ClassCubit>().joinSchool(codeController.text);
+              
               // sl.get<ClassCubit>().joinSchool(codeController.text);
             } else {
               context.read<ClassCubit>().joinClass(codeController.text);

@@ -3,7 +3,10 @@
 import 'package:quotes/core/api/api_consumer.dart';
 import 'package:quotes/core/api/end_points.dart';
 import 'package:quotes/core/error/exceptions.dart';
+import 'package:quotes/features/classrooms/data/models/class_m.dart';
+import 'package:quotes/features/classrooms/data/models/class_member.dart';
 import 'package:quotes/features/classrooms/data/models/class_model.dart';
+import 'package:quotes/features/classrooms/data/models/member_model.dart';
 import 'package:quotes/features/classrooms/data/models/school_nodel.dart';
 import 'package:quotes/features/posts/data/models/post_model.dart';
 
@@ -11,6 +14,9 @@ abstract class ClassroomRemoteDataSource {
   Future<List<PostModel>> getPosts(int id, int page, String type);
   Future<ClassModel> joinClass(String code);
   Future<SchoolModel> joinSchool(String code);
+  Future<List<MemberModel>> getMembers(int id, String type);
+  Future<List<ClassMemberModel>> getClasses(int id);
+  Future<ClassModel> addClass(ClassM classModel);
 }
 
 class ClassroomRemoteDataSourceImpl implements ClassroomRemoteDataSource {
@@ -77,4 +83,44 @@ class ClassroomRemoteDataSourceImpl implements ClassroomRemoteDataSource {
       throw ServerException();
     }
   }
+
+  @override
+  Future<List<MemberModel>> getMembers(int id, String type) async {
+    String endpoint;
+    if (type == "school") {
+      endpoint = EndPoints.getMembers(id);
+    } else {
+      endpoint = EndPoints.getClassMembers(id);
+    }
+    final response = await apiConsumer.get(endpoint);
+    if (response['statusCode'] != 200) {
+      throw ServerException();
+    }
+    return (response['data'] as List)
+        .map((i) => MemberModel.fromJson(i))
+        .toList();
+  }
+
+  @override
+  Future<List<ClassMemberModel>> getClasses(int id) async {
+    final response = await apiConsumer.get(EndPoints.getClasses(id));
+    if (response['statusCode'] != 200) {
+      throw ServerException();
+    }
+    return (response['data'] as List)
+        .map((i) => ClassMemberModel.fromJson(i))
+        .toList();
+  }
+  @override
+  Future<ClassModel> addClass(ClassM classModel) async {
+    final response = await apiConsumer.post(
+      EndPoints.addClass,
+      body: classModel.toJson(),
+    );
+    if (response['statusCode'] == 200) {
+      return ClassModel.fromJson(response['data']);
+    } else {
+      throw ServerException();
+    }
+  } 
 }

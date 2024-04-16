@@ -24,10 +24,15 @@ class EndPoints {
   static String checkIfPostIsLiked(int postId) =>
       '${baseUrl}posts/$postId/isliked';
 
-
-
   static const String joinSchool = '${baseUrl}school-join-requests/join-school';
   static const String joinClass = '${baseUrl}join-requests/class/join';
   static String getClass(int id) => '${baseUrl}posts/class/$id';
   static String getSchool(int id) => '${baseUrl}posts/school/$id';
+  static String getMembers(int id) => '${baseUrl}schools/$id/members';
+  static String getClassMembers(int id) => '${baseUrl}classes/$id/members';
+  static String getClasses(int id) => '${baseUrl}schools/$id/classes';
+
+  static const String getChildren = '${baseUrl}students/children/parent';
+  static const String addChild = '${baseUrl}students';
+  static const String addClass = '${baseUrl}classes';
 }

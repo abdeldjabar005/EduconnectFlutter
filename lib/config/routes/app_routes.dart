@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:quotes/core/utils/app_strings.dart';
 import 'package:quotes/core/widgets/RootScreen.dart';
+import 'package:quotes/core/widgets/custom_bottom_bar.dart';
 import 'package:quotes/core/widgets/home_page.dart';
 import 'package:quotes/features/auth/presentation/pages/login_screen.dart';
 import 'package:quotes/features/auth/presentation/pages/signup_screen.dart';
 import 'package:quotes/features/classrooms/presentation/widgets/join.dart';
+import 'package:quotes/features/profile/presentation/widgets/manage_children.dart';
 import '../../features/posts/presentation/cubit/post_cubit.dart';
 import 'package:quotes/injection_container.dart' as di;
 import 'package:quotes/features/posts/presentation/pages/post_screen.dart';
@@ -23,6 +25,8 @@ class Routes {
 
   static const String joinSchool = '/join-school';
   static const String joinClass = '/join-class';
+  static const String manageChildren = '/manage-children';
+  
 }
 
 class AppRoutes {
@@ -61,11 +65,7 @@ class AppRoutes {
         });
       case Routes.defaultWidget:
         return MaterialPageRoute(builder: (context) {
-          return const Scaffold(
-            body: Center(
-              child: Text(AppStrings.noRouteFound),
-            ),
-          );
+          return DefaultWidget();
         });
       case Routes.joinSchool:
         return MaterialPageRoute(builder: (context) {
@@ -74,6 +74,10 @@ class AppRoutes {
       case Routes.joinClass:
         return MaterialPageRoute(builder: (context) {
           return Join(type: 'class');
+        });
+      case Routes.manageChildren:
+        return MaterialPageRoute(builder: (context) {
+          return ManageChildren();
         });
       default:
         return undefinedRoute();

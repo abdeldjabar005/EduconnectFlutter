@@ -8,3 +8,4 @@ abstract class ProfileState extends Equatable {
 }
 
 class ProfileInitial extends ProfileState {}
+

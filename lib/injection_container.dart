@@ -8,12 +8,16 @@ import 'package:quotes/core/network/netwok_info.dart';
 import 'package:quotes/features/auth/data/datasources/auth_remote_data_source.dart';
 import 'package:quotes/features/auth/data/repositories/auth_repository_impl.dart';
 import 'package:quotes/features/auth/data/repositories/token_repository.dart';
+import 'package:quotes/features/auth/domain/entities/user.dart';
 import 'package:quotes/features/auth/domain/repositories/auth_repository.dart';
 import 'package:quotes/features/classrooms/data/datasources/classroom_remote_data_source.dart';
 import 'package:quotes/features/classrooms/data/repositories/classroom_repository_impl.dart';
 import 'package:quotes/features/classrooms/domain/repositories/classroom_repository.dart';
 import 'package:quotes/features/classrooms/domain/usecases/get_class.dart';
+import 'package:quotes/features/classrooms/domain/usecases/get_memebrs.dart';
 import 'package:quotes/features/classrooms/presentation/cubit/class_cubit.dart';
+import 'package:quotes/features/classrooms/presentation/cubit/members_cubit.dart';
+import 'package:quotes/features/classrooms/presentation/cubit/post2_cubit.dart';
 import 'package:quotes/features/posts/data/datasources/post_local_data_source.dart';
 import 'package:quotes/features/posts/domain/usecases/check_liked.dart';
 import 'package:quotes/features/posts/domain/usecases/get_comment.dart';
@@ -25,6 +29,12 @@ import 'package:quotes/features/posts/domain/usecases/post_comment.dart';
 import 'package:quotes/features/posts/domain/usecases/post_reply.dart';
 import 'package:quotes/features/posts/presentation/cubit/comment_cubit.dart';
 import 'package:quotes/features/posts/presentation/cubit/like_cubit.dart';
+import 'package:quotes/features/profile/data/datasources/profile_remote_data_source.dart';
+import 'package:quotes/features/profile/data/repositories/profile_repository_impl.dart';
+import 'package:quotes/features/profile/domain/repositories/profile_repository.dart';
+import 'package:quotes/features/profile/domain/usecases/add_child.dart';
+import 'package:quotes/features/profile/domain/usecases/get_children.dart';
+import 'package:quotes/features/profile/presentation/cubit/children_cubit.dart';
 import 'package:quotes/features/splash/data/datasources/lang_local_data_source.dart';
 import 'package:quotes/features/splash/data/repositories/lang_repository_impl.dart';
 import 'package:quotes/features/splash/domain/repositories/lang_repository.dart';
@@ -49,13 +59,12 @@ Future<void> init() async {
   // Blocs
   sl.registerFactory<LocaleCubit>(
       () => LocaleCubit(getSavedLangUseCase: sl(), changeLangUseCase: sl()));
-  sl.registerLazySingleton<AuthCubit>(() => AuthCubit(authRepository: sl()));
+  sl.registerLazySingleton<AuthCubit>(() => AuthCubit(authRepository: sl(), tokenProvider: sl()));
   sl.registerFactory<PostCubit>(() => PostCubit(
         getPostsUseCase: sl(),
         getPostUseCase: sl(),
         checkIfPostIsLikedUseCase: sl(),
         postRepository: sl(),
-        getClassroomPostsUseCase: sl(),
       ));
   sl.registerFactory<CommentsCubit>(() => CommentsCubit(
       getCommentsUseCase: sl(),
@@ -66,7 +75,21 @@ Future<void> init() async {
       postCubit: sl()));
   sl.registerFactory<LikeCubit>(() => LikeCubit(
       likePostUseCase: sl(), likeCommentUseCase: sl(), likeReplyUseCase: sl()));
-  sl.registerFactory<ClassCubit>(() => ClassCubit(classroomRepository: sl()));
+  sl.registerFactory<ClassCubit>(() => ClassCubit(
+        classroomRepository: sl(),
+        getMembersUseCase: sl(),
+      ));
+  sl.registerFactory<MembersCubit>(() => MembersCubit(
+        classroomRepository: sl(),
+        getMembersUseCase: sl(),
+      ));
+  sl.registerFactory<Post2Cubit>(() =>
+      Post2Cubit(classroomRepository: sl(), getClassroomPostsUseCase: sl()));
+  sl.registerFactory<ChildrenCubit>(() => ChildrenCubit(
+        getChildrenUseCase: sl(),
+        addChildUseCase: sl(),
+      ));
+
   // Use cases
   sl.registerLazySingleton<GetSavedLangUseCase>(
       () => GetSavedLangUseCase(langRepository: sl()));
@@ -88,12 +111,22 @@ Future<void> init() async {
   sl.registerLazySingleton<PostReply>(() => PostReply(sl()));
   sl.registerLazySingleton<GetPostsUseCase>(
       () => GetPostsUseCase(classroomRepository: sl()));
+  sl.registerLazySingleton<GetMembersUseCase>(
+      () => GetMembersUseCase(classroomRepository: sl()));
+  sl.registerLazySingleton<GetChildren>(
+      () => GetChildren(profileRepository: sl()));
+  sl.registerLazySingleton<AddChildUseCase>(
+      () => AddChildUseCase(profileRepository: sl()));
   // Repository
   sl.registerLazySingleton<AuthRepository>(
       () => AuthRepositoryImpl(remoteDataSource: sl(), secureStorage: sl()));
   sl.registerLazySingleton<PostRepository>(() => PostRepositoryImpl(
       networkInfo: sl(), remoteDataSource: sl(), localDataSource: sl()));
   sl.registerLazySingleton<ClassroomRepository>(() => ClassroomRepositoryImpl(
+        networkInfo: sl(),
+        remoteDataSource: sl(),
+      ));
+  sl.registerLazySingleton<ProfileRepository>(() => ProfileRepositoryImpl(
         networkInfo: sl(),
         remoteDataSource: sl(),
       ));
@@ -112,6 +145,8 @@ Future<void> init() async {
       () => PostLocalDataSourceImpl(sharedPreferences: sl()));
   sl.registerLazySingleton<ClassroomRemoteDataSource>(
       () => ClassroomRemoteDataSourceImpl(apiConsumer: sl()));
+  sl.registerLazySingleton<ProfileRemoteDataSource>(
+      () => ProfileRemoteDataSourceImpl(apiConsumer: sl()));
   //! Core
   sl.registerLazySingleton<NetworkInfo>(
       () => NetworkInfoImpl(connectionChecker: sl()));

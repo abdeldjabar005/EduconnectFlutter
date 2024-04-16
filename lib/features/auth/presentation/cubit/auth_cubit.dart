@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:quotes/core/error/exceptions.dart';
+import 'package:quotes/features/auth/data/repositories/token_repository.dart';
 import 'package:quotes/features/auth/domain/entities/user.dart';
 import 'package:quotes/features/auth/domain/repositories/auth_repository.dart';
 import 'package:dartz/dartz.dart';
@@ -13,7 +14,9 @@ class AuthCubit extends Cubit<AuthState> {
   final AuthRepository authRepository;
   String selectedRole = '';
   late User? currentUser;
-  AuthCubit({required this.authRepository}) : super(AuthInitial());
+    final TokenProvider tokenProvider; 
+
+  AuthCubit({required this.authRepository , required this.tokenProvider}) : super(AuthInitial());
 
   Future<void> login(String email, String password) async {
     emit(AuthLoading());
@@ -96,6 +99,11 @@ class AuthCubit extends Cubit<AuthState> {
   }
 
   void reset() {
+    currentUser = null;
+    emit(AuthInitial());
+  }
+  Future<void> logout() async {
+    await tokenProvider.logout();
     currentUser = null;
     emit(AuthInitial());
   }

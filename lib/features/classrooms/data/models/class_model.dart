@@ -1,18 +1,18 @@
 import 'package:quotes/features/classrooms/domain/entities/class.dart';
 
 class ClassModel extends Class {
-  const ClassModel({
-    required int id,
+   ClassModel({
+     required int id,
     required String name,
     int? schoolId,
-    required int teacherId,
-    required int grade,
+     int? teacherId,
+    required String grade,
     required String subject,
-    required String code,
-    required String teacherFirstName,
-    required String teacherLastName,
-    required int membersCount,
-    required String image,
+     String? code,
+     String? teacherFirstName,
+     String? teacherLastName,
+     int? membersCount,
+     String? image,
   }) : super(
           id: id,
           name: name,

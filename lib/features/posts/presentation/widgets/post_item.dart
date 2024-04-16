@@ -1,7 +1,6 @@
 // post_item.dart
 import 'dart:math';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:quotes/config/themes/app_decoration.dart';
@@ -16,7 +15,6 @@ import 'package:intl/intl.dart';
 import 'package:quotes/features/posts/presentation/cubit/like_cubit.dart';
 import 'package:quotes/features/posts/presentation/cubit/post_cubit.dart';
 import 'package:quotes/features/posts/presentation/widgets/custom_image_view.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:quotes/features/posts/presentation/widgets/image_detail.dart';
 
 class PostItem extends StatelessWidget {
@@ -27,8 +25,8 @@ class PostItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var date = post.createdAt;
-    var time = DateFormat.jm().format(date); // Time in AM/PM format
-    var restOfDate = DateFormat.yMMMMd().format(date); // Rest of the date
+    var time = DateFormat.jm().format(date); 
+    var restOfDate = DateFormat.yMMMMd().format(date); 
 
     return Container(
       padding: EdgeInsets.symmetric(
@@ -171,7 +169,7 @@ class PostItem extends StatelessWidget {
                                   ),
                                 );
                               } else {
-                                // Create the facebook like effect for the last image with number of remaining  images
+                                // Create the effect for the last image with number of remaining images
                                 return GestureDetector(
                                   onTap: () {
                                     Navigator.push(

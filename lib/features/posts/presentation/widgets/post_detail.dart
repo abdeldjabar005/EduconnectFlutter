@@ -30,7 +30,7 @@ class PostDetails extends StatelessWidget {
     var restOfDate = DateFormat.yMMMMd().format(date);
 
     return Container(
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         color: Colors.white,
       ),
       padding: EdgeInsets.symmetric(
@@ -211,7 +211,7 @@ class PostDetails extends StatelessWidget {
                                                 ),
                                               ),
                                               child: Text(
-                                                '+' + remaining.toString(),
+                                                '+$remaining',
                                                 style: TextStyle(
                                                     fontSize: 32,
                                                     color: AppColors.whiteA700),
@@ -258,7 +258,7 @@ class PostDetails extends StatelessWidget {
                         );
                       },
                     )
-              : SizedBox.shrink(),
+              : const SizedBox.shrink(),
 
           SizedBox(height: 12.v),
           Container(

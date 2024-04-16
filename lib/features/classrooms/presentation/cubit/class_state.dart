@@ -29,6 +29,25 @@ class SchoolLoaded extends ClassState {
   List<Object> get props => [school];
 }
 
+
+
+class ClassesLoaded extends ClassState {
+  final List<ClassMemberModel> classes;
+
+  ClassesLoaded(this.classes);
+
+  @override
+  List<Object> get props => [classes];
+}
+class NoClasses extends ClassState {
+  final String message;
+
+  NoClasses(this.message);
+
+  @override
+  List<Object> get props => [message];
+}
+
 class ClassError extends ClassState {
   final String message;
 

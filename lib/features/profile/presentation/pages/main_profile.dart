@@ -9,6 +9,10 @@ import 'package:quotes/core/widgets/custom_bottom_bar.dart';
 import 'package:quotes/core/widgets/custom_icon_button.dart';
 import 'package:quotes/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:quotes/features/posts/presentation/widgets/custom_image_view.dart';
+import 'package:quotes/features/profile/presentation/cubit/children_cubit.dart';
+import 'package:quotes/features/profile/presentation/widgets/manage_children.dart';
+import 'package:quotes/features/profile/presentation/widgets/manage_classes.dart';
+import 'package:quotes/injection_container.dart';
 
 class MainProfile extends StatelessWidget {
   MainProfile({Key? key})
@@ -51,6 +55,7 @@ class MainProfile extends StatelessWidget {
     return SingleChildScrollView(
       child: Container(
         width: double.maxFinite,
+        margin: EdgeInsets.only(left: 15.h, top: 15.v),
         padding: EdgeInsets.symmetric(vertical: 54.v, horizontal: 15.h),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -117,12 +122,20 @@ class MainProfile extends StatelessWidget {
             InkWell(
               borderRadius: BorderRadius.circular(29.h),
               onTap: () {
-                navigatorKey.currentState!.push(MaterialPageRoute(
-                  builder: (context) {
+                navigatorKey.currentState!
+                    .push(MaterialPageRoute(builder: (context) {
+                  if (user.role == 'parent') {
+                    return ManageChildren();
+                  } else if (user.role == 'teacher') {
+                    // return ManageClass();
+                    return ManageClasses();
+                  } else if (user.role == 'admin') {
                     return DefaultWidget();
-                    // return ManageProfile();
-                  },
-                ));
+                    // return ManageSchool();
+                  } else {
+                    return DefaultWidget();
+                  }
+                }));
               },
               child: Ink(
                 decoration: BoxDecoration(
@@ -132,8 +145,20 @@ class MainProfile extends StatelessWidget {
                 width: 356 * MediaQuery.of(context).size.width / 414,
                 child: _buildFrame(
                   context,
-                  profile: "Manage Children",
-                  icon: ImageConstant.imgClose,
+                  profile: user.role == 'parent'
+                      ? "Manage Children"
+                      : user.role == 'teacher'
+                          ? "Manage Classes"
+                          : user.role == 'admin'
+                              ? "Manage Schools"
+                              : "Default",
+                  icon: user.role == 'parent'
+                      ? ImageConstant.imgClose
+                      : user.role == 'teacher'
+                          ? ImageConstant.cap
+                          : user.role == 'admin'
+                              ? ImageConstant.school
+                              : ImageConstant.imgClose,
                   fill: IconButtonStyleHelper.fillLightGreen,
                 ),
               ),

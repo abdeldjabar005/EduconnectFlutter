@@ -16,13 +16,11 @@ class PostCubit extends Cubit<PostState> {
   final GetPost getPostUseCase;
   final CheckIfPostIsLiked checkIfPostIsLikedUseCase;
   final PostRepository postRepository;
-  final GetPostsUseCase getClassroomPostsUseCase;
   PostCubit({
     required this.getPostsUseCase,
     required this.getPostUseCase,
     required this.checkIfPostIsLikedUseCase,
     required this.postRepository,
-    required this.getClassroomPostsUseCase,
   }) : super(PostInitial());
 
   Future<void> getPosts(int page) async {
@@ -33,14 +31,7 @@ class PostCubit extends Cubit<PostState> {
       (posts) => PostLoaded(posts: posts),
     ));
   }
-  Future<void> getClassroomPosts(int id, int page, String type) async {
-    emit(PostLoading());
-    final response = await getClassroomPostsUseCase(Params3(id: id, page: page, type: type));
-    emit(response.fold(
-      (failure) => PostError(message: _mapFailureToMessage(failure)),
-      (posts) => PostLoaded(posts: posts),
-    ));
-  }
+ 
 
   Future<void> getPost(int id) async {
     // emit(PostLoading());
