@@ -18,6 +18,8 @@ class UserModel extends User {
     required List<SchoolModel> schools,
     required List<ClassModel> classes,
     required this.token,
+    List<ClassModel>? teacherClasses,
+    SchoolModel? school,
   }) : super(
           id: id,
           firstName: firstName,
@@ -30,6 +32,8 @@ class UserModel extends User {
           contactInformation: contactInformation,
           schools: schools,
           classes: classes,
+          teacherClasses: teacherClasses,
+          school: school,
         );
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
@@ -49,6 +53,14 @@ class UserModel extends User {
           .toList(),
       classes:
           (data['classes'] as List).map((i) => ClassModel.fromJson(i)).toList(),
+      teacherClasses: data['owned_classes'] != null
+          ? (data['owned_classes'] as List)
+              .map((i) => ClassModel.fromJson(i))
+              .toList()
+          : [],
+      school: data['owned_school'] != null
+          ? SchoolModel.fromJson(data['owned_school'])
+          : null,
       token: json['token'],
     );
   }
@@ -83,6 +95,8 @@ class UserModel extends User {
       contactInformation: contactInformation,
       schools: schools,
       classes: classes,
+      teacherClasses: teacherClasses,
+      school: school,
     );
   }
 }

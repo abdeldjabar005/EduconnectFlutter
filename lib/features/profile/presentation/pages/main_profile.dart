@@ -12,6 +12,7 @@ import 'package:quotes/features/posts/presentation/widgets/custom_image_view.dar
 import 'package:quotes/features/profile/presentation/cubit/children_cubit.dart';
 import 'package:quotes/features/profile/presentation/widgets/manage_children.dart';
 import 'package:quotes/features/profile/presentation/widgets/manage_classes.dart';
+import 'package:quotes/features/profile/presentation/widgets/manage_schools.dart';
 import 'package:quotes/injection_container.dart';
 
 class MainProfile extends StatelessWidget {
@@ -80,8 +81,11 @@ class MainProfile extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "${user.firstName} ${user.lastName}",
+                        ("${user.firstName} ${user.lastName}").length > 25
+                            ? '${("${user.firstName} ${user.lastName}").substring(0, 25)}...'
+                            : "${user.firstName} ${user.lastName}",
                         style: CustomTextStyles.titleLargeRobotoGray90001,
+                        overflow: TextOverflow.ellipsis,
                       ),
                       SizedBox(height: 2.v),
                       Text(
@@ -130,7 +134,7 @@ class MainProfile extends StatelessWidget {
                     // return ManageClass();
                     return ManageClasses();
                   } else if (user.role == 'admin') {
-                    return DefaultWidget();
+                    return ManageSchools();
                     // return ManageSchool();
                   } else {
                     return DefaultWidget();

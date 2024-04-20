@@ -5,7 +5,7 @@ class Child extends Equatable {
   final String firstName;
   final String lastName;
   final String grade;
-  final String? relation;
+  final String relation;
 
   const Child({
     required this.id,

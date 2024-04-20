@@ -32,10 +32,36 @@ class ProfileRepositoryImpl extends ProfileRepository {
   }
 
   @override
-  Future<Either<Failure, void>> addChild(ChildModel child) async {
+  Future<Either<Failure, ChildModel>> addChild(ChildModel child) async {
     if (await networkInfo.isConnected) {
       try {
         final remoteProfile = await remoteDataSource.addChild(child);
+        return Right(remoteProfile);
+      } on ServerException {
+        return Left(ServerFailure());
+      }
+    } else {
+      return Left(NetworkFailure());
+    }
+  }
+  @override
+  Future<Either<Failure, void>> removeChild(int? id) async {
+    if (await networkInfo.isConnected) {
+      try {
+        final remoteProfile = await remoteDataSource.removeChild(id);
+        return Right(remoteProfile);
+      } on ServerException {
+        return Left(ServerFailure());
+      }
+    } else {
+      return Left(NetworkFailure());
+    }
+  }
+  @override
+  Future<Either<Failure, void>> updateChild(ChildModel child) async {
+    if (await networkInfo.isConnected) {
+      try {
+        final remoteProfile = await remoteDataSource.updateChild(child);
         return Right(remoteProfile);
       } on ServerException {
         return Left(ServerFailure());

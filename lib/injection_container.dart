@@ -34,6 +34,8 @@ import 'package:quotes/features/profile/data/repositories/profile_repository_imp
 import 'package:quotes/features/profile/domain/repositories/profile_repository.dart';
 import 'package:quotes/features/profile/domain/usecases/add_child.dart';
 import 'package:quotes/features/profile/domain/usecases/get_children.dart';
+import 'package:quotes/features/profile/domain/usecases/remove_child.dart';
+import 'package:quotes/features/profile/domain/usecases/update_child.dart';
 import 'package:quotes/features/profile/presentation/cubit/children_cubit.dart';
 import 'package:quotes/features/splash/data/datasources/lang_local_data_source.dart';
 import 'package:quotes/features/splash/data/repositories/lang_repository_impl.dart';
@@ -59,7 +61,8 @@ Future<void> init() async {
   // Blocs
   sl.registerFactory<LocaleCubit>(
       () => LocaleCubit(getSavedLangUseCase: sl(), changeLangUseCase: sl()));
-  sl.registerLazySingleton<AuthCubit>(() => AuthCubit(authRepository: sl(), tokenProvider: sl()));
+  sl.registerLazySingleton<AuthCubit>(
+      () => AuthCubit(authRepository: sl(), tokenProvider: sl()));
   sl.registerFactory<PostCubit>(() => PostCubit(
         getPostsUseCase: sl(),
         getPostUseCase: sl(),
@@ -86,9 +89,10 @@ Future<void> init() async {
   sl.registerFactory<Post2Cubit>(() =>
       Post2Cubit(classroomRepository: sl(), getClassroomPostsUseCase: sl()));
   sl.registerFactory<ChildrenCubit>(() => ChildrenCubit(
-        getChildrenUseCase: sl(),
-        addChildUseCase: sl(),
-      ));
+      getChildrenUseCase: sl(),
+      addChildUseCase: sl(),
+      removeChildUseCase: sl(),
+      updateChildUseCase: sl()));
 
   // Use cases
   sl.registerLazySingleton<GetSavedLangUseCase>(
@@ -117,6 +121,10 @@ Future<void> init() async {
       () => GetChildren(profileRepository: sl()));
   sl.registerLazySingleton<AddChildUseCase>(
       () => AddChildUseCase(profileRepository: sl()));
+  sl.registerLazySingleton<RemoveChild>(() => RemoveChild(repository: sl()));
+  sl.registerLazySingleton<UpdateChildUseCase>(
+      () => UpdateChildUseCase(profileRepository: sl()));
+
   // Repository
   sl.registerLazySingleton<AuthRepository>(
       () => AuthRepositoryImpl(remoteDataSource: sl(), secureStorage: sl()));

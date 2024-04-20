@@ -19,17 +19,15 @@ import 'package:quotes/features/posts/presentation/widgets/custom_image_view.dar
 import 'package:quotes/features/profile/presentation/cubit/children_cubit.dart';
 import 'package:image_picker/image_picker.dart';
 
-class AddClass extends StatefulWidget {
-  const AddClass({Key? key})
-      : super(
-          key: key,
-        );
+class UpdateClass extends StatefulWidget {
+  final ClassModel classe;
+  UpdateClass({Key? key, required this.classe}) : super(key: key);
 
   @override
-  _AddClassState createState() => _AddClassState();
+  _UpdateClassState createState() => _UpdateClassState();
 }
 
-class _AddClassState extends State<AddClass> {
+class _UpdateClassState extends State<UpdateClass> {
   String errorMessage = '';
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -38,11 +36,19 @@ class _AddClassState extends State<AddClass> {
 
   TextEditingController subjectController = TextEditingController();
 
+  @override
+  void initState() {
+    classNameController.text = widget.classe.name;
+    subjectController.text = widget.classe.subject;
+    selectedGrade = widget.classe.grade;
+    selectedSchool = widget.classe.schoolId.toString();
+
+    super.initState();
+  }
+
   String selectedGrade = '';
   String selectedSchool = '';
-  int? selectedSchoolId;
   List<String> schools = [];
-  Map<String, int> schoolIdMap = {};
 
   List<String> grade = [
     "1st grade",
@@ -58,27 +64,6 @@ class _AddClassState extends State<AddClass> {
     "11th grade",
     "12th grade",
   ];
-
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance!.addPostFrameCallback((_) {
-      fetchSchools();
-    });
-  }
-
-  void fetchSchools() {
-    final user = (context.read<AuthCubit>().state as AuthAuthenticated).user;
-    final schoolCache = user.schools;
-    for (var school in schoolCache) {
-      schools.add(school.name);
-      schoolIdMap[school.name] = school.id;
-    }
-    log(schoolIdMap.toString());
-    log(schoolIdMap.values.toString());
-    log('Schools: $schools');
-    setState(() {});
-  }
 
   XFile? selectedImage;
 
@@ -96,7 +81,7 @@ class _AddClassState extends State<AddClass> {
     return BlocConsumer<ClassCubit, ClassState>(
       listener: (context, state) {
         log(state.toString());
-        if (state is ClassLoaded) {
+        if (state is TeacherClassesLoaded) {
           Navigator.pop(context2);
         }
       },
@@ -136,11 +121,11 @@ class _AddClassState extends State<AddClass> {
                   child: ListView(
                     // crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      SizedBox(height: 7.v),
+                      SizedBox(height: 20.v),
                       _buildName(context, "Class Name", classNameController),
-                      SizedBox(height: 7.v),
+                      SizedBox(height: 20.v),
                       _buildName(context, "Subject", subjectController),
-                      SizedBox(height: 7.v),
+                      SizedBox(height: 20.v),
                       Padding(
                         padding: EdgeInsets.only(left: 3.h),
                         child: Text(
@@ -148,7 +133,7 @@ class _AddClassState extends State<AddClass> {
                           style: CustomTextStyles.titleMediumPoppinsGray900,
                         ),
                       ),
-                      SizedBox(height: 7.v),
+                      SizedBox(height: 20.v),
                       Padding(
                         padding: EdgeInsets.only(left: 3.h),
                         child: CustomDropDown(
@@ -194,74 +179,7 @@ class _AddClassState extends State<AddClass> {
                           },
                         ),
                       ),
-                      SizedBox(height: 7.v),
-                      Row(
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.only(left: 3.h),
-                            child: Text(
-                              "Class School",
-                              style: CustomTextStyles.titleMediumPoppinsGray900,
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(left: 3.h),
-                            child: Text(
-                              "(Optional)",
-                              style:
-                                  CustomTextStyles.titleMediumPoppinsGray40001,
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 7.v),
-                      Padding(
-                        padding: EdgeInsets.only(left: 3.h),
-                        child: CustomDropDown(
-                          value: selectedSchool,
-                          textStyle: TextStyle(
-                            fontFamily: "Poppins",
-                            color: AppColors.black900,
-                            fontWeight: FontWeight.w700,
-                          ),
-                          borderDecoration: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide(
-                              color: AppColors.gray300,
-                              width: 1.5,
-                            ),
-                          ),
-                          contentPadding: EdgeInsets.symmetric(
-                              horizontal: 21.h, vertical: 15.v),
-                          icon: Container(
-                            margin: EdgeInsets.fromLTRB(30.h, 18.v, 9.h, 18.v),
-                            child: CustomImageView(
-                              imagePath: ImageConstant.imgArrowdown,
-                              height: 20.adaptSize,
-                              width: 20.adaptSize,
-                            ),
-                          ),
-                          suffix: Container(
-                            margin: EdgeInsets.fromLTRB(10.h, 18.v, 12.h, 18.v),
-                            child: CustomImageView(
-                              imagePath: ImageConstant.imgArrowdown,
-                              height: 20.adaptSize,
-                              width: 20.adaptSize,
-                            ),
-                          ),
-                          hintText: "Select School",
-                          hintStyle:
-                              CustomTextStyles.titleMediumPoppinsGray40001,
-                          items: schools,
-                          onChanged: (String newValue) {
-                            setState(() {
-                              selectedSchool = newValue;
-                              selectedSchoolId = schoolIdMap[newValue];
-                            });
-                          },
-                        ),
-                      ),
-                      SizedBox(height: 20.v),
+                      SizedBox(height: 48.v),
                       Row(
                         children: [
                           Padding(
@@ -362,11 +280,10 @@ class _AddClassState extends State<AddClass> {
                   if (selectedImage != null) {
                     image = File(selectedImage!.path);
                   }
-                  context.read<ClassCubit>().addClass(
+                  context.read<ClassCubit>().updateClass(
+                        widget.classe.id,
                         ClassM(
-                          
                           name: classNameController.text,
-                          schoolId: selectedSchoolId,
                           grade: selectedGrade,
                           subject: subjectController.text,
                         ),
@@ -401,15 +318,12 @@ class _AddClassState extends State<AddClass> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           state is ClassError
-              ? Flexible(
-                  child: Text(
-                      overflow: TextOverflow.visible,
-                      state.message.contains('Server Failure')
-                          ? "Server error"
-                          : state.message,
-                      style: CustomTextStyles.titleMediumPoppinsBluegray100),
-                )
-              : Text('errorMessage',
+              ? Text(
+                  state.message.contains('Server Failure')
+                      ? "Server error"
+                      : state.message,
+                  style: CustomTextStyles.titleMediumPoppinsBluegray100)
+              : Text(errorMessage,
                   style: CustomTextStyles.titleMediumPoppinsBluegray100)
         ],
       ),

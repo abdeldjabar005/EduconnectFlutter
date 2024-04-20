@@ -16,17 +16,18 @@ import 'package:quotes/features/profile/data/models/child_model.dart';
 import 'package:quotes/features/profile/presentation/cubit/children_cubit.dart';
 import 'package:quotes/injection_container.dart';
 
-class AddChild extends StatefulWidget {
-  const AddChild({Key? key})
+class UpdateChild extends StatefulWidget {
+  ChildModel child;
+  UpdateChild({Key? key, required this.child})
       : super(
           key: key,
         );
 
   @override
-  _AddChildState createState() => _AddChildState();
+  _UpdateChildState createState() => _UpdateChildState();
 }
 
-class _AddChildState extends State<AddChild> {
+class _UpdateChildState extends State<UpdateChild> {
   String errorMessage = '';
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -34,6 +35,14 @@ class _AddChildState extends State<AddChild> {
   TextEditingController firstNameController = TextEditingController();
 
   TextEditingController lastNameController = TextEditingController();
+  @override
+  void initState() {
+    firstNameController.text = widget.child.firstName;
+    lastNameController.text = widget.child.lastName;
+    selectedGrade = widget.child.grade;
+    selectedRealtion = widget.child.relation;
+    super.initState();
+  }
 
   String selectedGrade = '';
   String selectedRealtion = '';
@@ -178,7 +187,7 @@ class _AddChildState extends State<AddChild> {
                         Padding(
                           padding: EdgeInsets.only(left: 3.h),
                           child: CustomDropDown(
-                            value: selectedGrade,
+                            value: selectedRealtion,
                             textStyle: TextStyle(
                               fontFamily: "Poppins",
                               color: AppColors.black900,
@@ -309,8 +318,9 @@ class _AddChildState extends State<AddChild> {
                 });
 
                 if (_formKey.currentState!.validate()) {
-                  context.read<ChildrenCubit>().addChild(
+                  context.read<ChildrenCubit>().updateChild(
                         ChildModel(
+                          id: widget.child.id,
                           firstName: firstNameController.text,
                           lastName: lastNameController.text,
                           grade: selectedGrade,

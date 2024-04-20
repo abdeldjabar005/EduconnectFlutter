@@ -31,8 +31,13 @@ class EndPoints {
   static String getMembers(int id) => '${baseUrl}schools/$id/members';
   static String getClassMembers(int id) => '${baseUrl}classes/$id/members';
   static String getClasses(int id) => '${baseUrl}schools/$id/classes';
+  static String removeClass(int? id) => '${baseUrl}classes/$id';
 
+  static const String getTeacherClasses = '${baseUrl}classes/owned';
   static const String getChildren = '${baseUrl}students/children/parent';
   static const String addChild = '${baseUrl}students';
   static const String addClass = '${baseUrl}classes';
+  static const String addSchool = '${baseUrl}schools';
+  static String removeChild(int? id) => '${baseUrl}students/$id';
+  static String updateChild(int? id) => '${baseUrl}students/$id';
 }

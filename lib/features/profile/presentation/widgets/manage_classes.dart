@@ -17,6 +17,7 @@ import 'package:quotes/features/profile/data/models/child_model.dart';
 import 'package:quotes/features/profile/presentation/cubit/children_cubit.dart';
 import 'package:quotes/features/profile/presentation/widgets/add_child.dart';
 import 'package:quotes/features/profile/presentation/widgets/add_class.dart';
+import 'package:quotes/features/profile/presentation/widgets/update_class.dart';
 import 'package:quotes/injection_container.dart';
 
 class ManageClasses extends StatefulWidget {
@@ -31,12 +32,23 @@ class ManageClasses extends StatefulWidget {
   _ManageClassesState createState() => _ManageClassesState();
 }
 
-class _ManageClassesState extends State<ManageClasses>
-     {
-  
+enum ActionItems { delete, update }
+
+final items = <ActionItems, String>{
+  ActionItems.delete: 'Delete',
+  ActionItems.update: 'Update',
+};
+
+class _ManageClassesState extends State<ManageClasses> {
   GlobalKey<NavigatorState> navigatorKey = GlobalKey();
   late final ValueListenableBuilder<bool> childAddedListener;
 
+  @override
+  void initState() {
+    super.initState();
+    final user = (context.watch<AuthCubit>().state as AuthAuthenticated).user;
+    context.read<ClassCubit>().getTeacherClasses(user.id, useCache: true);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -106,42 +118,65 @@ class _ManageClassesState extends State<ManageClasses>
                     SizedBox(height: 10.v),
                     _buildDivider2(context, "My Classes"),
                     SizedBox(height: 10.v),
-                     BlocBuilder<ClassCubit, ClassState>(
-                    builder: (context, state) {
-                      final user = (context.watch<AuthCubit>().state
-                              as AuthAuthenticated)
-                          .user;
-                      List<ClassModel> classes = user.classes;
-
-                      return ListView.builder(
-                        shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
-                        itemCount: classes.length,
-                        itemBuilder: (context, index) {
-                          return _buildClassItem(context, classes[index]);
-                        },
-                      );
-                    },
-                  ),
                     BlocBuilder<ClassCubit, ClassState>(
-                    builder: (context, state) {
-                      if (state is ClassLoaded) {}
-                      return ValueListenableBuilder<List<ClassModel>>(
-                          valueListenable:
-                              context.read<ClassCubit>().classCache,
-                          builder: (context, List<ClassModel> value, _) {
-                            log(value.toString());
-                            return ListView.builder(
-                              shrinkWrap: true,
-                              physics: NeverScrollableScrollPhysics(),
-                              itemCount: value.length,
-                              itemBuilder: (context, index) {
-                                return _buildClassItem(context, value[index]);
-                              },
-                            );
-                          });
-                    },
-                  ),
+                      builder: (context, state) {
+                        if (state is TeacherClassesLoaded) {
+                          return ListView.builder(
+                            shrinkWrap: true,
+                            physics: NeverScrollableScrollPhysics(),
+                            itemCount: state.classes.length,
+                            itemBuilder: (context, index) {
+                              return _buildClassItem(
+                                  context, state.classes[index]);
+                            },
+                          );
+                        } else if (state is NoClasses) {
+                          return Center(child: Text(state.message));
+                        } else if (state is ClassError) {
+                          return Center(child: Text(state.message));
+                        } else if (state is ClassLoading) {
+                          return Center(child: CircularProgressIndicator());
+                        } else {
+                          return const SizedBox();
+                        }
+                      },
+                    ),
+                    // BlocBuilder<ClassCubit, ClassState>(
+                    //   builder: (context, state) {
+                    //     final user = (context.watch<AuthCubit>().state
+                    //             as AuthAuthenticated)
+                    //         .user;
+                    //     List<ClassModel> classes = user.teacherClasses ?? [];
+
+                    //     return ListView.builder(
+                    //       shrinkWrap: true,
+                    //       physics: NeverScrollableScrollPhysics(),
+                    //       itemCount: classes.length,
+                    //       itemBuilder: (context, index) {
+                    //         return _buildClassItem(context, classes[index]);
+                    //       },
+                    //     );
+                    //   },
+                    // ),
+                    // BlocBuilder<ClassCubit, ClassState>(
+                    //   builder: (context, state) {
+                    //     if (state is ClassLoaded) {}
+                    //     return ValueListenableBuilder<List<ClassModel>>(
+                    //         valueListenable:
+                    //             context.read<ClassCubit>().classCache,
+                    //         builder: (context, List<ClassModel> value, _) {
+                    //           log(value.toString());
+                    //           return ListView.builder(
+                    //             shrinkWrap: true,
+                    //             physics: NeverScrollableScrollPhysics(),
+                    //             itemCount: value.length,
+                    //             itemBuilder: (context, index) {
+                    //               return _buildClassItem(context, value[index]);
+                    //             },
+                    //           );
+                    //         });
+                    //   },
+                    // ),
                   ],
                 ),
               ),
@@ -208,16 +243,91 @@ class _ManageClassesState extends State<ManageClasses>
             SizedBox(
               width: 10.v,
             ),
-            const Icon(
-              FontAwesomeIcons.arrowRight,
-              color: Colors.black,
+            //const Icon(
+            //FontAwesomeIcons.arrowRight,
+            //color: Colors.black,
+            //),
+            PopupMenuButton<ActionItems>(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+              onSelected: (value) async {
+                switch (value) {
+                  case ActionItems.delete:
+                    final confirm = await showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          title: Text(
+                            'Confirm',
+                            style: TextStyle(
+                                color: AppColors.indigoA200,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          content: const Text(
+                            'Are you sure you want to delete this child?',
+                            style: TextStyle(color: Colors.black54),
+                          ),
+                          actions: <Widget>[
+                            TextButton(
+                              onPressed: () => Navigator.of(context).pop(true),
+                              child: const Text(
+                                'DELETE',
+                                style: TextStyle(color: Colors.red),
+                              ),
+                            ),
+                            TextButton(
+                              onPressed: () => Navigator.of(context).pop(false),
+                              child: const Text(
+                                'CANCEL',
+                                style: TextStyle(color: Colors.blue),
+                              ),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                    if (confirm == true) {
+                      context.read<ClassCubit>().removeClass(classe.id);
+                    }
+                    break;
+                  case ActionItems.update:
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => UpdateClass(classe: classe)),
+                    );
+                    break;
+                }
+              },
+              itemBuilder: (context) => items
+                  .map((item, text) => MapEntry(
+                      item,
+                      PopupMenuItem<ActionItems>(
+                        value: item,
+                        child: ListTile(
+                          contentPadding: EdgeInsets.zero,
+                          leading: Icon(
+                              item == ActionItems.delete
+                                  ? Icons.delete
+                                  : Icons.update,
+                              color: AppColors.indigoA200),
+                          title: Text(text),
+                        ),
+                      )))
+                  .values
+                  .toList(),
             ),
           ],
         ),
       ),
     );
   }
-   Widget _buildDivider2(BuildContext context, type) {
+
+  Widget _buildDivider2(BuildContext context, type) {
     return Align(
       alignment: Alignment.center,
       child: Row(

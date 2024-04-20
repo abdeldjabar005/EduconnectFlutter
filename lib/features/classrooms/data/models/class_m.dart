@@ -64,7 +64,7 @@ class ClassM extends Equatable {
       'name': name,
       'school_id': schoolId,
       'teacher_id': teacherId,
-      'grade': grade,
+      'grade_level': grade,
       'subject': subject,
       'code': code,
       'teacher_first_name': teacherFirstName,

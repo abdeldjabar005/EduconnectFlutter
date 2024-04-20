@@ -4,13 +4,13 @@ import 'package:quotes/core/usecases/usecase.dart';
 import 'package:quotes/features/profile/data/models/child_model.dart';
 import 'package:quotes/features/profile/domain/repositories/profile_repository.dart';
 
-class AddChildUseCase implements UseCase<ChildModel, ChildModel> {
+class UpdateChildUseCase implements UseCase<void, ChildModel> {
   final ProfileRepository profileRepository;
 
-  AddChildUseCase({required this.profileRepository});
+  UpdateChildUseCase({required this.profileRepository});
 
   @override
-  Future<Either<Failure, ChildModel>> call(ChildModel params) {
-    return profileRepository.addChild(params);
+  Future<Either<Failure, void>> call(ChildModel params) {
+    return profileRepository.updateChild(params);
   }
 }

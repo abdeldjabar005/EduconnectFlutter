@@ -45,8 +45,15 @@ class MainClassroom extends StatelessWidget {
         child: Scaffold(
           body: BlocBuilder<ClassCubit, ClassState>(
             builder: (context, state) {
+              ValueNotifier<List<SchoolModel>> school =
+                  context.read<ClassCubit>().schoolCache;
+              ValueNotifier<List<ClassModel>> classe =
+                  context.read<ClassCubit>().classCache;
+
               if (state is SchoolLoaded ||
-                  state is ClassLoaded &&
+                  state is ClassLoaded ||
+                  school.value.isNotEmpty ||
+                  classe.value.isNotEmpty &&
                       user.schools.isEmpty &&
                       user.classes.isEmpty) {
                 return _buildClassroom(context);

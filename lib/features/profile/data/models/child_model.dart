@@ -6,7 +6,7 @@ class ChildModel extends Child {
     required String firstName,
     required String lastName,
     required String grade,
-     String? relation,
+     required String relation,
   }) : super(
           id: id,
           firstName: firstName,

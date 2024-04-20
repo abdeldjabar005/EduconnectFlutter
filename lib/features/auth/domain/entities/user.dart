@@ -13,9 +13,9 @@ class User extends Equatable {
   final String? bio;
   final String? contactInformation;
    List<SchoolModel> schools;
-  
    List<ClassModel> classes;
-
+   List<ClassModel>? teacherClasses;
+   SchoolModel? school;
   User({
     required this.id,
     required this.firstName,
@@ -28,8 +28,11 @@ class User extends Equatable {
     this.contactInformation,
     required this.schools,
     required this.classes,
+   this.teacherClasses,
+    this.school,
+
   });
 
   @override
-  List<Object?> get props => [id, firstName, lastName, email, isVerified, role, profilePicture, bio, contactInformation, schools, classes];
+  List<Object?> get props => [id, firstName, lastName, email, isVerified, role, profilePicture, bio, contactInformation, schools, classes, teacherClasses, school];
 }
