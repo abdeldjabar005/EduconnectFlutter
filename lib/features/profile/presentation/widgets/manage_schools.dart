@@ -7,20 +7,12 @@ import 'package:quotes/config/themes/custom_text_style.dart';
 import 'package:quotes/core/api/end_points.dart';
 import 'package:quotes/core/utils/app_colors.dart';
 import 'package:quotes/core/utils/size_utils.dart';
-import 'package:quotes/core/widgets/custom_bottom_bar.dart';
 import 'package:quotes/features/auth/presentation/cubit/auth_cubit.dart';
-import 'package:quotes/features/classrooms/data/models/class_model.dart';
 import 'package:quotes/features/classrooms/data/models/school_nodel.dart';
 import 'package:quotes/features/classrooms/presentation/cubit/class_cubit.dart';
-import 'package:quotes/features/classrooms/presentation/pages/class_details.dart';
 import 'package:quotes/features/classrooms/presentation/pages/school_details.dart';
 import 'package:quotes/features/posts/presentation/widgets/custom_image_view.dart';
-import 'package:quotes/features/profile/data/models/child_model.dart';
-import 'package:quotes/features/profile/presentation/cubit/children_cubit.dart';
-import 'package:quotes/features/profile/presentation/widgets/add_child.dart';
-import 'package:quotes/features/profile/presentation/widgets/add_class.dart';
 import 'package:quotes/features/profile/presentation/widgets/add_school.dart';
-import 'package:quotes/injection_container.dart';
 
 class ManageSchools extends StatefulWidget {
   const ManageSchools({Key? key})
@@ -36,7 +28,6 @@ class ManageSchools extends StatefulWidget {
 
 class _ManageSchoolsState extends State<ManageSchools>
      {
-  
 
   @override
   Widget build(BuildContext context) {
@@ -104,7 +95,7 @@ class _ManageSchoolsState extends State<ManageSchools>
                           )),
                     ),
                     SizedBox(height: 10.v),
-                    _buildDivider2(context, "My Schools"),
+                    _buildDivider2(context, "My School"),
                     SizedBox(height: 10.v),
                      BlocBuilder<ClassCubit, ClassState>(
                     builder: (context, state) {

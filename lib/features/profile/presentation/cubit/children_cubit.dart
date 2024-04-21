@@ -19,7 +19,6 @@ class ChildrenCubit extends Cubit<ChildrenState> {
   final UpdateChildUseCase updateChildUseCase;
   List<ChildModel>? _children = [];
 
-  final childrenCache = ValueNotifier<List<ChildModel>>([]);
 
   ChildrenCubit(
       {required this.getChildrenUseCase,
@@ -43,10 +42,6 @@ class ChildrenCubit extends Cubit<ChildrenState> {
           (children) {
         _children = children;
         if (children.isEmpty) {
-          List<ChildModel> newList = List.from(childrenCache.value);
-          newList.addAll(children);
-          childrenCache.value = newList;
-          childrenCache.notifyListeners();
           emit(const ChildrenEmpty(message: 'No children found'));
         } else {
           emit(ChildrenLoaded(children: children));
@@ -65,10 +60,6 @@ class ChildrenCubit extends Cubit<ChildrenState> {
         emit(ChildrenError(message: _mapFailureToMessage(failure)));
       }, (createdChild) {
         _children!.add(createdChild);
-        List<ChildModel> newList = List.from(childrenCache.value);
-        newList.add(createdChild);
-        childrenCache.value = newList;
-        childrenCache.notifyListeners();
         emit(ChildrenLoaded(children: _children!));
       });
     } catch (e) {

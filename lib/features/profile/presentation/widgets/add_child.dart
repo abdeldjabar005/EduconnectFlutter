@@ -65,7 +65,7 @@ class _AddChildState extends State<AddChild> {
       listener: (context, state) {
         log(state.toString());
         if (state is ChildrenLoaded) {
-          Navigator.pop(context2);
+          Navigator.maybePop(context2);
         }
       },
       builder: (context, state) {

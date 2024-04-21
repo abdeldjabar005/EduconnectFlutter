@@ -8,10 +8,13 @@ import 'package:quotes/core/utils/size_utils.dart';
 import 'package:quotes/core/widgets/custom_bottom_bar.dart';
 import 'package:quotes/core/widgets/custom_icon_button.dart';
 import 'package:quotes/features/auth/presentation/cubit/auth_cubit.dart';
+import 'package:quotes/features/classrooms/presentation/cubit/class_cubit.dart';
 import 'package:quotes/features/posts/presentation/widgets/custom_image_view.dart';
 import 'package:quotes/features/profile/presentation/cubit/children_cubit.dart';
+import 'package:quotes/features/profile/presentation/widgets/add_school.dart';
 import 'package:quotes/features/profile/presentation/widgets/manage_children.dart';
 import 'package:quotes/features/profile/presentation/widgets/manage_classes.dart';
+import 'package:quotes/features/profile/presentation/widgets/manage_school.dart';
 import 'package:quotes/features/profile/presentation/widgets/manage_schools.dart';
 import 'package:quotes/injection_container.dart';
 
@@ -123,49 +126,61 @@ class MainProfile extends StatelessWidget {
               ),
             ),
             SizedBox(height: 28.v),
-            InkWell(
-              borderRadius: BorderRadius.circular(29.h),
-              onTap: () {
-                navigatorKey.currentState!
-                    .push(MaterialPageRoute(builder: (context) {
-                  if (user.role == 'parent') {
-                    return ManageChildren();
-                  } else if (user.role == 'teacher') {
-                    // return ManageClass();
-                    return ManageClasses();
-                  } else if (user.role == 'admin') {
-                    return ManageSchools();
-                    // return ManageSchool();
-                  } else {
-                    return DefaultWidget();
-                  }
-                }));
-              },
-              child: Ink(
-                decoration: BoxDecoration(
-                  color: AppColors.whiteA700,
+            BlocBuilder<ClassCubit, ClassState>(
+              builder: (context, state) {
+                return InkWell(
                   borderRadius: BorderRadius.circular(29.h),
-                ),
-                width: 356 * MediaQuery.of(context).size.width / 414,
-                child: _buildFrame(
-                  context,
-                  profile: user.role == 'parent'
-                      ? "Manage Children"
-                      : user.role == 'teacher'
-                          ? "Manage Classes"
-                          : user.role == 'admin'
-                              ? "Manage Schools"
-                              : "Default",
-                  icon: user.role == 'parent'
-                      ? ImageConstant.imgClose
-                      : user.role == 'teacher'
-                          ? ImageConstant.cap
-                          : user.role == 'admin'
-                              ? ImageConstant.school
-                              : ImageConstant.imgClose,
-                  fill: IconButtonStyleHelper.fillLightGreen,
-                ),
-              ),
+                  onTap: () {
+                    navigatorKey.currentState!
+                        .push(MaterialPageRoute(builder: (context) {
+                      if (user.role == 'parent') {
+                        return ManageChildren();
+                      } else if (user.role == 'teacher') {
+                        // return ManageClass();
+                        return ManageClasses();
+                      } else if (user.role == 'admin') {
+                        // return ManageSchools();
+                        if (user.school == null && !(state is SchoolLoaded) ||
+                            state is SchoolRemoved) {
+                         return AddSchool();
+                           
+                          // return AddSchool();
+                        } else {
+                          return ManageSchool();
+                        }
+                        // return ManageSchool();
+                      } else {
+                        return DefaultWidget();
+                      }
+                    }));
+                  },
+                  child: Ink(
+                    decoration: BoxDecoration(
+                      color: AppColors.whiteA700,
+                      borderRadius: BorderRadius.circular(29.h),
+                    ),
+                    width: 356 * MediaQuery.of(context).size.width / 414,
+                    child: _buildFrame(
+                      context,
+                      profile: user.role == 'parent'
+                          ? "Manage Children"
+                          : user.role == 'teacher'
+                              ? "Manage Classes"
+                              : user.role == 'admin'
+                                  ? "Manage Schools"
+                                  : "Default",
+                      icon: user.role == 'parent'
+                          ? ImageConstant.imgClose
+                          : user.role == 'teacher'
+                              ? ImageConstant.cap
+                              : user.role == 'admin'
+                                  ? ImageConstant.school
+                                  : ImageConstant.imgClose,
+                      fill: IconButtonStyleHelper.fillLightGreen,
+                    ),
+                  ),
+                );
+              },
             ),
             SizedBox(height: 28.v),
             InkWell(

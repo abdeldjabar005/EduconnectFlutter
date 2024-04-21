@@ -8,15 +8,19 @@ import 'package:quotes/features/auth/domain/entities/user.dart';
 import 'package:quotes/features/auth/domain/repositories/auth_repository.dart';
 import 'package:dartz/dartz.dart';
 import 'package:quotes/core/error/failures.dart';
+import 'package:quotes/features/classrooms/data/models/class_model.dart';
+import 'package:quotes/features/classrooms/data/models/school_m.dart';
+import 'package:quotes/features/classrooms/data/models/school_nodel.dart';
 part 'auth_state.dart';
 
 class AuthCubit extends Cubit<AuthState> {
   final AuthRepository authRepository;
   String selectedRole = '';
   late User? currentUser;
-    final TokenProvider tokenProvider; 
+  final TokenProvider tokenProvider;
 
-  AuthCubit({required this.authRepository , required this.tokenProvider}) : super(AuthInitial());
+  AuthCubit({required this.authRepository, required this.tokenProvider})
+      : super(AuthInitial());
 
   Future<void> login(String email, String password) async {
     emit(AuthLoading());
@@ -102,10 +106,83 @@ class AuthCubit extends Cubit<AuthState> {
     currentUser = null;
     emit(AuthInitial());
   }
+
   Future<void> logout() async {
     await tokenProvider.logout();
     currentUser = null;
     emit(AuthInitial());
+  }
+
+  void addSchool(SchoolModel school) {
+    final currentState = state;
+    if (currentState is AuthAuthenticated) {
+      
+      final updatedUser = currentState.user.copyWith(school: school);
+      emit(AuthAuthenticated(user: updatedUser));
+    }
+  }
+  void addClass(ClassModel classModel) {
+    final currentState = state;
+    if (currentState is AuthAuthenticated) {
+      final updatedClasses = currentState.user.classes;
+      updatedClasses.add(classModel);
+      final updatedUser = currentState.user.copyWith(classes: updatedClasses);
+      emit(AuthAuthenticated(user: updatedUser));
+    }
+  }
+
+  void updateClass(ClassModel updatedClass) {
+    final currentState = state;
+    if (currentState is AuthAuthenticated) {
+      final updatedClasses = currentState.user.classes.map((classModel) {
+        if (classModel.id == updatedClass.id) {
+          return updatedClass;
+        } else {
+          return classModel;
+        }
+      }).toList();
+
+      final updatedUser = currentState.user.copyWith(classes: updatedClasses);
+      emit(AuthAuthenticated(user: updatedUser));
+    }
+  }
+
+  void updateSchool(SchoolModel updatedSchool) {
+    final currentState = state;
+    if (currentState is AuthAuthenticated) {
+      final updatedSchools = currentState.user.schools.map((schoolModel) {
+        if (schoolModel.id == updatedSchool.id) {
+          return updatedSchool;
+        } else {
+          return schoolModel;
+        }
+      }).toList();
+
+      final updatedUser = currentState.user
+          .copyWith(schools: updatedSchools, school: updatedSchool);
+      emit(AuthAuthenticated(user: updatedUser));
+    }
+  }
+
+  void removeClass(int id) {
+    final currentState = state;
+    if (currentState is AuthAuthenticated) {
+      final updatedClasses = currentState.user.classes
+          .where((classModel) => classModel.id != id)
+          .toList();
+      final updatedUser = currentState.user.copyWith(classes: updatedClasses);
+      emit(AuthAuthenticated(user: updatedUser));
+    }
+  }
+  void removeSchool(int id) {
+    final currentState = state;
+    if (currentState is AuthAuthenticated) {
+      final updatedSchools = currentState.user.schools
+          .where((schoolModel) => schoolModel.id != id)
+          .toList();
+      final updatedUser = currentState.user.copyWith(schools: updatedSchools, school: null);
+      emit(AuthAuthenticated(user: updatedUser));
+    }
   }
 
   void _eitherLoadedOrErrorState2(Either<Failure, User> failureOrUser) {

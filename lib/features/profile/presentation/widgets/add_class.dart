@@ -96,8 +96,8 @@ class _AddClassState extends State<AddClass> {
     return BlocConsumer<ClassCubit, ClassState>(
       listener: (context, state) {
         log(state.toString());
-        if (state is ClassLoaded) {
-          Navigator.pop(context2);
+        if (state is TeacherClassesLoaded) {
+          Navigator.maybePop(context2);
         }
       },
       builder: (context, state) {
@@ -364,7 +364,6 @@ class _AddClassState extends State<AddClass> {
                   }
                   context.read<ClassCubit>().addClass(
                         ClassM(
-                          
                           name: classNameController.text,
                           schoolId: selectedSchoolId,
                           grade: selectedGrade,

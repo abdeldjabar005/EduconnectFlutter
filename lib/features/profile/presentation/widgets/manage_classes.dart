@@ -42,13 +42,18 @@ final items = <ActionItems, String>{
 class _ManageClassesState extends State<ManageClasses> {
   GlobalKey<NavigatorState> navigatorKey = GlobalKey();
   late final ValueListenableBuilder<bool> childAddedListener;
-
   @override
-  void initState() {
-    super.initState();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
     final user = (context.watch<AuthCubit>().state as AuthAuthenticated).user;
     context.read<ClassCubit>().getTeacherClasses(user.id, useCache: true);
   }
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   final user = (context.watch<AuthCubit>().state as AuthAuthenticated).user;
+  //   context.read<ClassCubit>().getTeacherClasses(user.id, useCache: true);
+  // }
 
   @override
   Widget build(BuildContext context) {

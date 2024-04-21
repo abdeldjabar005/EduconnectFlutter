@@ -14,56 +14,38 @@ import 'package:quotes/features/auth/presentation/widgets/custom_image_pick.dart
 import 'package:quotes/features/auth/presentation/widgets/custom_text_form_field.dart';
 import 'package:quotes/features/classrooms/data/models/class_m.dart';
 import 'package:quotes/features/classrooms/data/models/class_model.dart';
+import 'package:quotes/features/classrooms/data/models/school_m.dart';
+import 'package:quotes/features/classrooms/data/models/school_nodel.dart';
 import 'package:quotes/features/classrooms/presentation/cubit/class_cubit.dart';
 import 'package:quotes/features/posts/presentation/widgets/custom_image_view.dart';
 import 'package:quotes/features/profile/presentation/cubit/children_cubit.dart';
 import 'package:image_picker/image_picker.dart';
 
-class UpdateClass extends StatefulWidget {
-  final ClassModel classe;
-  UpdateClass({Key? key, required this.classe}) : super(key: key);
+class UpdateSchool extends StatefulWidget {
+  final SchoolModel school;
+  UpdateSchool({Key? key, required this.school}) : super(key: key);
 
   @override
-  _UpdateClassState createState() => _UpdateClassState();
+  _UpdateSchoolState createState() => _UpdateSchoolState();
 }
 
-class _UpdateClassState extends State<UpdateClass> {
+class _UpdateSchoolState extends State<UpdateSchool> {
   String errorMessage = '';
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  TextEditingController classNameController = TextEditingController();
-
-  TextEditingController subjectController = TextEditingController();
 
   @override
   void initState() {
-    classNameController.text = widget.classe.name;
-    subjectController.text = widget.classe.subject;
-    selectedGrade = widget.classe.grade;
-    selectedSchool = widget.classe.schoolId.toString();
+    schoolNameController.text = widget.school.name;
+    addressController.text = widget.school.address;
 
     super.initState();
   }
+  TextEditingController schoolNameController = TextEditingController();
 
-  String selectedGrade = '';
-  String selectedSchool = '';
-  List<String> schools = [];
+  TextEditingController addressController = TextEditingController();
 
-  List<String> grade = [
-    "1st grade",
-    "2nd grade",
-    "3rd grade",
-    "4th grade",
-    "5th grade",
-    "6th grade",
-    "7th grade",
-    "8th grade",
-    "9th grade",
-    "10th grade",
-    "11th grade",
-    "12th grade",
-  ];
 
   XFile? selectedImage;
 
@@ -81,7 +63,7 @@ class _UpdateClassState extends State<UpdateClass> {
     return BlocConsumer<ClassCubit, ClassState>(
       listener: (context, state) {
         log(state.toString());
-        if (state is TeacherClassesLoaded) {
+        if (state is SchoolLoaded) {
           Navigator.pop(context2);
         }
       },
@@ -101,7 +83,7 @@ class _UpdateClassState extends State<UpdateClass> {
                 elevation: 0,
                 centerTitle: true,
                 title: Text(
-                  "Update a Class",
+                  "Update the School",
                   style: TextStyle(
                     fontFamily: "Poppins",
                     color: AppColors.black900,
@@ -122,65 +104,11 @@ class _UpdateClassState extends State<UpdateClass> {
                     // crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       SizedBox(height: 20.v),
-                      _buildName(context, "Class Name", classNameController),
+                      _buildName(context, "School Name", schoolNameController),
                       SizedBox(height: 20.v),
-                      _buildName(context, "Subject", subjectController),
+                      _buildName(context, "Address", addressController),
                       SizedBox(height: 20.v),
-                      Padding(
-                        padding: EdgeInsets.only(left: 3.h),
-                        child: Text(
-                          "Grade level",
-                          style: CustomTextStyles.titleMediumPoppinsGray900,
-                        ),
-                      ),
-                      SizedBox(height: 20.v),
-                      Padding(
-                        padding: EdgeInsets.only(left: 3.h),
-                        child: CustomDropDown(
-                          value: selectedGrade,
-                          textStyle: TextStyle(
-                            fontFamily: "Poppins",
-                            color: AppColors.black900,
-                            fontWeight: FontWeight.w700,
-                          ),
-                          borderDecoration: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide(
-                              color: AppColors.gray300,
-                              width: 1.5,
-                            ),
-                          ),
-                          contentPadding: EdgeInsets.symmetric(
-                              horizontal: 21.h, vertical: 15.v),
-                          icon: Container(
-                            margin: EdgeInsets.fromLTRB(30.h, 18.v, 9.h, 18.v),
-                            child: CustomImageView(
-                              imagePath: ImageConstant.imgArrowdown,
-                              height: 20.adaptSize,
-                              width: 20.adaptSize,
-                            ),
-                          ),
-                          suffix: Container(
-                            margin: EdgeInsets.fromLTRB(10.h, 18.v, 12.h, 18.v),
-                            child: CustomImageView(
-                              imagePath: ImageConstant.imgArrowdown,
-                              height: 20.adaptSize,
-                              width: 20.adaptSize,
-                            ),
-                          ),
-                          hintText: "Select Grade level",
-                          hintStyle:
-                              CustomTextStyles.titleMediumPoppinsGray40001,
-                          items: grade,
-                          onChanged: (String newValue) {
-                            setState(() {
-                              selectedGrade = newValue;
-                            });
-                          },
-                        ),
-                      ),
-                      SizedBox(height: 48.v),
-                      Row(
+                                            Row(
                         children: [
                           Padding(
                             padding: EdgeInsets.only(left: 3.h),
@@ -203,7 +131,7 @@ class _UpdateClassState extends State<UpdateClass> {
                       InkWell(
                         onTap: pickImage,
                         child: selectedImage == null
-                            ? Text('Select Image')
+                            ? const Text('Select Image')
                             : Text(
                                 'Image Selected: ${selectedImage!.path.split('/').last}'),
                       ),
@@ -268,9 +196,8 @@ class _UpdateClassState extends State<UpdateClass> {
       onPressed: state is ChildrenLoading
           ? null
           : () {
-              if (classNameController.text.isNotEmpty &&
-                  subjectController.text.isNotEmpty &&
-                  selectedGrade.isNotEmpty) {
+              if (schoolNameController.text.isNotEmpty &&
+                  addressController.text.isNotEmpty) {
                 setState(() {
                   errorMessage = '';
                 });
@@ -280,12 +207,11 @@ class _UpdateClassState extends State<UpdateClass> {
                   if (selectedImage != null) {
                     image = File(selectedImage!.path);
                   }
-                  context.read<ClassCubit>().updateClass(
-                        widget.classe.id,
-                        ClassM(
-                          name: classNameController.text,
-                          grade: selectedGrade,
-                          subject: subjectController.text,
+                  context.read<ClassCubit>().updateSchool(
+                        widget.school.id,
+                        SchoolM(
+                          name: schoolNameController.text,
+                          address: addressController.text,
                         ),
                         image,
                       );

@@ -23,7 +23,7 @@ class ClassLoaded extends ClassState {
 class SchoolLoaded extends ClassState {
   final SchoolModel school;
 
-  SchoolLoaded(this.school);
+  SchoolLoaded(this.school);  
 
   @override
   List<Object> get props => [school];
@@ -56,6 +56,8 @@ class NoClasses extends ClassState {
   @override
   List<Object> get props => [message];
 }
+
+class SchoolRemoved extends ClassState {}
 
 class ClassError extends ClassState {
   final String message;

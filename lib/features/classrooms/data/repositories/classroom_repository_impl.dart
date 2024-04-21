@@ -141,10 +141,10 @@ class ClassroomRepositoryImpl implements ClassroomRepository {
     }
   }
   @override
-  Future<Either<Failure, void>> updateClass(ClassM classModel, File? image) async {
+  Future<Either<Failure, ClassModel>> updateClass(int id, ClassM classModel, File? image) async {
     if (await networkInfo.isConnected) {
       try {
-        final remoteResponse = await remoteDataSource.updateClass(classModel, image);
+        final remoteResponse = await remoteDataSource.updateClass(id, classModel, image);
         return Right(remoteResponse);
       } on ServerException {
         return Left(ServerFailure());
@@ -158,6 +158,32 @@ class ClassroomRepositoryImpl implements ClassroomRepository {
     if (await networkInfo.isConnected) {
       try {
         final remoteResponse = await remoteDataSource.addSchool(schoolModel, image);
+        return Right(remoteResponse);
+      } on ServerException {
+        return Left(ServerFailure());
+      }
+    } else {
+      return Left(NetworkFailure());
+    }
+  }
+  @override
+  Future<Either<Failure, void>> removeSchool(int? id) async {
+    if (await networkInfo.isConnected) {
+      try {
+        final remoteResponse = await remoteDataSource.removeSchool(id);
+        return Right(remoteResponse);
+      } on ServerException {
+        return Left(ServerFailure());
+      }
+    } else {
+      return Left(NetworkFailure());
+    }
+  }
+  @override
+  Future<Either<Failure, SchoolModel>> updateSchool(int id, SchoolM schoolModel, File? image) async {
+    if (await networkInfo.isConnected) {
+      try {
+        final remoteResponse = await remoteDataSource.updateSchool(id, schoolModel, image);
         return Right(remoteResponse);
       } on ServerException {
         return Left(ServerFailure());

@@ -24,8 +24,10 @@ abstract class ClassroomRemoteDataSource {
   Future<List<ClassModel>> getTeacherClasses(int? id);
   Future<ClassModel> addClass(ClassM classModel, File? image);
   Future<void> removeClass(int? id);
-  Future<void> updateClass(ClassM classModel, File? image);
+  Future<ClassModel> updateClass(int id, ClassM classModel, File? image);
   Future<SchoolModel> addSchool(SchoolM schoolModel, File? image);
+  Future<void> removeSchool(int? id);
+  Future<SchoolModel> updateSchool(int id, SchoolM schoolModel, File? image);
 }
 
 class ClassroomRemoteDataSourceImpl implements ClassroomRemoteDataSource {
@@ -166,24 +168,29 @@ class ClassroomRemoteDataSourceImpl implements ClassroomRemoteDataSource {
   }
 
   @override
-  Future<void> updateClass(ClassM classModel, File? image) async {
+  Future<ClassModel> updateClass(int id, ClassM classModel, File? image) async {
     FormData formData;
     if (image != null) {
       String fileName = image.path.split('/').last;
       formData = FormData.fromMap({
         ...classModel.toJson(),
+        "_method": "PUT",
         "image": await MultipartFile.fromFile(image.path, filename: fileName),
       });
     } else {
-      formData = FormData.fromMap(classModel.toJson());
+      formData = FormData.fromMap({
+        ...classModel.toJson(),
+        "_method": "PUT",
+      });
     }
 
-    final response = await apiConsumer.put2(
-      EndPoints.removeClass(classModel.id),
+    final response = await apiConsumer.post2(
+      EndPoints.removeClass(id),
       body: formData,
     );
-
-    if (response['statusCode'] != 201) {
+    if (response['statusCode'] == 201) {
+      return ClassModel.fromJson(response['data']);
+    } else {
       throw ServerException();
     }
   }
@@ -206,6 +213,40 @@ class ClassroomRemoteDataSourceImpl implements ClassroomRemoteDataSource {
       body: formData,
     );
 
+    if (response['statusCode'] == 201) {
+      return SchoolModel.fromJson(response['data']);
+    } else {
+      throw ServerException();
+    }
+  }
+  @override
+  Future<void> removeSchool(int? id) async {
+    final response = await apiConsumer.delete(EndPoints.removeSchool(id));
+    if (response['statusCode'] != 204) {
+      throw ServerException();
+    }
+  }
+  @override
+  Future<SchoolModel> updateSchool(int id, SchoolM schoolModel, File? image) async {
+    FormData formData;
+    if (image != null) {
+      String fileName = image.path.split('/').last;
+      formData = FormData.fromMap({
+        ...schoolModel.toJson(),
+        "_method": "PUT",
+        "image": await MultipartFile.fromFile(image.path, filename: fileName),
+      });
+    } else {
+      formData = FormData.fromMap({
+        ...schoolModel.toJson(),
+        "_method": "PUT",
+      });
+    }
+
+    final response = await apiConsumer.post2(
+      EndPoints.updateSchool(id),
+      body: formData,
+    );
     if (response['statusCode'] == 201) {
       return SchoolModel.fromJson(response['data']);
     } else {

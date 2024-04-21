@@ -81,6 +81,7 @@ Future<void> init() async {
   sl.registerFactory<ClassCubit>(() => ClassCubit(
         classroomRepository: sl(),
         getMembersUseCase: sl(),
+        authCubit: sl(),
       ));
   sl.registerFactory<MembersCubit>(() => MembersCubit(
         classroomRepository: sl(),

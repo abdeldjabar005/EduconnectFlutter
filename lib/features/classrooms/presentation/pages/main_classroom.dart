@@ -56,10 +56,23 @@ class MainClassroom extends StatelessWidget {
                   classe.value.isNotEmpty &&
                       user.schools.isEmpty &&
                       user.classes.isEmpty) {
-                return _buildClassroom(context);
+                return Navigator(
+                  key: navigatorKey,
+                  onGenerateRoute: (settings) {
+                    return MaterialPageRoute(
+                      builder: (context) {
+                        return _buildClassroom(context);
+                      },
+                    );
+                  },
+                );
+                // return _buildClassroom(context);
               } else if (user.schools.isEmpty &&
-                  user.classes.isEmpty &&
-                  !(state is SchoolLoaded || state is ClassLoaded)) {
+                      user.classes.isEmpty &&
+                      !(state is SchoolLoaded || state is ClassLoaded) ||
+                  (state is SchoolRemoved &&
+                      user.schools.isEmpty &&
+                      school.value.isEmpty)) {
                 return Navigator(
                   key: navigatorKey,
                   onGenerateRoute: (settings) {

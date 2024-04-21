@@ -17,6 +17,7 @@ import 'package:quotes/features/classrooms/presentation/cubit/class_cubit.dart';
 import 'package:quotes/features/posts/presentation/widgets/custom_image_view.dart';
 import 'package:quotes/features/profile/presentation/cubit/children_cubit.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:quotes/features/profile/presentation/widgets/manage_school.dart';
 
 class AddSchool extends StatefulWidget {
   const AddSchool({Key? key})
@@ -49,12 +50,12 @@ class _AddSchoolState extends State<AddSchool> {
   }
 
   @override
-  Widget build(BuildContext context2) {
+  Widget build(BuildContext context) {
     return BlocConsumer<ClassCubit, ClassState>(
-      listener: (context2, state) {
+      listener: (context, state) {
         log(state.toString());
         if (state is SchoolLoaded) {
-          Navigator.pop(context);
+          Navigator.maybePop(context);
         }
       },
       builder: (context, state) {
@@ -93,6 +94,18 @@ class _AddSchoolState extends State<AddSchool> {
                   child: ListView(
                     // crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      SizedBox(height: 40.v),
+                      Center(
+                        child: Text("You have no school yet",
+                            style: CustomTextStyles.bodyMediumRobotoBlack),
+                      ),
+                      SizedBox(height: 20.v),
+                      Center(
+                        child: Text(
+                          "Add a school to get started",
+                          style: CustomTextStyles.bodyMediumRobotoBlack2,
+                        ),
+                      ),
                       SizedBox(height: 40.v),
                       _buildName(context, "School Name", schoolNameController),
                       SizedBox(height: 20.v),

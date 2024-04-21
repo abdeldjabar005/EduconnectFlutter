@@ -93,7 +93,7 @@ class _UpdateChildState extends State<UpdateChild> {
                 elevation: 0,
                 centerTitle: true,
                 title: Text(
-                  "Add a Child",
+                  "Update Child Informations",
                   style: TextStyle(
                     fontFamily: "Poppins",
                     color: AppColors.black900,

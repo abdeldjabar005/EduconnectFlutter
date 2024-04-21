@@ -36,6 +36,18 @@ class CustomTextStyles {
         fontSize: 20.fSize,
         fontWeight: FontWeight.w400,
       );
+  static get bodyMediumRobotoBlack =>
+      theme.textTheme.bodyMedium!.poppins.copyWith(
+        color: AppColors.black900,
+        fontSize: 26.fSize,
+        fontWeight: FontWeight.w600,
+      );
+  static get bodyMediumRobotoBlack2 =>
+      theme.textTheme.bodyMedium!.poppins.copyWith(
+        color: AppColors.gray90001,
+        fontSize: 18.fSize,
+        fontWeight: FontWeight.w600,
+      );
   static get bodyMediumRobotoGray90001 =>
       theme.textTheme.bodyMedium!.roboto.copyWith(
         color: postTheme.gray90001,
