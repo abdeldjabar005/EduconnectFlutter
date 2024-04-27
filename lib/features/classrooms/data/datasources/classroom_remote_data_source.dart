@@ -28,6 +28,8 @@ abstract class ClassroomRemoteDataSource {
   Future<SchoolModel> addSchool(SchoolM schoolModel, File? image);
   Future<void> removeSchool(int? id);
   Future<SchoolModel> updateSchool(int id, SchoolM schoolModel, File? image);
+  Future<SchoolModel> schoolVerifyRequest(
+      int id, String email, String phoneNumber, File? file);
 }
 
 class ClassroomRemoteDataSourceImpl implements ClassroomRemoteDataSource {
@@ -219,6 +221,7 @@ class ClassroomRemoteDataSourceImpl implements ClassroomRemoteDataSource {
       throw ServerException();
     }
   }
+
   @override
   Future<void> removeSchool(int? id) async {
     final response = await apiConsumer.delete(EndPoints.removeSchool(id));
@@ -226,8 +229,10 @@ class ClassroomRemoteDataSourceImpl implements ClassroomRemoteDataSource {
       throw ServerException();
     }
   }
+
   @override
-  Future<SchoolModel> updateSchool(int id, SchoolM schoolModel, File? image) async {
+  Future<SchoolModel> updateSchool(
+      int id, SchoolM schoolModel, File? image) async {
     FormData formData;
     if (image != null) {
       String fileName = image.path.split('/').last;
@@ -248,6 +253,35 @@ class ClassroomRemoteDataSourceImpl implements ClassroomRemoteDataSource {
       body: formData,
     );
     if (response['statusCode'] == 201) {
+      return SchoolModel.fromJson(response['data']);
+    } else {
+      throw ServerException();
+    }
+  }
+
+  @override
+  Future<SchoolModel> schoolVerifyRequest(
+      int id, String email, String phoneNumber, File? file) async {
+    FormData formData;
+    if (file != null) {
+      String fileName = file.path.split('/').last;
+      formData = FormData.fromMap({
+        "email": email,
+        "phone_number": phoneNumber,
+        "document": await MultipartFile.fromFile(file.path, filename: fileName),
+      });
+    } else {
+      formData = FormData.fromMap({
+        "email": email,
+        "phone_number": phoneNumber,
+      });
+    }
+
+    final response = await apiConsumer.post2(
+      EndPoints.schoolVerifyRequest(id),
+      body: formData,
+    );
+    if (response['statusCode'] == 200) {
       return SchoolModel.fromJson(response['data']);
     } else {
       throw ServerException();

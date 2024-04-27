@@ -59,4 +59,13 @@ class AuthRepositoryImpl implements AuthRepository {
       return Left(ServerFailure());
     }
   }
+  @override
+  Future<Either<Failure, void>> resendEmail(String email) async {
+    try {
+      await remoteDataSource.resendEmail(email);
+      return Right(null);
+    } on ServerException {
+      return Left(ServerFailure());
+    }
+  }
 }

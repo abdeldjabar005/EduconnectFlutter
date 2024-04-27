@@ -49,6 +49,7 @@ class ClassCubit extends Cubit<ClassState> {
       newList.add(schoolModel);
       schoolCache.value = newList;
       schoolCache.notifyListeners();
+      authCubit.addSchool(schoolModel);
       emit(SchoolLoaded(schoolModel));
     });
   }
@@ -87,9 +88,10 @@ class ClassCubit extends Cubit<ClassState> {
       (classModel) {
         List<ClassModel> newList = List.from(classCache.value);
         newList.add(classModel);
-
+        _classes!.add(classModel);
         classCache.value = newList;
         classCache.notifyListeners();
+        authCubit.addClass(classModel);
         emit(ClassLoaded(classModel));
       },
     );
@@ -103,7 +105,6 @@ class ClassCubit extends Cubit<ClassState> {
         return;
       }
     }
-
     try {
       emit(ClassLoading());
       final result = await classroomRepository.getClasses(id);
@@ -256,6 +257,32 @@ class ClassCubit extends Cubit<ClassState> {
           authCubit.removeSchool(id);
 
           emit(SchoolRemoved());
+        },
+      );
+    } catch (e) {
+      emit(ClassError(e.toString()));
+    }
+  }
+
+  Future<void> schoolVerifyRequest(
+      int schoolId, String email, String phoneNumber, File? file) async {
+    try {
+      emit(ClassLoading());
+      final result = await classroomRepository.schoolVerifyRequest(
+          schoolId, email, phoneNumber, file);
+      result.fold(
+        (failure) => emit(ClassError(_mapFailureToMessage(failure))),
+        (updatedSchool) async {
+          List<SchoolModel> newList = List.from(schoolCache.value);
+          int indexToUpdate =
+              newList.indexWhere((schoolModel) => schoolModel.id == schoolId);
+          if (indexToUpdate != -1) {
+            newList[indexToUpdate] = updatedSchool;
+            schoolCache.value = newList;
+            schoolCache.notifyListeners();
+            authCubit.updateSchool(updatedSchool);
+          }
+          emit(SchoolVerifyRequested(updatedSchool));
         },
       );
     } catch (e) {

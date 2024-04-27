@@ -54,7 +54,21 @@ class PostModel extends Post {
             .toList()
             .cast<String>();
         break;
-      // Add other cases for 'video' and 'attachment'
+      case 'video':
+        content = (json['video'] as List)
+            .map((item) => item is Map ? item['url'] : null)
+            .where((item) => item != null)
+            .toList()
+            .cast<String>();
+        break;
+      case 'attachment':
+        content = (json['attachment'] as List)
+            .map((item) => item is Map ? item['url'] : null)
+            .where((item) => item != null)
+            .toList()
+            .cast<String>();
+        break;
+      
     }
     return PostModel(
       id: json["id"],
@@ -128,6 +142,6 @@ class PostModel extends Post {
         "profile_picture": profilePicture,
         "classname": classname,
         "isSaved": isSaved,
-        "content": content, // Add this line
+        "content": content, 
       };
 }

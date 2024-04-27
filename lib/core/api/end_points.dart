@@ -11,6 +11,7 @@ class EndPoints {
   static const String posts = '${baseUrl}posts/class/16';
   static String post(int id) => '${baseUrl}posts/$id';
 
+  static const String resendEmail = '${baseUrl}resendotp';
   static const String users = '${baseUrl}users';
   static const String verifyEmail = '${baseUrl}verify';
 
@@ -42,4 +43,6 @@ class EndPoints {
   static const String addSchool = '${baseUrl}schools';
   static String removeChild(int? id) => '${baseUrl}students/$id';
   static String updateChild(int? id) => '${baseUrl}students/$id';
+
+  static String schoolVerifyRequest(int? id ) => '${baseUrl}schools/$id/request/verification';
 }

@@ -76,6 +76,14 @@ class AuthCubit extends Cubit<AuthState> {
     _eitherLoadedOrErrorState2(result);
   }
 
+  Future<void> resendEmail(String email) async {
+    try {
+      final result = await authRepository.resendEmail(email);
+    } on ServerException {
+      emit(AuthError(message: 'Server Failure'));
+    }
+  }
+
   User? getCurrentUser() {
     return state is AuthAuthenticated
         ? (state as AuthAuthenticated).user
@@ -116,11 +124,15 @@ class AuthCubit extends Cubit<AuthState> {
   void addSchool(SchoolModel school) {
     final currentState = state;
     if (currentState is AuthAuthenticated) {
-      
-      final updatedUser = currentState.user.copyWith(school: school);
+      final updatedSchools = currentState.user.schools;
+      updatedSchools.add(school);
+
+      final updatedUser =
+          currentState.user.copyWith(school: school, schools: updatedSchools);
       emit(AuthAuthenticated(user: updatedUser));
     }
   }
+
   void addClass(ClassModel classModel) {
     final currentState = state;
     if (currentState is AuthAuthenticated) {
@@ -167,20 +179,21 @@ class AuthCubit extends Cubit<AuthState> {
   void removeClass(int id) {
     final currentState = state;
     if (currentState is AuthAuthenticated) {
-      final updatedClasses = currentState.user.classes
-          .where((classModel) => classModel.id != id)
-          .toList();
-      final updatedUser = currentState.user.copyWith(classes: updatedClasses);
+      currentState.user.classes.removeWhere((classe) => classe.id == id);
+      final updatedUser =
+          currentState.user.copyWith(classes: currentState.user.classes);
       emit(AuthAuthenticated(user: updatedUser));
     }
   }
+
   void removeSchool(int id) {
     final currentState = state;
     if (currentState is AuthAuthenticated) {
-      final updatedSchools = currentState.user.schools
-          .where((schoolModel) => schoolModel.id != id)
-          .toList();
-      final updatedUser = currentState.user.copyWith(schools: updatedSchools, school: null);
+      currentState.user.schools
+          .removeWhere((schoolModel) => schoolModel.id == id);
+
+      final updatedUser = currentState.user.copyWith(school: null);
+      log(updatedUser.toString());
       emit(AuthAuthenticated(user: updatedUser));
     }
   }

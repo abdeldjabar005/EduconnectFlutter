@@ -67,7 +67,10 @@ class MainProfile extends StatelessWidget {
             Row(
               children: [
                 CustomImageView(
-                  imagePath: ImageConstant.imgRectangle17100x100,
+                  imagePath:
+                      ImageConstant.imgRectangle17100x100, // TODO:user.image
+                  // imagePath: '${EndPoints.storage}${user.profilePicture}',
+
                   height: 100.adaptSize,
                   width: 100.adaptSize,
                   radius: BorderRadius.circular(
@@ -142,8 +145,8 @@ class MainProfile extends StatelessWidget {
                         // return ManageSchools();
                         if (user.school == null && !(state is SchoolLoaded) ||
                             state is SchoolRemoved) {
-                         return AddSchool();
-                           
+                          return AddSchool();
+
                           // return AddSchool();
                         } else {
                           return ManageSchool();

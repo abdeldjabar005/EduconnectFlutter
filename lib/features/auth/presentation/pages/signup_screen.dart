@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -49,6 +51,40 @@ class _SignupScreenState extends State<SignupScreen> {
 
   bool isPasswordVisible = false;
 
+  // timer for the resend email button
+
+  late Timer _timer;
+  int _start = 180;
+  bool _isClickable = false;
+
+  void startTimer() {
+    _timer = Timer.periodic(
+      Duration(seconds: 1),
+      (Timer timer) => setState(
+        () {
+          if (_start < 1) {
+            timer.cancel();
+            _isClickable = true;
+          } else {
+            _start--;
+          }
+        },
+      ),
+    );
+  }
+
+  @override
+  void initState() {
+    startTimer();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -87,9 +123,9 @@ class _SignupScreenState extends State<SignupScreen> {
                       duration: const Duration(milliseconds: 300),
                       curve: Curves.easeIn,
                     );
-                    return false; 
+                    return false;
                   }
-                  return true; 
+                  return true;
                 },
                 child: PageView(
                   controller: _pageController,
@@ -110,175 +146,235 @@ class _SignupScreenState extends State<SignupScreen> {
   }
 
   Widget _buildFirstPage(BuildContext context, AuthState state) {
-    return SingleChildScrollView(
-      padding: EdgeInsets.only(
-        bottom: MediaQuery.of(context).viewInsets.bottom,
+    return Scaffold(
+      appBar: AppBar(
+        toolbarHeight: 0.0, // This hides the AppBar
       ),
-      child: Form(
-        key: _formKey,
-        child: Container(
-          width: double.maxFinite,
-          padding: EdgeInsets.symmetric(
-            horizontal: 24.h,
-            vertical: 15.v,
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Center(
-                child:
-                    Text("EduConnect", style: CustomTextStyles.displayMedium45),
-              ),
-              SizedBox(height: 4.v),
-              Padding(
-                padding: EdgeInsets.only(left: 2.h),
-                child: Center(
-                  child: Text(
-                    "Registration",
-                    style: CustomTextStyles.titleMediumPoppinsBlack2,
-                  ),
+      body: Stack(
+        children: [
+          SingleChildScrollView(
+            padding: EdgeInsets.only(
+              bottom: MediaQuery.of(context).viewInsets.bottom,
+            ),
+            child: Form(
+              key: _formKey,
+              child: Container(
+                width: double.maxFinite,
+                padding: EdgeInsets.symmetric(
+                  horizontal: 24.h,
+                  vertical: 15.v,
                 ),
-              ),
-              SizedBox(height: 28.v),
-              _buildsteps(context),
-              SizedBox(height: 28.v),
-              _buildFiftyOne(context),
-              SizedBox(height: 16.v),
-              Padding(
-                padding: EdgeInsets.only(left: 3.h),
-                child: Text(
-                  "Email",
-                  style: CustomTextStyles.titleMediumPoppinsGray900,
-                ),
-              ),
-              SizedBox(height: 11.v),
-              _buildEmail(context),
-              SizedBox(height: 16.v),
-              Padding(
-                padding: EdgeInsets.only(left: 3.h),
-                child: Text(
-                  "Occupation",
-                  style: CustomTextStyles.titleMediumPoppinsGray900,
-                ),
-              ),
-              SizedBox(height: 11.v),
-              Padding(
-                padding: EdgeInsets.only(left: 3.h),
-                child: CustomDropDown(
-                  value: context.read<AuthCubit>().selectedRole,
-                  textStyle: TextStyle(
-                    fontFamily: "Poppins",
-                    color: AppColors.black900,
-                    fontWeight: FontWeight.w700,
-                  ),
-                  borderDecoration: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: BorderSide(
-                      color: AppColors.gray300,
-                      width: 1.5,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      height: 45.v,
                     ),
-                  ),
-                  contentPadding:
-                      EdgeInsets.symmetric(horizontal: 21.h, vertical: 15.v),
-                  icon: Container(
-                    margin: EdgeInsets.fromLTRB(30.h, 18.v, 9.h, 18.v),
-                    child: CustomImageView(
-                      imagePath: ImageConstant.imgArrowdown,
-                      height: 20.adaptSize,
-                      width: 20.adaptSize,
+                    Center(
+                      child: Text("EduConnect",
+                          style: CustomTextStyles.displayMedium45),
                     ),
-                  ),
-                  suffix: Container(
-                    margin: EdgeInsets.fromLTRB(10.h, 18.v, 12.h, 18.v),
-                    child: CustomImageView(
-                      imagePath: ImageConstant.imgArrowdown,
-                      height: 20.adaptSize,
-                      width: 20.adaptSize,
+                    SizedBox(height: 4.v),
+                    Padding(
+                      padding: EdgeInsets.only(left: 2.h),
+                      child: Center(
+                        child: Text(
+                          "Registration",
+                          style: CustomTextStyles.titleMediumPoppinsBlack2,
+                        ),
+                      ),
                     ),
-                  ),
-                  hintText: "Select your role",
-                  hintStyle: CustomTextStyles.titleMediumPoppinsGray40001,
-                  items: role,
-                  onChanged: (String newValue) {
-                    setState(() {
-                      context.read<AuthCubit>().selectedRole = newValue;
+                    SizedBox(height: 28.v),
+                    _buildsteps(context),
+                    SizedBox(height: 28.v),
+                    _buildFiftyOne(context),
+                    SizedBox(height: 16.v),
+                    Padding(
+                      padding: EdgeInsets.only(left: 3.h),
+                      child: Text(
+                        "Email",
+                        style: CustomTextStyles.titleMediumPoppinsGray900,
+                      ),
+                    ),
+                    SizedBox(height: 11.v),
+                    _buildEmail(context),
+                    SizedBox(height: 16.v),
+                    Padding(
+                      padding: EdgeInsets.only(left: 3.h),
+                      child: Text(
+                        "Occupation",
+                        style: CustomTextStyles.titleMediumPoppinsGray900,
+                      ),
+                    ),
+                    SizedBox(height: 11.v),
+                    Padding(
+                      padding: EdgeInsets.only(left: 3.h),
+                      child: CustomDropDown(
+                        value: context.read<AuthCubit>().selectedRole,
+                        textStyle: TextStyle(
+                          fontFamily: "Poppins",
+                          color: AppColors.black900,
+                          fontWeight: FontWeight.w700,
+                        ),
+                        borderDecoration: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide(
+                            color: AppColors.gray300,
+                            width: 1.5,
+                          ),
+                        ),
+                        contentPadding: EdgeInsets.symmetric(
+                            horizontal: 21.h, vertical: 15.v),
+                        icon: Container(
+                          margin: EdgeInsets.fromLTRB(30.h, 18.v, 9.h, 18.v),
+                          child: CustomImageView(
+                            imagePath: ImageConstant.imgArrowdown,
+                            height: 20.adaptSize,
+                            width: 20.adaptSize,
+                          ),
+                        ),
+                        suffix: Container(
+                          margin: EdgeInsets.fromLTRB(10.h, 18.v, 12.h, 18.v),
+                          child: CustomImageView(
+                            imagePath: ImageConstant.imgArrowdown,
+                            height: 20.adaptSize,
+                            width: 20.adaptSize,
+                          ),
+                        ),
+                        hintText: "Select your role",
+                        hintStyle: CustomTextStyles.titleMediumPoppinsGray40001,
+                        items: role,
+                        onChanged: (String newValue) {
+                          setState(() {
+                            context.read<AuthCubit>().selectedRole = newValue;
 
-                      selectedRole = newValue;
-                    });
-                  },
+                            selectedRole = newValue;
+                          });
+                        },
+                      ),
+                    ),
+                    SizedBox(height: 45.v),
+                    _buildNextStep(context, state),
+                    SizedBox(height: 8.v),
+                    _buildError(context, state),
+                    SizedBox(height: 8.v),
+                  ],
                 ),
               ),
-              SizedBox(height: 45.v),
-              _buildNextStep(context, state),
-              SizedBox(height: 8.v),
-              _buildError(context, state),
-              SizedBox(height: 8.v),
-            ],
+            ),
           ),
-        ),
+          Positioned(
+            top: 15.0,
+            left: 11.0,
+            child: FloatingActionButton(
+              mini: true, // This makes the FloatingActionButton smaller
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Icon(Icons.arrow_back_sharp, color: Colors.black),
+              backgroundColor: AppColors.black900
+                  .withOpacity(0.1), // Customize this color as per your design
+              elevation: 0.0, // This removes the shadow
+            ),
+          ),
+        ],
       ),
     );
   }
 
   Widget _buildSecondPage(BuildContext context, AuthState state) {
-    return SingleChildScrollView(
-      padding: EdgeInsets.only(
-        bottom: MediaQuery.of(context).viewInsets.bottom,
-      ),
-      child: Form(
-        key: _formKey2,
-        child: Container(
-          width: double.maxFinite,
-          padding: EdgeInsets.symmetric(
-            horizontal: 24.h,
-            vertical: 15.v,
+    return Scaffold(
+      body: Stack(
+        children: [
+          SingleChildScrollView(
+            padding: EdgeInsets.only(
+              bottom: MediaQuery.of(context).viewInsets.bottom,
+            ),
+            child: Form(
+              key: _formKey2,
+              child: Container(
+                width: double.maxFinite,
+                padding: EdgeInsets.symmetric(
+                  horizontal: 24.h,
+                  vertical: 15.v,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      height: 45.v,
+                    ),
+                    Center(
+                      child: Text("EduConnect",
+                          style: CustomTextStyles.displayMedium45),
+                    ),
+                    SizedBox(height: 4.v),
+                    Padding(
+                      padding: EdgeInsets.only(left: 15.h),
+                      child: Center(
+                        child: Text(
+                          "Registration",
+                          textAlign: TextAlign.center,
+                          style: CustomTextStyles.titleMediumPoppinsBlack2,
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 16.v),
+                    _buildsteps2(context),
+                    SizedBox(height: 16.v),
+                    Padding(
+                      padding: EdgeInsets.only(left: 3.h),
+                      child: Text(
+                        "Password",
+                        style: CustomTextStyles.titleMediumPoppinsGray900,
+                      ),
+                    ),
+                    SizedBox(height: 11.v),
+                    _buildPassword(
+                        context, "Enter Password", passwordController),
+                    SizedBox(height: 16.v),
+                    Padding(
+                      padding: EdgeInsets.only(left: 3.h),
+                      child: Text(
+                        "Confirm Password",
+                        style: CustomTextStyles.titleMediumPoppinsGray900,
+                      ),
+                    ),
+                    SizedBox(height: 11.v),
+                    _buildPassword(
+                        context, "Confirm Password", confirmpasswordController),
+                    SizedBox(height: 30.v),
+                    _buildContinue(context, state),
+                    SizedBox(height: 8.v),
+                    _buildError(context, state),
+                    SizedBox(height: 8.v),
+                  ],
+                ),
+              ),
+            ),
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Center(
-                child:
-                    Text("EduConnect", style: CustomTextStyles.displayMedium45),
-              ),
-              SizedBox(height: 4.v),
-              Padding(
-                padding: EdgeInsets.only(left: 2.h),
-                child: Text(
-                  "Registration",
-                  style: CustomTextStyles.titleMediumPoppinsBlack2,
-                ),
-              ),
-              SizedBox(height: 16.v),
-              _buildsteps2(context),
-              SizedBox(height: 16.v),
-              Padding(
-                padding: EdgeInsets.only(left: 3.h),
-                child: Text(
-                  "Password",
-                  style: CustomTextStyles.titleMediumPoppinsGray900,
-                ),
-              ),
-              SizedBox(height: 11.v),
-              _buildPassword(context, "Enter Password", passwordController),
-              SizedBox(height: 16.v),
-              Padding(
-                padding: EdgeInsets.only(left: 3.h),
-                child: Text(
-                  "Confirm Password",
-                  style: CustomTextStyles.titleMediumPoppinsGray900,
-                ),
-              ),
-              SizedBox(height: 11.v),
-              _buildPassword(
-                  context, "Confirm Password", confirmpasswordController),
-              SizedBox(height: 30.v),
-              _buildContinue(context, state),
-              SizedBox(height: 8.v),
-              _buildError(context, state),
-              SizedBox(height: 8.v),
-            ],
+          Positioned(
+            top: 15.0,
+            left: 11.0,
+            child: FloatingActionButton(
+              mini: true, // This makes the FloatingActionButton smaller
+              onPressed: () {
+                if (_pageController.page != 0.0) {
+                  _pageController.previousPage(
+                    duration: const Duration(milliseconds: 300),
+                    curve: Curves.easeIn,
+                  );
+                } else {
+                  Navigator.of(context).pop();
+                }
+              },
+              child: Icon(Icons.arrow_back_sharp, color: Colors.black),
+              backgroundColor: AppColors.black900
+                  .withOpacity(0.1), // Customize this color as per your design
+              elevation: 0.0, // This removes the shadow
+            ),
           ),
-        ),
+        ],
       ),
     );
   }
@@ -362,14 +458,60 @@ class _SignupScreenState extends State<SignupScreen> {
                 text: TextSpan(children: [
                   TextSpan(
                     text: "Haven’t got the email yet?",
-                    style: CustomTextStyles.titleMediumff989898,
+                    style: CustomTextStyles.titleMediumff545454,
                   ),
                   TextSpan(text: " "),
-                  TextSpan(
-                    text: "Resend email",
-                    style: CustomTextStyles.titleMediumff648ddb
-                        .copyWith(decoration: TextDecoration.underline),
-                  ),
+                  _start > 0
+                      ? WidgetSpan(
+                          child: GestureDetector(
+                            onTap: null,
+                            child: Text(
+                              "Resend email (${_start ~/ 60}:${(_start % 60).toString().padLeft(2, '0')})",
+                              style: CustomTextStyles.titleMediumff989898
+                                  .copyWith(
+                                      decoration: TextDecoration.underline),
+                            ),
+                          ),
+                        )
+                      : WidgetSpan(
+                          child: GestureDetector(
+                            onTap: () {
+                              if (_isClickable) {
+                                setState(() {
+                                  _isClickable = false;
+                                  _start = 180;
+                                });
+                                startTimer();
+                                context
+                                    .read<AuthCubit>()
+                                    .resendEmail(emailController.text);
+                              }
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: const Text(
+                                    'The email has been resent successfully.',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                  backgroundColor: AppColors.indigoA300,
+                                  duration: Duration(seconds: 2),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  behavior: SnackBarBehavior.floating,
+                                ),
+                              );
+                            },
+                            child: Text(
+                              "Resend email",
+                              style: CustomTextStyles.titleMediumff648ddb
+                                  .copyWith(
+                                      decoration: TextDecoration.underline),
+                            ),
+                          ),
+                        ),
                 ]),
                 textAlign: TextAlign.left,
               ),

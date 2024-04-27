@@ -1,12 +1,16 @@
 // ignore_for_file: must_be_immutable
 
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:video_player/video_player.dart';
+import 'package:flutter_pdfview/flutter_pdfview.dart';
+import 'package:flutter_vlc_player/flutter_vlc_player.dart';
 
-class CustomImageView extends StatelessWidget {
+class CustomImageView extends StatefulWidget {
   ///[imagePath] is required parameter for showing image
   String? imagePath;
 
@@ -38,10 +42,15 @@ class CustomImageView extends StatelessWidget {
   });
 
   @override
+  State<CustomImageView> createState() => _CustomImageViewState();
+}
+
+class _CustomImageViewState extends State<CustomImageView> {
+  @override
   Widget build(BuildContext context) {
-    return alignment != null
+    return widget.alignment != null
         ? Align(
-            alignment: alignment!,
+            alignment: widget.alignment!,
             child: _buildWidget(),
           )
         : _buildWidget();
@@ -49,9 +58,9 @@ class CustomImageView extends StatelessWidget {
 
   Widget _buildWidget() {
     return Padding(
-      padding: margin ?? EdgeInsets.zero,
+      padding: widget.margin ?? EdgeInsets.zero,
       child: InkWell(
-        onTap: onTap,
+        onTap: widget.onTap,
         child: _buildCircleImage(),
       ),
     );
@@ -59,9 +68,9 @@ class CustomImageView extends StatelessWidget {
 
   ///build the image with border radius
   _buildCircleImage() {
-    if (radius != null) {
+    if (widget.radius != null) {
       return ClipRRect(
-        borderRadius: radius ?? BorderRadius.zero,
+        borderRadius: widget.radius ?? BorderRadius.zero,
         child: _buildImageWithBorder(),
       );
     } else {
@@ -71,11 +80,11 @@ class CustomImageView extends StatelessWidget {
 
   ///build the image with border and border radius style
   _buildImageWithBorder() {
-    if (border != null) {
+    if (widget.border != null) {
       return Container(
         decoration: BoxDecoration(
-          border: border,
-          borderRadius: radius,
+          border: widget.border,
+          borderRadius: widget.radius,
         ),
         child: _buildImageView(),
       );
@@ -85,30 +94,30 @@ class CustomImageView extends StatelessWidget {
   }
 
   Widget _buildImageView() {
-    if (imagePath != null) {
-      switch (imagePath!.imageType) {
+    if (widget.imagePath != null) {
+      switch (widget.imagePath!.imageType) {
         case ImageType.svg:
           return Container(
-            height: height,
-            width: width,
+            height: widget.height,
+            width: widget.width,
             child: SvgPicture.asset(
-              imagePath!,
-              height: height,
-              width: width,
-              fit: fit ?? BoxFit.contain,
-              colorFilter: color != null
+              widget.imagePath!,
+              height: widget.height,
+              width: widget.width,
+              fit: widget.fit ?? BoxFit.contain,
+              colorFilter: widget.color != null
                   ? ColorFilter.mode(
-                      this.color ?? Colors.transparent, BlendMode.srcIn)
+                      this.widget.color ?? Colors.transparent, BlendMode.srcIn)
                   : null,
             ),
           );
         case ImageType.file:
           return Image.file(
-            File(imagePath!),
-            height: height,
-            width: width,
-            fit: fit ?? BoxFit.cover,
-            color: color,
+            File(widget.imagePath!),
+            height: widget.height,
+            width: widget.width,
+            fit: widget.fit ?? BoxFit.cover,
+            color: widget.color,
           );
         case ImageType.network:
           return CachedNetworkImage(
@@ -116,15 +125,13 @@ class CustomImageView extends StatelessWidget {
             memCacheHeight: 500,
             // maxHeightDiskCache: 183,
             // maxWidthDiskCache: 329,
-            
-
             imageBuilder: (context, imageProvider) =>
                 Image(image: imageProvider),
-            height: height,
-            width: width,
-            fit: fit,
-            imageUrl: imagePath!,
-            color: color,
+            height: widget.height,
+            width: widget.width,
+            fit: widget.fit,
+            imageUrl: widget.imagePath!,
+            color: widget.color,
             placeholder: (context, url) => Container(
               height: 30,
               width: 30,
@@ -134,20 +141,59 @@ class CustomImageView extends StatelessWidget {
               ),
             ),
             errorWidget: (context, url, error) => Image.asset(
-              placeHolder,
-              height: height,
-              width: width,
-              fit: fit ?? BoxFit.cover,
+              widget.placeHolder,
+              height: widget.height,
+              width: widget.width,
+              fit: widget.fit ?? BoxFit.cover,
             ),
+          );
+        case ImageType.video:
+          final VlcPlayerController controller = VlcPlayerController.network(
+            widget.imagePath!,
+            hwAcc: HwAcc.auto,
+            autoPlay: false,
+            autoInitialize: true,
+          );
+          return VlcPlayer(
+            controller: controller,
+            aspectRatio: 16 / 9,
+            placeholder: Center(child: CircularProgressIndicator()),
+          );
+
+        // case ImageType.text:
+        //   String contents = File(imagePath!).readAsStringSync();
+        //   return Text(contents);
+        case ImageType.text:
+          Future<String> contents = File(widget.imagePath!).readAsString();
+          return FutureBuilder<String>(
+            future: contents,
+            builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+              if (snapshot.hasData) {
+                return Text(snapshot.data!);
+              } else if (snapshot.hasError) {
+                return Text('Error: ${snapshot.error}');
+              } else {
+                return CircularProgressIndicator();
+              }
+            },
+          );
+        case ImageType.pdf:
+          return PDFView(
+            filePath: widget.imagePath!,
+            autoSpacing: true,
+            enableSwipe: true,
+            pageSnap: true,
+            swipeHorizontal: true,
+            nightMode: false,
           );
         case ImageType.png:
         default:
           return Image.asset(
-            imagePath!,
-            height: height,
-            width: width,
-            fit: fit ?? BoxFit.cover,
-            color: color,
+            widget.imagePath!,
+            height: widget.height,
+            width: widget.width,
+            fit: widget.fit ?? BoxFit.cover,
+            color: widget.color,
           );
       }
     }
@@ -158,15 +204,23 @@ class CustomImageView extends StatelessWidget {
 extension ImageTypeExtension on String {
   ImageType get imageType {
     if (this.startsWith('http') || this.startsWith('https')) {
-      return ImageType.network;
+      if (this.endsWith('.mp4')) {
+        return ImageType.video;
+      } else {
+        return ImageType.network;
+      }
     } else if (this.endsWith('.svg')) {
       return ImageType.svg;
     } else if (this.startsWith('file://')) {
       return ImageType.file;
+    } else if (this.endsWith('.txt')) {
+      return ImageType.text;
+    } else if (this.endsWith('.pdf')) {
+      return ImageType.pdf;
     } else {
-      return ImageType.png;
+      return ImageType.unknown;
     }
   }
 }
 
-enum ImageType { svg, png, network, file, unknown }
+enum ImageType { svg, png, network, file, video, text, pdf, unknown }

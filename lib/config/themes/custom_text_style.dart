@@ -24,7 +24,11 @@ class CustomTextStyles {
         color: postTheme.gray900,
         fontSize: 13.fSize,
       );
-
+  static get bodyMediumRobotoGray9002 =>
+      theme.textTheme.bodyMedium!.roboto.copyWith(
+        color: postTheme.gray900,
+        fontSize: 16.fSize,
+      );
   static get bodyMediumRobotoGray900big =>
       theme.textTheme.bodyMedium!.roboto.copyWith(
         color: postTheme.gray900,
@@ -89,6 +93,7 @@ class CustomTextStyles {
         color: postTheme.gray90002,
         fontSize: 13.fSize,
       );
+
   static get titleMediumPoppins =>
       theme.textTheme.titleMedium!.poppins.copyWith(
         color: postTheme.whiteA700,

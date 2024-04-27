@@ -11,6 +11,8 @@ class SchoolModel extends School {
     required String adminLastName,
     required String? code,
     required int membersCount,
+    required bool isVerified,
+    required bool verificationRequest,
   }) : super(
           id: id,
           name: name,
@@ -21,6 +23,8 @@ class SchoolModel extends School {
           adminLastName: adminLastName,
           code: code,
           membersCount: membersCount,
+          isVerified: isVerified,
+          verificationRequest: verificationRequest,
         );
 
   factory SchoolModel.fromJson(Map<String, dynamic> json) {
@@ -34,6 +38,8 @@ class SchoolModel extends School {
       adminLastName: json['admin_last_name'],
       code: json['code'],
       membersCount: json['members_count'],
+      isVerified: json['is_verified'],
+      verificationRequest: json['verification_request_sent'],
     );
   }
 
@@ -48,6 +54,8 @@ class SchoolModel extends School {
       'admin_last_name': adminLastName,
       'code': code,
       'members_count': membersCount,
+      'is_verified': isVerified,
+      'verification_request_sent': verificationRequest,
     };
   }
 }

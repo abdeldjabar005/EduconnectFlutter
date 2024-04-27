@@ -192,4 +192,17 @@ class ClassroomRepositoryImpl implements ClassroomRepository {
       return Left(NetworkFailure());
     }
   }
+  @override
+  Future<Either<Failure, SchoolModel>> schoolVerifyRequest(int id, String email, String phoneNumber, File? file) async {
+    if (await networkInfo.isConnected) {
+      try {
+        final remoteResponse = await remoteDataSource.schoolVerifyRequest(id, email, phoneNumber, file);
+        return Right(remoteResponse);
+      } on ServerException {
+        return Left(ServerFailure());
+      }
+    } else {
+      return Left(NetworkFailure());
+    }
+  }
 }

@@ -10,7 +10,10 @@ import 'package:quotes/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:quotes/features/classrooms/presentation/cubit/class_cubit.dart';
 import 'package:quotes/features/classrooms/presentation/pages/school_details.dart';
 import 'package:quotes/features/posts/presentation/widgets/custom_image_view.dart';
+import 'package:quotes/features/profile/presentation/widgets/school_verified.dart';
 import 'package:quotes/features/profile/presentation/widgets/update_school.dart';
+import 'package:quotes/features/profile/presentation/widgets/verification_pending.dart';
+import 'package:quotes/features/profile/presentation/widgets/verify_school.dart';
 
 class ManageSchool extends StatelessWidget {
   ManageSchool({Key? key})
@@ -34,6 +37,23 @@ class ManageSchool extends StatelessWidget {
             return true;
           },
           child: Scaffold(
+            appBar: AppBar(
+              leading: BackButton(
+                color: AppColors.black900,
+              ),
+              backgroundColor: AppColors.whiteA700,
+              elevation: 0,
+              centerTitle: true,
+              title: Text(
+                "Manage School",
+                style: TextStyle(
+                  fontFamily: "Poppins",
+                  color: AppColors.black900,
+                  fontWeight: FontWeight.w400,
+                  fontSize: 18.v,
+                ),
+              ),
+            ),
             body: SingleChildScrollView(
               child: Container(
                 width: double.maxFinite,
@@ -61,7 +81,7 @@ class ManageSchool extends StatelessWidget {
                         child: _buildFrame(
                           context,
                           profile: "School Details",
-                          icon: ImageConstant.imgFavorite,
+                          icon: ImageConstant.details,
                           fill: IconButtonStyleHelper.fillindigoA400,
                         ),
                       ),
@@ -70,7 +90,6 @@ class ManageSchool extends StatelessWidget {
                     InkWell(
                       borderRadius: BorderRadius.circular(29.h),
                       onTap: () {
-                        
                         Navigator.push(context, MaterialPageRoute(
                           builder: (context) {
                             return UpdateSchool(school: user.school!);
@@ -86,8 +105,8 @@ class ManageSchool extends StatelessWidget {
                         child: _buildFrame(
                           context,
                           profile: "Modify Your School",
-                          icon: ImageConstant.imgFavorite,
-                          fill: IconButtonStyleHelper.fillindigoA400,
+                          icon: ImageConstant.edit,
+                          fill: IconButtonStyleHelper.fillLightGreen500,
                         ),
                       ),
                     ),
@@ -148,35 +167,48 @@ class ManageSchool extends StatelessWidget {
                         child: _buildFrame(
                           context,
                           profile: "Delete Your School",
-                          icon: ImageConstant.imgClose,
+                          icon: ImageConstant.delete,
                           fill: IconButtonStyleHelper.fillLightGreen,
                         ),
                       ),
                     ),
                     SizedBox(height: 28.v),
-                    InkWell(
-                      borderRadius: BorderRadius.circular(29.h),
-                      onTap: () {
-                        Navigator.push(context, MaterialPageRoute(
-                          builder: (context) {
-                            return DefaultWidget();
-                            // return ManageProfile();
-                          },
-                        ));
-                      },
-                      child: Ink(
-                        decoration: BoxDecoration(
-                          color: AppColors.whiteA700,
+                    BlocBuilder<ClassCubit, ClassState>(
+                      builder: (context, state) {
+                        return InkWell(
                           borderRadius: BorderRadius.circular(29.h),
-                        ),
-                        width: 356 * MediaQuery.of(context).size.width / 414,
-                        child: _buildFrame(
-                          context,
-                          profile: "School Verification",
-                          icon: ImageConstant.imgBookmarkOrange300,
-                          fill: IconButtonStyleHelper.fillOrange,
-                        ),
-                      ),
+                          onTap: () {
+                            Navigator.push(context, MaterialPageRoute(
+                              builder: (context) {
+                                if (user.school?.isVerified == false &&
+                                    user.school?.verificationRequest == false) {
+                                  return VerifySchool();
+                                } else if (user.school?.isVerified == false &&
+                                    user.school?.verificationRequest == true) {
+                                  return VerificationPending();
+                                } else {
+                                  return SchoolVerified();
+                                }
+                                // return ManageProfile();
+                              },
+                            ));
+                          },
+                          child: Ink(
+                            decoration: BoxDecoration(
+                              color: AppColors.whiteA700,
+                              borderRadius: BorderRadius.circular(29.h),
+                            ),
+                            width:
+                                356 * MediaQuery.of(context).size.width / 414,
+                            child: _buildFrame(
+                              context,
+                              profile: "School Verification",
+                              icon: ImageConstant.verify,
+                              fill: IconButtonStyleHelper.gold,
+                            ),
+                          ),
+                        );
+                      },
                     ),
                     SizedBox(height: 28.v),
                     InkWell(
@@ -197,8 +229,8 @@ class ManageSchool extends StatelessWidget {
                         width: 356 * MediaQuery.of(context).size.width / 414,
                         child: _buildFrame(
                           context,
-                          icon: ImageConstant.imgBoldDuotoneEssentional,
-                          fill: IconButtonStyleHelper.fillRed,
+                          icon: ImageConstant.members,
+                          fill: IconButtonStyleHelper.blue,
                           profile: "Manage Members",
                         ),
                       ),
@@ -223,9 +255,9 @@ class ManageSchool extends StatelessWidget {
     return Row(
       children: [
         CustomIconButton(
-          height: 59.v,
+          height: 56.v,
           width: 58.h,
-          padding: EdgeInsets.all(10.h),
+          padding: EdgeInsets.all(12.h),
           decoration: fill,
           child: CustomImageView(
             height: 55.v,

@@ -74,9 +74,6 @@ class _AddClassState extends State<AddClass> {
       schools.add(school.name);
       schoolIdMap[school.name] = school.id;
     }
-    log(schoolIdMap.toString());
-    log(schoolIdMap.values.toString());
-    log('Schools: $schools');
     setState(() {});
   }
 
@@ -252,12 +249,16 @@ class _AddClassState extends State<AddClass> {
                           hintText: "Select School",
                           hintStyle:
                               CustomTextStyles.titleMediumPoppinsGray40001,
-                          items: schools,
+                          items: schools.isNotEmpty
+                              ? schools
+                              : ['You have no schools'],
                           onChanged: (String newValue) {
-                            setState(() {
-                              selectedSchool = newValue;
-                              selectedSchoolId = schoolIdMap[newValue];
-                            });
+                            if (newValue != 'You have no schools') {
+                              setState(() {
+                                selectedSchool = newValue;
+                                selectedSchoolId = schoolIdMap[newValue];
+                              });
+                            }
                           },
                         ),
                       ),
@@ -408,8 +409,7 @@ class _AddClassState extends State<AddClass> {
                           : state.message,
                       style: CustomTextStyles.titleMediumPoppinsBluegray100),
                 )
-              : Text('errorMessage',
-                  style: CustomTextStyles.titleMediumPoppinsBluegray100)
+              : Container(),
         ],
       ),
     );

@@ -28,6 +28,7 @@ class Routes {
   static const String joinClass = '/join-class';
   static const String manageChildren = '/manage-children';
   static const String manageSchool = '/manage-school';
+  static const String classRoom = '/classroom';
   
 }
 
@@ -85,6 +86,7 @@ class AppRoutes {
         return MaterialPageRoute(builder: (context) {
           return ManageSchool();
         });
+      
       default:
         return undefinedRoute();
     }

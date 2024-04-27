@@ -48,7 +48,6 @@ class ImageConstant {
   static String imgClose = '$imagePath/img_close.png';
   static String school = '$imagePath/school.svg';
   static String cap = '$imagePath/cap.svg';
-  
 
   static String imgBookmarkOrange300 = '$imagePath/img_bookmark_orange_300.png';
 
@@ -85,4 +84,18 @@ class ImageConstant {
 
   static String imgClass2 = 'assets/images/class2.png';
   static String imgSchool2 = 'assets/images/school2.png';
+
+  static String details = 'assets/images/manageSchool/details.svg';
+  static String edit = 'assets/images/manageSchool/edit.svg';
+  static String delete = 'assets/images/manageSchool/delete.svg';
+  static String verify = 'assets/images/manageSchool/verify.svg';
+  static String members = 'assets/images/manageSchool/members.svg';
+  static String pending = 'assets/images/manageSchool/pending.png';
+  static String verify2 = 'assets/images/manageSchool/verify.png';
+
+  static String gallery = 'assets/images/post/gallery.svg';
+  static String camera = 'assets/images/post/camera.svg';
+  static String attachment = 'assets/images/post/attachment.svg';
+  static String attachmentBlack = 'assets/images/post/attachment-black.png';
+  static String poll = 'assets/images/post/poll.svg';
 }

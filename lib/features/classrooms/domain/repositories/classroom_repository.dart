@@ -25,4 +25,5 @@ abstract class ClassroomRepository {
   Future<Either<Failure, void>> removeSchool(int? id);
   Future<Either<Failure, ClassModel>> updateClass(int id, ClassM classModel, File? image);
   Future<Either<Failure, SchoolModel>> updateSchool(int id, SchoolM schoolModel, File? image);
+  Future<Either<Failure, SchoolModel>> schoolVerifyRequest(int id, String email, String phoneNumber, File? file);
 }

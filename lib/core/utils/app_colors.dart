@@ -15,7 +15,6 @@ class AppColors {
   static Color get gray200 => const Color(0XFFF5F5F5);
   static Color get gray250 => const Color(0XFFE1E1E1);
 
-  
   static Color get gray300 => const Color(0xFFC9CCD3);
   static Color get gray400 => const Color(0XFFBDBDBD);
   static Color get gray500 => const Color(0XFFA09BA2);
@@ -26,6 +25,7 @@ class AppColors {
   static Color get gray90002 => const Color(0XFF1B141F);
 
   static Color get lightBlue500 => const Color(0XFF00A3FF);
+  static Color get blue => const Color(0XFF008FFF);
 
   static Color get indigoA100 => const Color(0XFFEFF4FF);
   static Color get indigoA200 => const Color(0XFF6F7DFF);
@@ -35,10 +35,13 @@ class AppColors {
   static Color get greenA200 => const Color(0XFF63E9B0);
 
   static Color get lightGreen400 => const Color(0XFF85D062);
+  static Color get lightGreen500 => const Color(0XFF63E6BE);
 
   static Color get orange300 => const Color(0XFFFFC046);
+  static Color get gold => const Color(0XFFFFD700);
 
   static Color get red400 => const Color(0XFFEF5353);
+  static Color get red500 => const Color(0XFFEF5454);
 
   static Color get blueGray100 => Color(0XFFD9D9D9);
   static Color get blueGray300 => const Color(0XFFA0A7BA);

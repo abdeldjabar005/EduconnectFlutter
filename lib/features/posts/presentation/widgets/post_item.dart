@@ -14,7 +14,9 @@ import 'package:quotes/features/posts/domain/entities/post.dart';
 import 'package:intl/intl.dart';
 import 'package:quotes/features/posts/presentation/cubit/like_cubit.dart';
 import 'package:quotes/features/posts/presentation/cubit/post_cubit.dart';
+import 'package:quotes/features/posts/presentation/widgets/custom_attachment_view.dart';
 import 'package:quotes/features/posts/presentation/widgets/custom_image_view.dart';
+import 'package:quotes/features/posts/presentation/widgets/custom_video_player.dart';
 import 'package:quotes/features/posts/presentation/widgets/image_detail.dart';
 
 class PostItem extends StatelessWidget {
@@ -25,8 +27,8 @@ class PostItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var date = post.createdAt;
-    var time = DateFormat.jm().format(date); 
-    var restOfDate = DateFormat.yMMMMd().format(date); 
+    var time = DateFormat.jm().format(date);
+    var restOfDate = DateFormat.yMMMMd().format(date);
 
     return Container(
       padding: EdgeInsets.symmetric(
@@ -37,6 +39,8 @@ class PostItem extends StatelessWidget {
         8.h,
       ),
       decoration: AppDecoration.fillWhiteA.copyWith(
+        border: Border.fromBorderSide(
+            BorderSide(color: Colors.black.withOpacity(0.1))),
         borderRadius: BorderRadiusStyle.roundedBorder21,
       ),
       child: Column(
@@ -85,31 +89,26 @@ class PostItem extends StatelessWidget {
           ),
           SizedBox(height: 12.v),
           post.content.isNotEmpty
-              ? post.content.length == 1
+              ? post.type == 'video'
                   ? GestureDetector(
                       onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => ImageDetailPage(
-                              imageUrls: post.content,
-                              initialIndex: 0,
-                            ),
-                            fullscreenDialog: true,
-                          ),
-                        );
+                        // Navigator.push(
+                        //   context,
+                        //   MaterialPageRoute(
+                        //     builder: (context) => VideoPlayerPage(
+                        //       videoUrl: post.content[0],
+                        //     ),
+                        //     fullscreenDialog: true,
+                        //   ),
+                        // );
                       },
                       child: Hero(
-                        // tag: post.content[0],
                         tag: '${post.content[0]}_0',
-
                         child: Material(
                           color: Colors.transparent,
-                          child: CustomImageView(
+                          child: CustomVideoPlayer(
                             fit: BoxFit.cover,
-                            imagePath: '${EndPoints.storage}${post.content[0]}',
-                            // height: 183.h,
-                            // width: 329.h,
+                            videoPath: '${EndPoints.storage}${post.content[0]}',
                             radius: BorderRadius.circular(
                               15.h,
                             ),
@@ -117,147 +116,199 @@ class PostItem extends StatelessWidget {
                         ),
                       ),
                     )
-                  : LayoutBuilder(
-                      builder:
-                          (BuildContext context, BoxConstraints constraints) {
-                        int crossAxisCount = post.content.length >= 2 ? 2 : 1;
-                        return GridView.count(
-                          physics: const NeverScrollableScrollPhysics(),
-                          shrinkWrap: true,
-                          crossAxisCount: crossAxisCount,
-                          crossAxisSpacing: 8,
-                          mainAxisSpacing: 8,
-                          childAspectRatio: 700 / 500,
-                          children: List<Widget>.generate(
-                              min(post.content.length, 4), (index) {
-                            String imageUrl = post.content[index];
-
-                            // If its the last image
-                            if (index == 3) {
-                              // Check how many more images are left
-                              int remaining = post.content.length - 4;
-
-                              // If no more are remaining return a simple image widget
-                              if (remaining == 0) {
-                                return GestureDetector(
-                                  onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => ImageDetailPage(
-                                          imageUrls: post.content,
-                                          initialIndex: index,
-                                        ),
-                                        fullscreenDialog: true,
-                                      ),
-                                    );
-                                  },
-                                  child: Hero(
-                                    tag: '${post.content[index]}_$index',
-                                    // tag: imageUrl,
-                                    child: Material(
-                                      color: Colors.transparent,
-                                      child: CustomImageView(
-                                        fit: BoxFit.cover,
-                                        imagePath:
-                                            '${EndPoints.storage}$imageUrl',
-                                        radius: BorderRadius.circular(
-                                          15.h,
-                                        ),
-                                      ),
+                  : post.type == 'attachment'
+                      ? GestureDetector(
+                          onTap: () {},
+                          child: CustomAttachmentView(
+                            filePath: '${EndPoints.storage}${post.content[0]}',
+                          ),
+                        )
+                      : post.content.length == 1
+                          ? GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => ImageDetailPage(
+                                      imageUrls: post.content,
+                                      initialIndex: 0,
                                     ),
+                                    fullscreenDialog: true,
                                   ),
                                 );
-                              } else {
-                                // Create the effect for the last image with number of remaining images
-                                return GestureDetector(
-                                  onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => ImageDetailPage(
-                                          imageUrls: post.content,
-                                          initialIndex: index,
-                                        ),
-                                        fullscreenDialog: true,
-                                      ),
-                                    );
-                                  },
-                                  child: Hero(
-                                    tag: '${post.content[index]}_$index',
-                                    // tag: imageUrl,
-                                    child: Material(
-                                      color: Colors.transparent,
-                                      child: Stack(
-                                        clipBehavior: Clip.hardEdge,
-                                        fit: StackFit.expand,
-                                        children: [
-                                          CustomImageView(
-                                            fit: BoxFit.cover,
-                                            imagePath:
-                                                '${EndPoints.storage}$imageUrl',
-                                            radius: BorderRadius.circular(
-                                              15.h,
-                                            ),
-                                          ),
-                                          if (remaining > 0)
-                                            Container(
-                                              alignment: Alignment.center,
-                                              decoration: BoxDecoration(
-                                                color: Colors.black54,
-                                                borderRadius:
-                                                    BorderRadius.circular(
-                                                  15.h,
-                                                ),
-                                              ),
-                                              child: Text(
-                                                '+' + remaining.toString(),
-                                                style: TextStyle(
-                                                    fontSize: 32,
-                                                    color: AppColors.whiteA700),
-                                              ),
-                                            ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              }
-                            } else {
-                              return GestureDetector(
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => ImageDetailPage(
-                                        imageUrls: post.content,
-                                        initialIndex: index,
-                                      ),
-                                      fullscreenDialog: true,
-                                    ),
-                                  );
-                                },
-                                child: Hero(
-                                  tag: '${post.content[index]}_$index',
-                                  // tag: imageUrl,
-                                  child: Material(
-                                    color: Colors.transparent,
-                                    child: CustomImageView(
-                                      fit: BoxFit.cover,
-                                      imagePath:
-                                          '${EndPoints.storage}$imageUrl',
-                                      radius: BorderRadius.circular(
-                                        15.h,
-                                      ),
+                              },
+                              child: Hero(
+                                // tag: post.content[0],
+                                tag: '${post.content[0]}_0',
+
+                                child: Material(
+                                  color: Colors.transparent,
+                                  child: CustomImageView(
+                                    fit: BoxFit.cover,
+                                    imagePath:
+                                        '${EndPoints.storage}${post.content[0]}',
+                                    // height: 183.h,
+                                    // width: 329.h,
+                                    radius: BorderRadius.circular(
+                                      15.h,
                                     ),
                                   ),
                                 ),
-                              );
-                            }
-                          }),
-                        );
-                      },
-                    )
+                              ),
+                            )
+                          : LayoutBuilder(
+                              builder: (BuildContext context,
+                                  BoxConstraints constraints) {
+                                int crossAxisCount =
+                                    post.content.length >= 2 ? 2 : 1;
+                                return GridView.count(
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  shrinkWrap: true,
+                                  crossAxisCount: crossAxisCount,
+                                  crossAxisSpacing: 8,
+                                  mainAxisSpacing: 8,
+                                  childAspectRatio: 700 / 500,
+                                  children: List<Widget>.generate(
+                                      min(post.content.length, 4), (index) {
+                                    String imageUrl = post.content[index];
+
+                                    // If its the last image
+                                    if (index == 3) {
+                                      // Check how many more images are left
+                                      int remaining = post.content.length - 4;
+
+                                      // If no more are remaining return a simple image widget
+                                      if (remaining == 0) {
+                                        return GestureDetector(
+                                          onTap: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    ImageDetailPage(
+                                                  imageUrls: post.content,
+                                                  initialIndex: index,
+                                                ),
+                                                fullscreenDialog: true,
+                                              ),
+                                            );
+                                          },
+                                          child: Hero(
+                                            tag:
+                                                '${post.content[index]}_$index',
+                                            // tag: imageUrl,
+                                            child: Material(
+                                              color: Colors.transparent,
+                                              child: CustomImageView(
+                                                fit: BoxFit.cover,
+                                                imagePath:
+                                                    '${EndPoints.storage}$imageUrl',
+                                                radius: BorderRadius.circular(
+                                                  15.h,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        );
+                                      } else {
+                                        // Create the effect for the last image with number of remaining images
+                                        return GestureDetector(
+                                          onTap: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    ImageDetailPage(
+                                                  imageUrls: post.content,
+                                                  initialIndex: index,
+                                                ),
+                                                fullscreenDialog: true,
+                                              ),
+                                            );
+                                          },
+                                          child: Hero(
+                                            tag:
+                                                '${post.content[index]}_$index',
+                                            // tag: imageUrl,
+                                            child: Material(
+                                              color: Colors.transparent,
+                                              child: Stack(
+                                                clipBehavior: Clip.hardEdge,
+                                                fit: StackFit.expand,
+                                                children: [
+                                                  CustomImageView(
+                                                    fit: BoxFit.cover,
+                                                    imagePath:
+                                                        '${EndPoints.storage}$imageUrl',
+                                                    radius:
+                                                        BorderRadius.circular(
+                                                      15.h,
+                                                    ),
+                                                  ),
+                                                  if (remaining > 0)
+                                                    Container(
+                                                      alignment:
+                                                          Alignment.center,
+                                                      decoration: BoxDecoration(
+                                                        color: Colors.black54,
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(
+                                                          15.h,
+                                                        ),
+                                                      ),
+                                                      child: Text(
+                                                        '+' +
+                                                            remaining
+                                                                .toString(),
+                                                        style: TextStyle(
+                                                            fontSize: 32,
+                                                            color: AppColors
+                                                                .whiteA700),
+                                                      ),
+                                                    ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        );
+                                      }
+                                    } else {
+                                      return GestureDetector(
+                                        onTap: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  ImageDetailPage(
+                                                imageUrls: post.content,
+                                                initialIndex: index,
+                                              ),
+                                              fullscreenDialog: true,
+                                            ),
+                                          );
+                                        },
+                                        child: Hero(
+                                          tag: '${post.content[index]}_$index',
+                                          // tag: imageUrl,
+                                          child: Material(
+                                            color: Colors.transparent,
+                                            child: CustomImageView(
+                                              fit: BoxFit.cover,
+                                              imagePath:
+                                                  '${EndPoints.storage}$imageUrl',
+                                              radius: BorderRadius.circular(
+                                                15.h,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                    }
+                                  }),
+                                );
+                              },
+                            )
               : SizedBox.shrink(),
           SizedBox(height: 12.v),
           Container(

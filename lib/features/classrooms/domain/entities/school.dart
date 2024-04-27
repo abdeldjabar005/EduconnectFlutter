@@ -11,6 +11,8 @@ class School extends Equatable {
   final String adminLastName;
   final String? code;
   final int membersCount;
+  final bool isVerified;
+  final bool verificationRequest;
 
   const School({
     required this.id,
@@ -22,6 +24,8 @@ class School extends Equatable {
     required this.adminLastName,
     required this.code,
     required this.membersCount,
+    required this.isVerified,
+    required this.verificationRequest,
   });
 
   @override
@@ -35,5 +39,7 @@ class School extends Equatable {
         adminLastName,
         code,
         membersCount,
+        isVerified,
+        verificationRequest
       ];
 }

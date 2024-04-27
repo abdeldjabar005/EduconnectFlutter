@@ -43,58 +43,46 @@ class MainClassroom extends StatelessWidget {
           return true;
         },
         child: Scaffold(
-          body: BlocBuilder<ClassCubit, ClassState>(
-            builder: (context, state) {
-              ValueNotifier<List<SchoolModel>> school =
-                  context.read<ClassCubit>().schoolCache;
-              ValueNotifier<List<ClassModel>> classe =
-                  context.read<ClassCubit>().classCache;
+          body: Navigator(
+            key: navigatorKey,
+            onGenerateRoute: (settings) {
+              return MaterialPageRoute(
+                builder: (context) {
+                  return BlocBuilder<ClassCubit, ClassState>(
+                    builder: (context, state) {
+                      log(user.schools.toString());
+                      if (user.schools.isNotEmpty || user.classes.isNotEmpty) {
+                        log('User has schools or classes');
+                        return _buildClassroom(context);
 
-              if (state is SchoolLoaded ||
-                  state is ClassLoaded ||
-                  school.value.isNotEmpty ||
-                  classe.value.isNotEmpty &&
-                      user.schools.isEmpty &&
-                      user.classes.isEmpty) {
-                return Navigator(
-                  key: navigatorKey,
-                  onGenerateRoute: (settings) {
-                    return MaterialPageRoute(
-                      builder: (context) {
-                        return _buildClassroom(context);
-                      },
-                    );
-                  },
-                );
-                // return _buildClassroom(context);
-              } else if (user.schools.isEmpty &&
-                      user.classes.isEmpty &&
-                      !(state is SchoolLoaded || state is ClassLoaded) ||
-                  (state is SchoolRemoved &&
-                      user.schools.isEmpty &&
-                      school.value.isEmpty)) {
-                return Navigator(
-                  key: navigatorKey,
-                  onGenerateRoute: (settings) {
-                    return MaterialPageRoute(
-                      builder: (context) {
+                        // WidgetsBinding.instance!.addPostFrameCallback((_) {
+                        //   navigatorKey.currentState!.pushReplacement(
+                        //     MaterialPageRoute(
+                        //       builder: (context) {
+                        //         return _buildClassroom(context);
+                        //       },
+                        //     ),
+                        //   );
+                        // });
+                      } else {
+                        log('User has no schools or classes');
                         return _buildClassroomPage(context);
-                      },
-                    );
-                  },
-                );
-              } else {
-                return Navigator(
-                  key: navigatorKey,
-                  onGenerateRoute: (settings) {
-                    return MaterialPageRoute(
-                      builder: (context) {
-                        return _buildClassroom(context);
-                      },
-                    );
-                  },
-                );
-              }
+
+                        // WidgetsBinding.instance!.addPostFrameCallback((_) {
+                        //   navigatorKey.currentState!.pushReplacement(
+                        //     MaterialPageRoute(
+                        //       builder: (context) {
+                        //         return _buildClassroomPage(context);
+                        //       },
+                        //     ),
+                        //   );
+                        // });
+                      }
+                      return Container(); // return an empty container as the child of the BlocBuilder
+                    },
+                  );
+                },
+              );
             },
           ),
         ),
@@ -167,6 +155,8 @@ class MainClassroom extends StatelessWidget {
       height: 250.v,
       width: double.maxFinite,
       decoration: BoxDecoration(
+        border: Border.fromBorderSide(
+            BorderSide(color: Colors.black.withOpacity(0.1))),
         color: AppColors.whiteA700,
         borderRadius: BorderRadius.circular(23),
       ),
@@ -319,25 +309,6 @@ class MainClassroom extends StatelessWidget {
                       );
                     },
                   ),
-                  BlocBuilder<ClassCubit, ClassState>(
-                    builder: (context, state) {
-                      if (state is SchoolLoaded) {}
-                      return ValueListenableBuilder<List<SchoolModel>>(
-                          valueListenable:
-                              context.read<ClassCubit>().schoolCache,
-                          builder: (context, List<SchoolModel> value, _) {
-                            log(value.toString());
-                            return ListView.builder(
-                              shrinkWrap: true,
-                              physics: NeverScrollableScrollPhysics(),
-                              itemCount: value.length,
-                              itemBuilder: (context, index) {
-                                return _buildSchoolItem(context, value[index]);
-                              },
-                            );
-                          });
-                    },
-                  ),
                   SizedBox(height: 33.v),
                   _buildDivider2(context, "Classes"),
                   SizedBox(height: 20.v),
@@ -356,25 +327,6 @@ class MainClassroom extends StatelessWidget {
                           return _buildClassItem(context, classes[index]);
                         },
                       );
-                    },
-                  ),
-                  BlocBuilder<ClassCubit, ClassState>(
-                    builder: (context, state) {
-                      if (state is ClassLoaded) {}
-                      return ValueListenableBuilder<List<ClassModel>>(
-                          valueListenable:
-                              context.read<ClassCubit>().classCache,
-                          builder: (context, List<ClassModel> value, _) {
-                            log(value.toString());
-                            return ListView.builder(
-                              shrinkWrap: true,
-                              physics: NeverScrollableScrollPhysics(),
-                              itemCount: value.length,
-                              itemBuilder: (context, index) {
-                                return _buildClassItem(context, value[index]);
-                              },
-                            );
-                          });
                     },
                   ),
                 ],
@@ -401,6 +353,8 @@ class MainClassroom extends StatelessWidget {
         height: 100.v,
         width: double.maxFinite,
         decoration: BoxDecoration(
+          border: Border.fromBorderSide(
+              BorderSide(color: Colors.black.withOpacity(0.1))),
           color: AppColors.whiteA700,
           borderRadius: BorderRadius.circular(23),
         ),
@@ -466,6 +420,8 @@ class MainClassroom extends StatelessWidget {
         height: 100.v,
         width: double.maxFinite,
         decoration: BoxDecoration(
+          border: Border.fromBorderSide(
+              BorderSide(color: Colors.black.withOpacity(0.1))),
           color: AppColors.whiteA700,
           borderRadius: BorderRadius.circular(23),
         ),

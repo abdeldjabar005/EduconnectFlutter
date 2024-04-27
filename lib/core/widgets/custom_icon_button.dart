@@ -71,16 +71,36 @@ extension IconButtonStyleHelper on CustomIconButton {
         color: AppColors.orange300.withOpacity(0.1),
         borderRadius: BorderRadius.circular(29.h),
       );
+      static BoxDecoration get gold => BoxDecoration(
+        color: AppColors.gold.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(29.h),
+      );
+      
   static BoxDecoration get fillRed => BoxDecoration(
         color: AppColors.red400.withOpacity(0.1),
         borderRadius: BorderRadius.circular(29.h),
       );
+      static BoxDecoration get fillRed2 => BoxDecoration(
+        color: AppColors.red500.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(29.h),
+      );
+      
   static BoxDecoration get fillLightGreen => BoxDecoration(
         color: AppColors.lightGreen400.withOpacity(0.1),
         borderRadius: BorderRadius.circular(29.h),
       );
+      static BoxDecoration get fillLightGreen500 => BoxDecoration(
+        color: AppColors.lightGreen500.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(29.h),
+      );
+      
   static BoxDecoration get fillindigoA400 => BoxDecoration(
         color: AppColors.indigoA400.withOpacity(0.1),
         borderRadius: BorderRadius.circular(29.h),
       );
+      static BoxDecoration get blue => BoxDecoration(
+        color: AppColors.blue.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(29.h),
+      );
+      
 }

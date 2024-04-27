@@ -5,6 +5,7 @@ import 'package:quotes/core/utils/app_colors.dart';
 import 'package:quotes/features/classrooms/presentation/pages/classroom_posts.dart';
 import 'package:quotes/features/classrooms/presentation/widgets/classes.dart';
 import 'package:quotes/features/classrooms/presentation/widgets/members.dart';
+import 'package:quotes/features/posts/presentation/pages/new_post.dart';
 import 'package:quotes/features/posts/presentation/pages/post_screen.dart';
 
 class Constants {
@@ -136,9 +137,10 @@ class Constants {
 
   static const List<Widget> screens = [
     PostScreen(),
-    Center(
-      child: Text('School Screen'),
-    ),
+    NewPost(),
+    // Center(
+    //   child: Text('School Screen'),
+    // ),
     Center(
       child: Text('Class Screen'),
     ),

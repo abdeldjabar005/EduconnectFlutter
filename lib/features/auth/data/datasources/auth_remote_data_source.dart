@@ -13,6 +13,7 @@ abstract class AuthRemoteDataSource {
   Future<UserModel> signUp(String firstName, String lastName, String role,
       String email, String password, String confirmPassword);
   Future<UserModel> verifyEmail(String email, String verificationCode);
+  Future<void> resendEmail(String email);
 }
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
@@ -84,6 +85,26 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
 
       if (response['statusCode'] == 200) {
         return UserModel.fromJson(response['data']);
+      } else {
+        throw ServerException();
+      }
+    } on TimeoutException {
+      throw const ServerException();
+    }
+  }
+
+  @override
+  Future<void> resendEmail(String email) async {
+    try {
+      final response = await apiConsumer.post(
+        EndPoints.resendEmail,
+        body: {
+          'email': email,
+        },
+      ).timeout(const Duration(seconds: 10));
+
+      if (response['statusCode'] == 200) {
+        return;
       } else {
         throw ServerException();
       }
