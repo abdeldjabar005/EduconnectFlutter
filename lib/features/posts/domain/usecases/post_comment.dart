@@ -1,8 +1,8 @@
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
-import 'package:quotes/core/error/failures.dart';
-import 'package:quotes/core/usecases/usecase.dart';
-import 'package:quotes/features/posts/domain/repositories/post_repository.dart';
+import 'package:educonnect/core/error/failures.dart';
+import 'package:educonnect/core/usecases/usecase.dart';
+import 'package:educonnect/features/posts/domain/repositories/post_repository.dart';
 
 class PostComment extends UseCase<void, Params> {
   final PostRepository repository;

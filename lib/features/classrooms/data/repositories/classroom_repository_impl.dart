@@ -2,18 +2,21 @@
 import 'dart:io';
 
 import 'package:dartz/dartz.dart';
-import 'package:quotes/core/error/exceptions.dart';
-import 'package:quotes/core/error/failures.dart';
-import 'package:quotes/core/network/netwok_info.dart';
-import 'package:quotes/features/classrooms/data/datasources/classroom_remote_data_source.dart';
-import 'package:quotes/features/classrooms/data/models/class_m.dart';
-import 'package:quotes/features/classrooms/data/models/class_member.dart';
-import 'package:quotes/features/classrooms/data/models/class_model.dart';
-import 'package:quotes/features/classrooms/data/models/member_model.dart';
-import 'package:quotes/features/classrooms/data/models/school_m.dart';
-import 'package:quotes/features/classrooms/data/models/school_nodel.dart';
-import 'package:quotes/features/classrooms/domain/repositories/classroom_repository.dart';
-import 'package:quotes/features/posts/data/models/post_model.dart';
+import 'package:educonnect/core/error/exceptions.dart';
+import 'package:educonnect/core/error/failures.dart';
+import 'package:educonnect/core/network/netwok_info.dart';
+import 'package:educonnect/features/classrooms/data/datasources/classroom_remote_data_source.dart';
+import 'package:educonnect/features/classrooms/data/models/class_m.dart';
+import 'package:educonnect/features/classrooms/data/models/class_member.dart';
+import 'package:educonnect/features/classrooms/data/models/class_model.dart';
+import 'package:educonnect/features/classrooms/data/models/member_model.dart';
+import 'package:educonnect/features/classrooms/data/models/request_model.dart';
+import 'package:educonnect/features/classrooms/data/models/school_m.dart';
+import 'package:educonnect/features/classrooms/data/models/school_nodel.dart';
+import 'package:educonnect/features/classrooms/domain/repositories/classroom_repository.dart';
+import 'package:educonnect/features/posts/data/models/post_model.dart';
+import 'package:educonnect/features/posts/data/models/post_result.dart';
+import 'package:educonnect/features/profile/data/models/child_model.dart';
 
 class ClassroomRepositoryImpl implements ClassroomRepository {
   final ClassroomRemoteDataSource remoteDataSource;
@@ -24,8 +27,8 @@ class ClassroomRepositoryImpl implements ClassroomRepository {
     required this.networkInfo,
   });
   @override
-  Future<Either<Failure, List<PostModel>>> getPosts(
-      int id, int page, String type) async {
+  Future<Either<Failure, PostsResult>> getPosts(
+      int id, int page, String? type) async {
     if (await networkInfo.isConnected) {
       try {
         final remoteClassroom = await remoteDataSource.getPosts(id, page, type);
@@ -68,6 +71,21 @@ class ClassroomRepositoryImpl implements ClassroomRepository {
         return Left(InvalidCodeFailure());
       }
       on ServerException {
+        return Left(ServerFailure());
+      }
+    } else {
+      return Left(NetworkFailure());
+    }
+  }
+  @override
+  Future<Either<Failure, void>> sendJoinRequest(int id) async {
+    if (await networkInfo.isConnected) {
+      try {
+        final remoteResponse = await remoteDataSource.sendJoinRequest(id);
+        return Right(remoteResponse);
+      } on JoinedException {
+        return Left(JoinedFailure());
+      } on ServerException {
         return Left(ServerFailure());
       }
     } else {
@@ -197,6 +215,63 @@ class ClassroomRepositoryImpl implements ClassroomRepository {
     if (await networkInfo.isConnected) {
       try {
         final remoteResponse = await remoteDataSource.schoolVerifyRequest(id, email, phoneNumber, file);
+        return Right(remoteResponse);
+      } on ServerException {
+        return Left(ServerFailure());
+      }
+    } else {
+      return Left(NetworkFailure());
+    }
+  }
+
+  @override 
+
+  Future<Either<Failure, void>> associateStudent(int studentId, int schoolId,String type) async {
+    if (await networkInfo.isConnected) {
+      try {
+        final remoteResponse = await remoteDataSource.associateStudent(studentId, schoolId, type);
+        return Right(remoteResponse);
+      } on StudentAlreadyAssociatedException {
+        return Left(StudentAlreadyAssociatedFailure());
+      } on ServerException {
+        return Left(ServerFailure());
+      }
+    } else {
+      return Left(NetworkFailure());
+    }
+  }
+  @override 
+  Future<Either<Failure, void>> leave(int id, String type) async {
+    if (await networkInfo.isConnected) {
+      try {
+        final remoteResponse = await remoteDataSource.leave(id, type);
+        return Right(remoteResponse);
+      } on ServerException {
+        return Left(ServerFailure());
+      }
+    } else {
+      return Left(NetworkFailure());
+    }
+  }
+  @override
+  Future<Either<Failure, List<ChildModel>>> getStudents(int id, String type) async {
+    if (await networkInfo.isConnected) {
+      try {
+        final remoteResponse = await remoteDataSource.getStudents(id, type);
+        return Right(remoteResponse);
+      } on ServerException {
+        return Left(ServerFailure());
+      }
+    } else {
+      return Left(NetworkFailure());
+    }
+  }
+  @override
+  Future<Either<Failure, List<RequestModel>>>
+      getRequests(int id, String type) async {
+    if (await networkInfo.isConnected) {
+      try {
+        final remoteResponse = await remoteDataSource.getRequests(id, type);
         return Right(remoteResponse);
       } on ServerException {
         return Left(ServerFailure());

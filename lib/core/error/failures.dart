@@ -18,3 +18,5 @@ class NetworkFailure extends Failure {}
 class JoinedFailure extends Failure {}
 
 class InvalidCodeFailure extends Failure {}
+
+class StudentAlreadyAssociatedFailure extends Failure {}

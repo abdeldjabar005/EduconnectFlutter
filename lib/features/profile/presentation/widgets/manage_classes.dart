@@ -3,22 +3,23 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:quotes/config/themes/custom_text_style.dart';
-import 'package:quotes/core/api/end_points.dart';
-import 'package:quotes/core/utils/app_colors.dart';
-import 'package:quotes/core/utils/size_utils.dart';
-import 'package:quotes/core/widgets/custom_bottom_bar.dart';
-import 'package:quotes/features/auth/presentation/cubit/auth_cubit.dart';
-import 'package:quotes/features/classrooms/data/models/class_model.dart';
-import 'package:quotes/features/classrooms/presentation/cubit/class_cubit.dart';
-import 'package:quotes/features/classrooms/presentation/pages/class_details.dart';
-import 'package:quotes/features/posts/presentation/widgets/custom_image_view.dart';
-import 'package:quotes/features/profile/data/models/child_model.dart';
-import 'package:quotes/features/profile/presentation/cubit/children_cubit.dart';
-import 'package:quotes/features/profile/presentation/widgets/add_child.dart';
-import 'package:quotes/features/profile/presentation/widgets/add_class.dart';
-import 'package:quotes/features/profile/presentation/widgets/update_class.dart';
-import 'package:quotes/injection_container.dart';
+import 'package:educonnect/config/locale/app_localizations.dart';
+import 'package:educonnect/config/themes/custom_text_style.dart';
+import 'package:educonnect/core/api/end_points.dart';
+import 'package:educonnect/core/utils/app_colors.dart';
+import 'package:educonnect/core/utils/size_utils.dart';
+import 'package:educonnect/core/widgets/custom_bottom_bar.dart';
+import 'package:educonnect/features/auth/presentation/cubit/auth_cubit.dart';
+import 'package:educonnect/features/classrooms/data/models/class_model.dart';
+import 'package:educonnect/features/classrooms/presentation/cubit/class_cubit.dart';
+import 'package:educonnect/features/classrooms/presentation/pages/class_details.dart';
+import 'package:educonnect/features/posts/presentation/widgets/custom_image_view.dart';
+import 'package:educonnect/features/profile/data/models/child_model.dart';
+import 'package:educonnect/features/profile/presentation/cubit/children_cubit.dart';
+import 'package:educonnect/features/profile/presentation/widgets/add_child.dart';
+import 'package:educonnect/features/profile/presentation/widgets/add_class.dart';
+import 'package:educonnect/features/profile/presentation/widgets/update_class.dart';
+import 'package:educonnect/injection_container.dart';
 
 class ManageClasses extends StatefulWidget {
   const ManageClasses({Key? key})
@@ -33,11 +34,6 @@ class ManageClasses extends StatefulWidget {
 }
 
 enum ActionItems { delete, update }
-
-final items = <ActionItems, String>{
-  ActionItems.delete: 'Delete',
-  ActionItems.update: 'Update',
-};
 
 class _ManageClassesState extends State<ManageClasses> {
   GlobalKey<NavigatorState> navigatorKey = GlobalKey();
@@ -57,6 +53,7 @@ class _ManageClassesState extends State<ManageClasses> {
 
   @override
   Widget build(BuildContext context) {
+
     return SafeArea(
       child: WillPopScope(
         onWillPop: () async {
@@ -72,7 +69,8 @@ class _ManageClassesState extends State<ManageClasses> {
             elevation: 0,
             centerTitle: true,
             title: Text(
-              "Manage Classes",
+              AppLocalizations.of(context)!
+                                    .translate('manage_classes')!,
               style: TextStyle(
                 fontFamily: "Poppins",
                 color: AppColors.black900,
@@ -108,7 +106,8 @@ class _ManageClassesState extends State<ManageClasses> {
                           child: Row(
                             children: [
                               Text(
-                                "Add a Class ...",
+                                AppLocalizations.of(context)!
+                                    .translate('add_class')!,
                                 style: CustomTextStyles.bodyMediumRobotoGray2
                                     .copyWith(
                                   color: AppColors.black900,
@@ -121,7 +120,8 @@ class _ManageClassesState extends State<ManageClasses> {
                           )),
                     ),
                     SizedBox(height: 10.v),
-                    _buildDivider2(context, "My Classes"),
+                    _buildDivider2(context, AppLocalizations.of(context)!
+                                    .translate('my_classes')!),
                     SizedBox(height: 10.v),
                     BlocBuilder<ClassCubit, ClassState>(
                       builder: (context, state) {
@@ -193,6 +193,11 @@ class _ManageClassesState extends State<ManageClasses> {
   }
 
   Widget _buildClassItem(BuildContext context, ClassModel classe) {
+    final isRtl = Localizations.localeOf(context).languageCode == 'ar';
+    final items = <ActionItems, String>{
+      ActionItems.delete: isRtl ? 'حذف' : 'Delete',
+      ActionItems.update: isRtl ? 'تحديث' : 'Update',
+    };
     return InkWell(
       onTap: () {
         Navigator.of(context).push(
@@ -233,7 +238,8 @@ class _ManageClassesState extends State<ManageClasses> {
                   ),
                 ),
                 Text(
-                  "By ${classe.teacherFirstName} ${classe.teacherLastName}",
+                  "${AppLocalizations.of(context)!
+                                    .translate('by')!} ${classe.teacherFirstName} ${classe.teacherLastName}",
                   style:
                       CustomTextStyles.titleMediumPoppinsblacksmall2.copyWith(
                     color: AppColors.black900,
@@ -267,27 +273,31 @@ class _ManageClassesState extends State<ManageClasses> {
                             borderRadius: BorderRadius.circular(20),
                           ),
                           title: Text(
-                            'Confirm',
+                            AppLocalizations.of(context)!
+                                    .translate('confirm')!,
                             style: TextStyle(
                                 color: AppColors.indigoA200,
                                 fontWeight: FontWeight.bold),
                           ),
-                          content: const Text(
-                            'Are you sure you want to delete this child?',
+                          content:  Text(
+                            AppLocalizations.of(context)!
+                                    .translate('confirm_delete_class')!,
                             style: TextStyle(color: Colors.black54),
                           ),
                           actions: <Widget>[
                             TextButton(
                               onPressed: () => Navigator.of(context).pop(true),
-                              child: const Text(
-                                'DELETE',
+                              child:  Text(
+                                AppLocalizations.of(context)!
+                                    .translate('delete')!,
                                 style: TextStyle(color: Colors.red),
                               ),
                             ),
                             TextButton(
                               onPressed: () => Navigator.of(context).pop(false),
-                              child: const Text(
-                                'CANCEL',
+                              child: Text(
+                                AppLocalizations.of(context)!
+                                    .translate('cancel')!,
                                 style: TextStyle(color: Colors.blue),
                               ),
                             ),
@@ -300,15 +310,17 @@ class _ManageClassesState extends State<ManageClasses> {
                     }
                     break;
                   case ActionItems.update:
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => UpdateClass(classe: classe)),
-                    );
-                    break;
+                    if (context.mounted) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => UpdateClass(classe: classe)),
+                      );
+                      break;
+                    }
                 }
               },
-              itemBuilder: (context) => items
+               itemBuilder: (context) => items
                   .map((item, text) => MapEntry(
                       item,
                       PopupMenuItem<ActionItems>(

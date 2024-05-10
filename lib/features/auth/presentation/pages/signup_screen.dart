@@ -3,17 +3,18 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:quotes/config/themes/custom_text_style.dart';
-import 'package:quotes/core/utils/app_colors.dart';
-import 'package:quotes/core/utils/image_constant.dart';
-import 'package:quotes/core/utils/size_utils.dart';
-import 'package:quotes/core/widgets/RootScreen.dart';
-import 'package:quotes/features/auth/presentation/cubit/auth_cubit.dart';
-import 'package:quotes/features/auth/presentation/widgets/custom_drop_down.dart';
-import 'package:quotes/features/auth/presentation/widgets/custom_elevated_button.dart';
-import 'package:quotes/features/auth/presentation/widgets/custom_pin_code_text_field.dart';
-import 'package:quotes/features/auth/presentation/widgets/custom_text_form_field.dart';
-import 'package:quotes/features/posts/presentation/widgets/custom_image_view.dart';
+import 'package:educonnect/config/locale/app_localizations.dart';
+import 'package:educonnect/config/themes/custom_text_style.dart';
+import 'package:educonnect/core/utils/app_colors.dart';
+import 'package:educonnect/core/utils/image_constant.dart';
+import 'package:educonnect/core/utils/size_utils.dart';
+import 'package:educonnect/core/widgets/RootScreen.dart';
+import 'package:educonnect/features/auth/presentation/cubit/auth_cubit.dart';
+import 'package:educonnect/features/auth/presentation/widgets/custom_drop_down.dart';
+import 'package:educonnect/features/auth/presentation/widgets/custom_elevated_button.dart';
+import 'package:educonnect/features/auth/presentation/widgets/custom_pin_code_text_field.dart';
+import 'package:educonnect/features/auth/presentation/widgets/custom_text_form_field.dart';
+import 'package:educonnect/features/posts/presentation/widgets/custom_image_view.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({Key? key}) : super(key: key);
@@ -34,11 +35,8 @@ class _SignupScreenState extends State<SignupScreen> {
   TextEditingController emailController = TextEditingController();
   String selectedRole = '';
 
-  List<String> role = [
-    "parent",
-    "teacher",
-    "admin",
-  ];
+  List<String> roleKeys = ["parent", "teacher", "admin"];
+
   final verificationCode = List<String>.filled(5, '', growable: false);
   final ValueNotifier<bool> isFilledNotifier = ValueNotifier<bool>(false);
   TextEditingController passwordController = TextEditingController();
@@ -146,9 +144,11 @@ class _SignupScreenState extends State<SignupScreen> {
   }
 
   Widget _buildFirstPage(BuildContext context, AuthState state) {
+    bool isRtl = Localizations.localeOf(context).languageCode == 'ar';
+
     return Scaffold(
       appBar: AppBar(
-        toolbarHeight: 0.0, // This hides the AppBar
+        toolbarHeight: 0.0,
       ),
       body: Stack(
         children: [
@@ -179,7 +179,8 @@ class _SignupScreenState extends State<SignupScreen> {
                       padding: EdgeInsets.only(left: 2.h),
                       child: Center(
                         child: Text(
-                          "Registration",
+                          AppLocalizations.of(context)!
+                              .translate("registration")!,
                           style: CustomTextStyles.titleMediumPoppinsBlack2,
                         ),
                       ),
@@ -192,7 +193,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     Padding(
                       padding: EdgeInsets.only(left: 3.h),
                       child: Text(
-                        "Email",
+                        AppLocalizations.of(context)!.translate("email")!,
                         style: CustomTextStyles.titleMediumPoppinsGray900,
                       ),
                     ),
@@ -202,7 +203,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     Padding(
                       padding: EdgeInsets.only(left: 3.h),
                       child: Text(
-                        "Occupation",
+                        AppLocalizations.of(context)!.translate("occupation")!,
                         style: CustomTextStyles.titleMediumPoppinsGray900,
                       ),
                     ),
@@ -241,14 +242,23 @@ class _SignupScreenState extends State<SignupScreen> {
                             width: 20.adaptSize,
                           ),
                         ),
-                        hintText: "Select your role",
+                        hintText: AppLocalizations.of(context)!
+                            .translate("select_role")!,
                         hintStyle: CustomTextStyles.titleMediumPoppinsGray40001,
-                        items: role,
+                        items: roleKeys
+                            .map((roleKey) => AppLocalizations.of(context)!
+                                .translate(roleKey)!)
+                            .toList(),
                         onChanged: (String newValue) {
                           setState(() {
-                            context.read<AuthCubit>().selectedRole = newValue;
-
-                            selectedRole = newValue;
+                            String englishRole = roleKeys.firstWhere(
+                                (roleKey) =>
+                                    AppLocalizations.of(context)!
+                                        .translate(roleKey)! ==
+                                    newValue);
+                            context.read<AuthCubit>().selectedRole =
+                                englishRole;
+                            selectedRole = englishRole;
                           });
                         },
                       ),
@@ -265,16 +275,16 @@ class _SignupScreenState extends State<SignupScreen> {
           ),
           Positioned(
             top: 15.0,
-            left: 11.0,
+            left: isRtl ? null : 11.0,
+            right: isRtl ? 11.0 : null,
             child: FloatingActionButton(
-              mini: true, // This makes the FloatingActionButton smaller
+              mini: true,
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Icon(Icons.arrow_back_sharp, color: Colors.black),
-              backgroundColor: AppColors.black900
-                  .withOpacity(0.1), // Customize this color as per your design
-              elevation: 0.0, // This removes the shadow
+              backgroundColor: AppColors.black900.withOpacity(0.1),
+              elevation: 0.0,
+              child: const Icon(Icons.arrow_back_sharp, color: Colors.black),
             ),
           ),
         ],
@@ -283,6 +293,7 @@ class _SignupScreenState extends State<SignupScreen> {
   }
 
   Widget _buildSecondPage(BuildContext context, AuthState state) {
+    bool isRtl = Localizations.localeOf(context).languageCode == 'ar';
     return Scaffold(
       body: Stack(
         children: [
@@ -313,7 +324,8 @@ class _SignupScreenState extends State<SignupScreen> {
                       padding: EdgeInsets.only(left: 15.h),
                       child: Center(
                         child: Text(
-                          "Registration",
+                          AppLocalizations.of(context)!
+                              .translate("registration")!,
                           textAlign: TextAlign.center,
                           style: CustomTextStyles.titleMediumPoppinsBlack2,
                         ),
@@ -325,24 +337,31 @@ class _SignupScreenState extends State<SignupScreen> {
                     Padding(
                       padding: EdgeInsets.only(left: 3.h),
                       child: Text(
-                        "Password",
+                        AppLocalizations.of(context)!.translate("password")!,
                         style: CustomTextStyles.titleMediumPoppinsGray900,
                       ),
                     ),
                     SizedBox(height: 11.v),
                     _buildPassword(
-                        context, "Enter Password", passwordController),
+                        context,
+                        AppLocalizations.of(context)!
+                            .translate("enter_your_password")!,
+                        passwordController),
                     SizedBox(height: 16.v),
                     Padding(
                       padding: EdgeInsets.only(left: 3.h),
                       child: Text(
-                        "Confirm Password",
+                        AppLocalizations.of(context)!
+                            .translate("confirm_password")!,
                         style: CustomTextStyles.titleMediumPoppinsGray900,
                       ),
                     ),
                     SizedBox(height: 11.v),
                     _buildPassword(
-                        context, "Confirm Password", confirmpasswordController),
+                        context,
+                        AppLocalizations.of(context)!
+                            .translate("confirm_password")!,
+                        confirmpasswordController),
                     SizedBox(height: 30.v),
                     _buildContinue(context, state),
                     SizedBox(height: 8.v),
@@ -355,9 +374,10 @@ class _SignupScreenState extends State<SignupScreen> {
           ),
           Positioned(
             top: 15.0,
-            left: 11.0,
+            left: isRtl ? null : 11.0,
+            right: isRtl ? 11.0 : null,
             child: FloatingActionButton(
-              mini: true, // This makes the FloatingActionButton smaller
+              mini: true,
               onPressed: () {
                 if (_pageController.page != 0.0) {
                   _pageController.previousPage(
@@ -368,10 +388,9 @@ class _SignupScreenState extends State<SignupScreen> {
                   Navigator.of(context).pop();
                 }
               },
-              child: Icon(Icons.arrow_back_sharp, color: Colors.black),
-              backgroundColor: AppColors.black900
-                  .withOpacity(0.1), // Customize this color as per your design
-              elevation: 0.0, // This removes the shadow
+              backgroundColor: AppColors.black900.withOpacity(0.1),
+              elevation: 0.0,
+              child: const Icon(Icons.arrow_back_sharp, color: Colors.black),
             ),
           ),
         ],
@@ -380,6 +399,8 @@ class _SignupScreenState extends State<SignupScreen> {
   }
 
   Widget _buildThirdPage(BuildContext context, AuthState state) {
+    bool isRtl = Localizations.localeOf(context).languageCode == 'ar';
+
     return SingleChildScrollView(
       padding: EdgeInsets.only(
         bottom: MediaQuery.of(context).viewInsets.bottom,
@@ -403,20 +424,24 @@ class _SignupScreenState extends State<SignupScreen> {
               _buildsteps3(context),
               SizedBox(height: 28.v),
               Align(
-                alignment: Alignment.centerLeft,
-                child: Text("Check your email",
+                alignment: isRtl ? Alignment.centerRight : Alignment.centerLeft,
+                child: Text(
+                    AppLocalizations.of(context)!.translate("check_email")!,
                     style: CustomTextStyles.titleMediumPoppinsBlack2),
               ),
               SizedBox(height: 10.v),
               Align(
-                alignment: Alignment.centerLeft,
+                alignment: isRtl ? Alignment.centerRight : Alignment.centerLeft,
                 child: Container(
                   width: 333.h,
-                  margin: EdgeInsets.only(right: 45.h),
+                  margin: isRtl
+                      ? EdgeInsets.only(left: 45.h)
+                      : EdgeInsets.only(right: 45.h),
                   child: RichText(
                     text: TextSpan(children: [
                       TextSpan(
-                        text: "We sent a verification code to ",
+                        text: AppLocalizations.of(context)!
+                            .translate("code_sent")!,
                         style: CustomTextStyles.titleMediumff989898,
                       ),
                       TextSpan(
@@ -425,27 +450,32 @@ class _SignupScreenState extends State<SignupScreen> {
                             .copyWith(height: 1.25),
                       ),
                       TextSpan(
-                        text: ". Please enter the code below.",
+                        text: AppLocalizations.of(context)!
+                            .translate("code_enter")!,
                         style: CustomTextStyles.titleMediumff989898,
                       ),
                     ]),
-                    textAlign: TextAlign.left,
+                    textAlign: isRtl ? TextAlign.right : TextAlign.left,
                   ),
                 ),
               ),
               SizedBox(height: 34.v),
               Padding(
                 padding: EdgeInsets.only(right: 1.h),
-                child: CustomPinCodeTextField(
-                  validator: (value) =>
-                      value!.isEmpty ? 'Enter the code' : null,
-                  context: context,
-                  onChanged: (value) {
-                    for (int i = 0; i < value.length; i++) {
-                      verificationCode[i] = value[i];
-                    }
-                    isFilledNotifier.value = value.length == 5;
-                  },
+                child: Directionality(
+                  textDirection: TextDirection.ltr,
+                  child: CustomPinCodeTextField(
+                    validator: (value) => value!.isEmpty
+                        ? AppLocalizations.of(context)!.translate("enter_code")!
+                        : null,
+                    context: context,
+                    onChanged: (value) {
+                      for (int i = 0; i < value.length; i++) {
+                        verificationCode[i] = value[i];
+                      }
+                      isFilledNotifier.value = value.length == 5;
+                    },
+                  ),
                 ),
               ),
               SizedBox(height: 26.v),
@@ -457,7 +487,8 @@ class _SignupScreenState extends State<SignupScreen> {
               RichText(
                 text: TextSpan(children: [
                   TextSpan(
-                    text: "Haven’t got the email yet?",
+                    text:
+                        "${AppLocalizations.of(context)!.translate("no_email_recieved")!} \n",
                     style: CustomTextStyles.titleMediumff545454,
                   ),
                   TextSpan(text: " "),
@@ -466,7 +497,7 @@ class _SignupScreenState extends State<SignupScreen> {
                           child: GestureDetector(
                             onTap: null,
                             child: Text(
-                              "Resend email (${_start ~/ 60}:${(_start % 60).toString().padLeft(2, '0')})",
+                              "${AppLocalizations.of(context)!.translate("resend_code")!} (${_start ~/ 60}:${(_start % 60).toString().padLeft(2, '0')})",
                               style: CustomTextStyles.titleMediumff989898
                                   .copyWith(
                                       decoration: TextDecoration.underline),
@@ -488,9 +519,10 @@ class _SignupScreenState extends State<SignupScreen> {
                               }
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
-                                  content: const Text(
-                                    'The email has been resent successfully.',
-                                    style: TextStyle(
+                                  content: Text(
+                                    AppLocalizations.of(context)!
+                                        .translate("email_resent")!,
+                                    style: const TextStyle(
                                       color: Colors.white,
                                       fontSize: 16,
                                     ),
@@ -505,7 +537,8 @@ class _SignupScreenState extends State<SignupScreen> {
                               );
                             },
                             child: Text(
-                              "Resend email",
+                              AppLocalizations.of(context)!
+                                  .translate("resend_email")!,
                               style: CustomTextStyles.titleMediumff648ddb
                                   .copyWith(
                                       decoration: TextDecoration.underline),
@@ -513,7 +546,7 @@ class _SignupScreenState extends State<SignupScreen> {
                           ),
                         ),
                 ]),
-                textAlign: TextAlign.left,
+                textAlign: isRtl ? TextAlign.right : TextAlign.left,
               ),
               SizedBox(height: 5.v),
             ],
@@ -559,7 +592,7 @@ class _SignupScreenState extends State<SignupScreen> {
             SizedBox(height: 40.v),
             Center(
               child: Text(
-                "Success!",
+                AppLocalizations.of(context)!.translate("success")!,
                 style: CustomTextStyles.titleMediumPoppinsBlack2,
               ),
             ),
@@ -567,7 +600,7 @@ class _SignupScreenState extends State<SignupScreen> {
             Padding(
               padding: EdgeInsets.only(left: 3.h),
               child: Text(
-                "Welcome to EduConnect, You can now access your account.",
+                AppLocalizations.of(context)!.translate("welcome")!,
                 style: CustomTextStyles.bodyMediumRobotoGray2,
               ),
             ),
@@ -818,11 +851,17 @@ class _SignupScreenState extends State<SignupScreen> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          _buildName(context, "First Name", firstNameController),
+          _buildName(
+              context,
+              AppLocalizations.of(context)!.translate("first_name")!,
+              firstNameController),
           Container(
             width: 23.v,
           ),
-          _buildName(context, "Last Name", lastNameController),
+          _buildName(
+              context,
+              AppLocalizations.of(context)!.translate("last_name")!,
+              lastNameController),
         ],
       ),
     );
@@ -847,7 +886,7 @@ class _SignupScreenState extends State<SignupScreen> {
         ),
         contentPadding: EdgeInsets.symmetric(horizontal: 21.h, vertical: 15.v),
         controller: emailController,
-        hintText: "Enter Email",
+        hintText: AppLocalizations.of(context)!.translate("enter_your_email")!,
         textInputType: TextInputType.emailAddress,
       ),
     );
@@ -922,13 +961,15 @@ class _SignupScreenState extends State<SignupScreen> {
                     );
                   } else {
                     setState(() {
-                      errorMessage = 'Invalid email format';
+                      errorMessage = AppLocalizations.of(context)!
+                          .translate("email_format")!;
                     });
                   }
                 }
               } else {
                 setState(() {
-                  errorMessage = 'Please fill all the fields';
+                  errorMessage = AppLocalizations.of(context)!
+                      .translate("fill_all_fields")!;
                 });
               }
             },
@@ -941,7 +982,7 @@ class _SignupScreenState extends State<SignupScreen> {
         backgroundColor: MaterialStateProperty.all(AppColors.indigoA300),
       ),
       isLoading: state is AuthLoading,
-      text: "Next Step",
+      text: AppLocalizations.of(context)!.translate("next_step")!,
       margin: EdgeInsets.only(left: 2.h, right: 2.h),
       buttonTextStyle: CustomTextStyles.titleMediumPoppins,
     );
@@ -974,18 +1015,21 @@ class _SignupScreenState extends State<SignupScreen> {
                           );
                     } else {
                       setState(() {
-                        errorMessage = 'Passwords do not match';
+                        errorMessage = AppLocalizations.of(context)!
+                            .translate("password_match")!;
                       });
                     }
                   } else {
                     setState(() {
-                      errorMessage = 'Password is too short';
+                      errorMessage = AppLocalizations.of(context)!
+                          .translate("password_short")!;
                     });
                   }
                 }
               } else {
                 setState(() {
-                  errorMessage = 'Please fill all the fields';
+                  errorMessage = AppLocalizations.of(context)!
+                      .translate("fill_all_fields")!;
                 });
               }
             },
@@ -998,7 +1042,7 @@ class _SignupScreenState extends State<SignupScreen> {
         backgroundColor: MaterialStateProperty.all(AppColors.indigoA300),
       ),
       isLoading: state is AuthLoading,
-      text: "Continue",
+      text: AppLocalizations.of(context)!.translate("continue")!,
       margin: EdgeInsets.only(left: 2.h, right: 2.h),
       buttonTextStyle: CustomTextStyles.titleMediumPoppins,
     );
@@ -1031,7 +1075,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 if (states.contains(MaterialState.disabled) || !isFilled) {
                   return AppColors.indigoA300.withOpacity(0.4);
                 }
-                return AppColors.indigoA300; // Use the component's default.
+                return AppColors.indigoA300;
               },
             ),
             shape: MaterialStateProperty.all<RoundedRectangleBorder>(
@@ -1041,7 +1085,7 @@ class _SignupScreenState extends State<SignupScreen> {
             ),
           ),
           isLoading: state is AuthLoading,
-          text: "Verify Code",
+          text: AppLocalizations.of(context)!.translate("verify_code")!,
           margin: EdgeInsets.only(left: 6.h, right: 6.h),
           buttonTextStyle: CustomTextStyles.titleMediumPoppins,
         );
@@ -1065,7 +1109,7 @@ class _SignupScreenState extends State<SignupScreen> {
         backgroundColor: MaterialStateProperty.all(AppColors.indigoA300),
       ),
       isLoading: state is AuthLoading,
-      text: "Continue",
+      text: AppLocalizations.of(context)!.translate("continue")!,
       margin: EdgeInsets.only(left: 2.h, right: 2.h),
       buttonTextStyle: CustomTextStyles.titleMediumPoppins,
     );
@@ -1080,9 +1124,10 @@ class _SignupScreenState extends State<SignupScreen> {
           state is AuthError
               ? Text(
                   state.message.contains('Server Failure')
-                      ? "Server error"
+                      ? AppLocalizations.of(context)!.translate("server_error")!
                       : state.message.contains('Email already exists')
-                          ? "Email already exists"
+                          ? AppLocalizations.of(context)!
+                              .translate("email_exists")!
                           : state.message,
                   style: CustomTextStyles.titleMediumPoppinsBluegray100)
               : Text(errorMessage,
@@ -1101,9 +1146,10 @@ class _SignupScreenState extends State<SignupScreen> {
           state is AuthError
               ? Text(
                   state.message.contains('Server Failure')
-                      ? "Wrong code"
+                      ? AppLocalizations.of(context)!.translate("wrong_code")!
                       : state.message.contains('Email already exists')
-                          ? "Email already exists"
+                          ? AppLocalizations.of(context)!
+                              .translate("email_exists")!
                           : state.message,
                   style: CustomTextStyles.titleMediumPoppinsBluegray100)
               : Text(errorMessage,

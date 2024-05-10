@@ -1,4 +1,4 @@
-import 'package:quotes/features/classrooms/domain/entities/school.dart';
+import 'package:educonnect/features/classrooms/domain/entities/school.dart';
 
 class SchoolModel extends School {
   const SchoolModel({

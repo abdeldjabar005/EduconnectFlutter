@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:quotes/core/utils/app_colors.dart';
-import 'package:quotes/core/utils/size_utils.dart';
+import 'package:educonnect/core/utils/app_colors.dart';
+import 'package:educonnect/core/utils/size_utils.dart';
 
 class CustomIconButton extends StatelessWidget {
   CustomIconButton({

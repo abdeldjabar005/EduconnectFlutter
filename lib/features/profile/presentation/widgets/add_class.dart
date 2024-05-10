@@ -1,22 +1,23 @@
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:educonnect/config/locale/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:quotes/config/themes/custom_text_style.dart';
-import 'package:quotes/core/utils/app_colors.dart';
-import 'package:quotes/core/utils/image_constant.dart';
-import 'package:quotes/core/utils/size_utils.dart';
-import 'package:quotes/features/auth/presentation/cubit/auth_cubit.dart';
-import 'package:quotes/features/auth/presentation/widgets/custom_drop_down.dart';
-import 'package:quotes/features/auth/presentation/widgets/custom_elevated_button.dart';
-import 'package:quotes/features/auth/presentation/widgets/custom_image_pick.dart';
-import 'package:quotes/features/auth/presentation/widgets/custom_text_form_field.dart';
-import 'package:quotes/features/classrooms/data/models/class_m.dart';
-import 'package:quotes/features/classrooms/data/models/class_model.dart';
-import 'package:quotes/features/classrooms/presentation/cubit/class_cubit.dart';
-import 'package:quotes/features/posts/presentation/widgets/custom_image_view.dart';
-import 'package:quotes/features/profile/presentation/cubit/children_cubit.dart';
+import 'package:educonnect/config/themes/custom_text_style.dart';
+import 'package:educonnect/core/utils/app_colors.dart';
+import 'package:educonnect/core/utils/image_constant.dart';
+import 'package:educonnect/core/utils/size_utils.dart';
+import 'package:educonnect/features/auth/presentation/cubit/auth_cubit.dart';
+import 'package:educonnect/features/auth/presentation/widgets/custom_drop_down.dart';
+import 'package:educonnect/features/auth/presentation/widgets/custom_elevated_button.dart';
+import 'package:educonnect/features/auth/presentation/widgets/custom_image_pick.dart';
+import 'package:educonnect/features/auth/presentation/widgets/custom_text_form_field.dart';
+import 'package:educonnect/features/classrooms/data/models/class_m.dart';
+import 'package:educonnect/features/classrooms/data/models/class_model.dart';
+import 'package:educonnect/features/classrooms/presentation/cubit/class_cubit.dart';
+import 'package:educonnect/features/posts/presentation/widgets/custom_image_view.dart';
+import 'package:educonnect/features/profile/presentation/cubit/children_cubit.dart';
 import 'package:image_picker/image_picker.dart';
 
 class AddClass extends StatefulWidget {
@@ -113,7 +114,7 @@ class _AddClassState extends State<AddClass> {
                 elevation: 0,
                 centerTitle: true,
                 title: Text(
-                  "Add a Class",
+                  AppLocalizations.of(context)!.translate('add_class2')!,
                   style: TextStyle(
                     fontFamily: "Poppins",
                     color: AppColors.black900,
@@ -134,14 +135,22 @@ class _AddClassState extends State<AddClass> {
                     // crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       SizedBox(height: 7.v),
-                      _buildName(context, "Class Name", classNameController),
+                      _buildName(
+                          context,
+                          AppLocalizations.of(context)!
+                              .translate('class_name')!,
+                          classNameController),
                       SizedBox(height: 7.v),
-                      _buildName(context, "Subject", subjectController),
+                      _buildName(
+                          context,
+                          AppLocalizations.of(context)!.translate('subject')!,
+                          subjectController),
                       SizedBox(height: 7.v),
                       Padding(
                         padding: EdgeInsets.only(left: 3.h),
                         child: Text(
-                          "Grade level",
+                          AppLocalizations.of(context)!
+                              .translate('grade_level')!,
                           style: CustomTextStyles.titleMediumPoppinsGray900,
                         ),
                       ),
@@ -180,7 +189,8 @@ class _AddClassState extends State<AddClass> {
                               width: 20.adaptSize,
                             ),
                           ),
-                          hintText: "Select Grade level",
+                          hintText: AppLocalizations.of(context)!
+                              .translate('select_grade_level')!,
                           hintStyle:
                               CustomTextStyles.titleMediumPoppinsGray40001,
                           items: grade,
@@ -197,14 +207,16 @@ class _AddClassState extends State<AddClass> {
                           Padding(
                             padding: EdgeInsets.only(left: 3.h),
                             child: Text(
-                              "Class School",
+                              AppLocalizations.of(context)!
+                                  .translate('class_school')!,
                               style: CustomTextStyles.titleMediumPoppinsGray900,
                             ),
                           ),
                           Padding(
                             padding: EdgeInsets.only(left: 3.h),
                             child: Text(
-                              "(Optional)",
+                              AppLocalizations.of(context)!
+                                  .translate('optional')!,
                               style:
                                   CustomTextStyles.titleMediumPoppinsGray40001,
                             ),
@@ -246,14 +258,20 @@ class _AddClassState extends State<AddClass> {
                               width: 20.adaptSize,
                             ),
                           ),
-                          hintText: "Select School",
+                          hintText: AppLocalizations.of(context)!
+                              .translate('select_school')!,
                           hintStyle:
                               CustomTextStyles.titleMediumPoppinsGray40001,
                           items: schools.isNotEmpty
                               ? schools
-                              : ['You have no schools'],
+                              : [
+                                  AppLocalizations.of(context)!
+                                      .translate('no_schools')!
+                                ],
                           onChanged: (String newValue) {
-                            if (newValue != 'You have no schools') {
+                            if (newValue !=
+                                    'You are not part of any school yet' &&
+                                newValue != 'لست منظم الى اي مدرسة') {
                               setState(() {
                                 selectedSchool = newValue;
                                 selectedSchoolId = schoolIdMap[newValue];
@@ -268,14 +286,16 @@ class _AddClassState extends State<AddClass> {
                           Padding(
                             padding: EdgeInsets.only(left: 3.h),
                             child: Text(
-                              "Select Image",
+                              AppLocalizations.of(context)!
+                                  .translate('select_image')!,
                               style: CustomTextStyles.titleMediumPoppinsGray900,
                             ),
                           ),
                           Padding(
                             padding: EdgeInsets.only(left: 3.h),
                             child: Text(
-                              "(Optional)",
+                              AppLocalizations.of(context)!
+                                  .translate('optional')!,
                               style:
                                   CustomTextStyles.titleMediumPoppinsGray40001,
                             ),
@@ -288,7 +308,7 @@ class _AddClassState extends State<AddClass> {
                         child: selectedImage == null
                             ? Text('Select Image')
                             : Text(
-                                'Image Selected: ${selectedImage!.path.split('/').last}'),
+                                '${AppLocalizations.of(context)!.translate('image_selected')!}: ${selectedImage!.path.split('/').last}'),
                       ),
                       SizedBox(height: 30.v),
                       _buildContinue(context, state),
@@ -375,7 +395,8 @@ class _AddClassState extends State<AddClass> {
                 }
               } else {
                 setState(() {
-                  errorMessage = 'Please fill all the fields';
+                  errorMessage = AppLocalizations.of(context)!
+                      .translate('fill_all_fields')!;
                 });
               }
             },
@@ -388,7 +409,7 @@ class _AddClassState extends State<AddClass> {
         backgroundColor: MaterialStateProperty.all(AppColors.indigoA300),
       ),
       isLoading: state is ClassLoading,
-      text: "Continue",
+      text: AppLocalizations.of(context)!.translate('continue')!,
       margin: EdgeInsets.only(left: 2.h, right: 2.h),
       buttonTextStyle: CustomTextStyles.titleMediumPoppins,
     );
@@ -405,7 +426,8 @@ class _AddClassState extends State<AddClass> {
                   child: Text(
                       overflow: TextOverflow.visible,
                       state.message.contains('Server Failure')
-                          ? "Server error"
+                          ? AppLocalizations.of(context)!
+                              .translate('server_error')!
                           : state.message,
                       style: CustomTextStyles.titleMediumPoppinsBluegray100),
                 )

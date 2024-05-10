@@ -1,20 +1,21 @@
 import 'dart:developer';
 
+import 'package:educonnect/config/locale/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:quotes/config/themes/custom_text_style.dart';
-import 'package:quotes/core/utils/app_colors.dart';
-import 'package:quotes/core/utils/image_constant.dart';
-import 'package:quotes/core/utils/size_utils.dart';
-import 'package:quotes/core/widgets/custom_bottom_bar.dart';
-import 'package:quotes/features/auth/presentation/widgets/custom_drop_down.dart';
-import 'package:quotes/features/auth/presentation/widgets/custom_elevated_button.dart';
-import 'package:quotes/features/auth/presentation/widgets/custom_text_form_field.dart';
-import 'package:quotes/features/posts/presentation/widgets/custom_image_view.dart';
-import 'package:quotes/features/profile/data/models/child_model.dart';
-import 'package:quotes/features/profile/presentation/cubit/children_cubit.dart';
-import 'package:quotes/injection_container.dart';
+import 'package:educonnect/config/themes/custom_text_style.dart';
+import 'package:educonnect/core/utils/app_colors.dart';
+import 'package:educonnect/core/utils/image_constant.dart';
+import 'package:educonnect/core/utils/size_utils.dart';
+import 'package:educonnect/core/widgets/custom_bottom_bar.dart';
+import 'package:educonnect/features/auth/presentation/widgets/custom_drop_down.dart';
+import 'package:educonnect/features/auth/presentation/widgets/custom_elevated_button.dart';
+import 'package:educonnect/features/auth/presentation/widgets/custom_text_form_field.dart';
+import 'package:educonnect/features/posts/presentation/widgets/custom_image_view.dart';
+import 'package:educonnect/features/profile/data/models/child_model.dart';
+import 'package:educonnect/features/profile/presentation/cubit/children_cubit.dart';
+import 'package:educonnect/injection_container.dart';
 
 class AddChild extends StatefulWidget {
   const AddChild({Key? key})
@@ -84,7 +85,7 @@ class _AddChildState extends State<AddChild> {
                 elevation: 0,
                 centerTitle: true,
                 title: Text(
-                  "Add a Child",
+                  AppLocalizations.of(context)!.translate('add_child2')!,
                   style: TextStyle(
                     fontFamily: "Poppins",
                     color: AppColors.black900,
@@ -114,7 +115,8 @@ class _AddChildState extends State<AddChild> {
                         Padding(
                           padding: EdgeInsets.only(left: 3.h),
                           child: Text(
-                            "Grade level",
+                            AppLocalizations.of(context)!
+                                .translate('grade_level')!,
                             style: CustomTextStyles.titleMediumPoppinsGray900,
                           ),
                         ),
@@ -155,13 +157,22 @@ class _AddChildState extends State<AddChild> {
                                 width: 20.adaptSize,
                               ),
                             ),
-                            hintText: "Select Grade level",
+                            hintText: AppLocalizations.of(context)!
+                                .translate('select_grade_level')!,
                             hintStyle:
                                 CustomTextStyles.titleMediumPoppinsGray40001,
-                            items: grade,
+                            items: grade
+                                .map((gradeKey) => AppLocalizations.of(context)!
+                                    .translate(gradeKey)!)
+                                .toList(),
                             onChanged: (String newValue) {
                               setState(() {
-                                selectedGrade = newValue;
+                                String englishGrade = grade.firstWhere(
+                                    (gradeKey) =>
+                                        AppLocalizations.of(context)!
+                                            .translate(gradeKey)! ==
+                                        newValue);
+                                selectedGrade = englishGrade;
                               });
                             },
                           ),
@@ -170,7 +181,8 @@ class _AddChildState extends State<AddChild> {
                         Padding(
                           padding: EdgeInsets.only(left: 3.h),
                           child: Text(
-                            "Relation",
+                            AppLocalizations.of(context)!
+                                .translate('relation')!,
                             style: CustomTextStyles.titleMediumPoppinsGray900,
                           ),
                         ),
@@ -178,7 +190,7 @@ class _AddChildState extends State<AddChild> {
                         Padding(
                           padding: EdgeInsets.only(left: 3.h),
                           child: CustomDropDown(
-                            value: selectedGrade,
+                            value: selectedRealtion,
                             textStyle: TextStyle(
                               fontFamily: "Poppins",
                               color: AppColors.black900,
@@ -211,13 +223,23 @@ class _AddChildState extends State<AddChild> {
                                 width: 20.adaptSize,
                               ),
                             ),
-                            hintText: "Select Relation",
+                            hintText: AppLocalizations.of(context)!
+                                .translate('select_relation')!,
                             hintStyle:
                                 CustomTextStyles.titleMediumPoppinsGray40001,
-                            items: relation,
+                            items: relation
+                                .map((relationKey) =>
+                                    AppLocalizations.of(context)!
+                                        .translate(relationKey)!)
+                                .toList(),
                             onChanged: (String newValue) {
                               setState(() {
-                                selectedRealtion = newValue;
+                                String englishRelation = relation.firstWhere(
+                                    (relationKey) =>
+                                        AppLocalizations.of(context)!
+                                            .translate(relationKey)! ==
+                                        newValue);
+                                selectedRealtion = englishRelation;
                               });
                             },
                           ),
@@ -245,11 +267,17 @@ class _AddChildState extends State<AddChild> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          _buildName(context, "First Name", firstNameController),
+          _buildName(
+              context,
+              AppLocalizations.of(context)!.translate('first_name')!,
+              firstNameController),
           Container(
             width: 23.v,
           ),
-          _buildName(context, "Last Name", lastNameController),
+          _buildName(
+              context,
+              AppLocalizations.of(context)!.translate('last_name')!,
+              lastNameController),
         ],
       ),
     );
@@ -320,7 +348,8 @@ class _AddChildState extends State<AddChild> {
                 }
               } else {
                 setState(() {
-                  errorMessage = 'Please fill all the fields';
+                  errorMessage = AppLocalizations.of(context)!
+                      .translate('fill_all_fields')!;
                 });
               }
             },
@@ -333,7 +362,7 @@ class _AddChildState extends State<AddChild> {
         backgroundColor: MaterialStateProperty.all(AppColors.indigoA300),
       ),
       isLoading: state is ChildrenLoading,
-      text: "Continue",
+      text: AppLocalizations.of(context)!.translate('continue')!,
       margin: EdgeInsets.only(left: 2.h, right: 2.h),
       buttonTextStyle: CustomTextStyles.titleMediumPoppins,
     );
@@ -348,7 +377,7 @@ class _AddChildState extends State<AddChild> {
           state is ChildrenError
               ? Text(
                   state.message.contains('Server Failure')
-                      ? "Server error"
+                      ? AppLocalizations.of(context)!.translate('server_error')!
                       : state.message,
                   style: CustomTextStyles.titleMediumPoppinsBluegray100)
               : Text(errorMessage,

@@ -1,22 +1,23 @@
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:educonnect/config/locale/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:quotes/config/themes/custom_text_style.dart';
-import 'package:quotes/core/utils/app_colors.dart';
-import 'package:quotes/core/utils/image_constant.dart';
-import 'package:quotes/core/utils/size_utils.dart';
-import 'package:quotes/features/auth/presentation/cubit/auth_cubit.dart';
-import 'package:quotes/features/auth/presentation/widgets/custom_drop_down.dart';
-import 'package:quotes/features/auth/presentation/widgets/custom_elevated_button.dart';
-import 'package:quotes/features/auth/presentation/widgets/custom_image_pick.dart';
-import 'package:quotes/features/auth/presentation/widgets/custom_text_form_field.dart';
-import 'package:quotes/features/classrooms/data/models/class_m.dart';
-import 'package:quotes/features/classrooms/data/models/class_model.dart';
-import 'package:quotes/features/classrooms/presentation/cubit/class_cubit.dart';
-import 'package:quotes/features/posts/presentation/widgets/custom_image_view.dart';
-import 'package:quotes/features/profile/presentation/cubit/children_cubit.dart';
+import 'package:educonnect/config/themes/custom_text_style.dart';
+import 'package:educonnect/core/utils/app_colors.dart';
+import 'package:educonnect/core/utils/image_constant.dart';
+import 'package:educonnect/core/utils/size_utils.dart';
+import 'package:educonnect/features/auth/presentation/cubit/auth_cubit.dart';
+import 'package:educonnect/features/auth/presentation/widgets/custom_drop_down.dart';
+import 'package:educonnect/features/auth/presentation/widgets/custom_elevated_button.dart';
+import 'package:educonnect/features/auth/presentation/widgets/custom_image_pick.dart';
+import 'package:educonnect/features/auth/presentation/widgets/custom_text_form_field.dart';
+import 'package:educonnect/features/classrooms/data/models/class_m.dart';
+import 'package:educonnect/features/classrooms/data/models/class_model.dart';
+import 'package:educonnect/features/classrooms/presentation/cubit/class_cubit.dart';
+import 'package:educonnect/features/posts/presentation/widgets/custom_image_view.dart';
+import 'package:educonnect/features/profile/presentation/cubit/children_cubit.dart';
 import 'package:image_picker/image_picker.dart';
 
 class UpdateClass extends StatefulWidget {
@@ -101,7 +102,7 @@ class _UpdateClassState extends State<UpdateClass> {
                 elevation: 0,
                 centerTitle: true,
                 title: Text(
-                  "Update a Class",
+                  AppLocalizations.of(context)!.translate('update_class')!,
                   style: TextStyle(
                     fontFamily: "Poppins",
                     color: AppColors.black900,
@@ -122,14 +123,22 @@ class _UpdateClassState extends State<UpdateClass> {
                     // crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       SizedBox(height: 20.v),
-                      _buildName(context, "Class Name", classNameController),
+                      _buildName(
+                          context,
+                          AppLocalizations.of(context)!
+                              .translate('class_name')!,
+                          classNameController),
                       SizedBox(height: 20.v),
-                      _buildName(context, "Subject", subjectController),
+                      _buildName(
+                          context,
+                          AppLocalizations.of(context)!.translate('subject')!,
+                          subjectController),
                       SizedBox(height: 20.v),
                       Padding(
                         padding: EdgeInsets.only(left: 3.h),
                         child: Text(
-                          "Grade level",
+                          AppLocalizations.of(context)!
+                              .translate('grade_level')!,
                           style: CustomTextStyles.titleMediumPoppinsGray900,
                         ),
                       ),
@@ -137,7 +146,8 @@ class _UpdateClassState extends State<UpdateClass> {
                       Padding(
                         padding: EdgeInsets.only(left: 3.h),
                         child: CustomDropDown(
-                          value: selectedGrade,
+                          value: AppLocalizations.of(context)!
+                              .translate(selectedGrade)!,
                           textStyle: TextStyle(
                             fontFamily: "Poppins",
                             color: AppColors.black900,
@@ -168,13 +178,22 @@ class _UpdateClassState extends State<UpdateClass> {
                               width: 20.adaptSize,
                             ),
                           ),
-                          hintText: "Select Grade level",
+                          hintText: AppLocalizations.of(context)!
+                              .translate('select_grade_level')!,
                           hintStyle:
                               CustomTextStyles.titleMediumPoppinsGray40001,
-                          items: grade,
+                          items: grade
+                              .map((gradeKey) => AppLocalizations.of(context)!
+                                  .translate(gradeKey)!)
+                              .toList(),
                           onChanged: (String newValue) {
                             setState(() {
-                              selectedGrade = newValue;
+                              String englishGrade = grade.firstWhere(
+                                  (gradeKey) =>
+                                      AppLocalizations.of(context)!
+                                          .translate(gradeKey)! ==
+                                      newValue);
+                              selectedGrade = englishGrade;
                             });
                           },
                         ),
@@ -185,14 +204,16 @@ class _UpdateClassState extends State<UpdateClass> {
                           Padding(
                             padding: EdgeInsets.only(left: 3.h),
                             child: Text(
-                              "Select New Image",
+                              AppLocalizations.of(context)!
+                                  .translate('select_new_image')!,
                               style: CustomTextStyles.titleMediumPoppinsGray900,
                             ),
                           ),
                           Padding(
                             padding: EdgeInsets.only(left: 3.h),
                             child: Text(
-                              "(Optional)",
+                              AppLocalizations.of(context)!
+                                  .translate('optional')!,
                               style:
                                   CustomTextStyles.titleMediumPoppinsGray40001,
                             ),
@@ -203,7 +224,8 @@ class _UpdateClassState extends State<UpdateClass> {
                       InkWell(
                         onTap: pickImage,
                         child: selectedImage == null
-                            ? Text('Select Image')
+                            ? Text(AppLocalizations.of(context)!
+                                .translate('select_image')!)
                             : Text(
                                 'Image Selected: ${selectedImage!.path.split('/').last}'),
                       ),
@@ -292,7 +314,8 @@ class _UpdateClassState extends State<UpdateClass> {
                 }
               } else {
                 setState(() {
-                  errorMessage = 'Please fill at least one field';
+                  errorMessage = AppLocalizations.of(context)!
+                      .translate('fill_one_field')!;
                 });
               }
             },
@@ -305,7 +328,7 @@ class _UpdateClassState extends State<UpdateClass> {
         backgroundColor: MaterialStateProperty.all(AppColors.indigoA300),
       ),
       isLoading: state is ClassLoading,
-      text: "Continue",
+      text: AppLocalizations.of(context)!.translate('continue')!,
       margin: EdgeInsets.only(left: 2.h, right: 2.h),
       buttonTextStyle: CustomTextStyles.titleMediumPoppins,
     );
@@ -320,7 +343,7 @@ class _UpdateClassState extends State<UpdateClass> {
           state is ClassError
               ? Text(
                   state.message.contains('Server Failure')
-                      ? "Server error"
+                      ? AppLocalizations.of(context)!.translate('server_error')!
                       : state.message,
                   style: CustomTextStyles.titleMediumPoppinsBluegray100)
               : Text(errorMessage,

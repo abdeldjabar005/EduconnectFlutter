@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
-import 'package:quotes/features/classrooms/data/models/class_model.dart';
-import 'package:quotes/features/classrooms/data/models/school_nodel.dart';
+import 'package:educonnect/features/classrooms/data/models/class_model.dart';
+import 'package:educonnect/features/classrooms/data/models/school_nodel.dart';
 
 class User extends Equatable {
   final int id;

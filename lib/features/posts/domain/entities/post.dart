@@ -1,7 +1,7 @@
 // post.dart
 import 'package:equatable/equatable.dart';
-import 'package:quotes/features/posts/data/models/comment_model.dart';
-import 'package:quotes/features/posts/domain/entities/comment.dart';
+import 'package:educonnect/features/posts/data/models/comment_model.dart';
+import 'package:educonnect/features/posts/domain/entities/comment.dart';
 
 class Post extends Equatable {
   final int id;
@@ -11,16 +11,16 @@ class Post extends Equatable {
   final String type;
   final DateTime createdAt;
   final int commentsCount;
-   int likesCount;
-   bool isLiked;
+  int likesCount;
+  bool isLiked;
   final String firstName;
   final String lastName;
   final String profilePicture;
   final String classname;
   final bool isSaved;
-  final List<String> content;
+  final  List<Map<String, dynamic>> content;
 
- Post({
+  Post({
     required this.id,
     required this.userId,
     required this.classOrSchoolId,
@@ -28,8 +28,8 @@ class Post extends Equatable {
     required this.type,
     required this.createdAt,
     required this.commentsCount,
-     required this.likesCount,
-     required this.isLiked,
+    required this.likesCount,
+    required this.isLiked,
     required this.firstName,
     required this.lastName,
     required this.profilePicture,
@@ -57,7 +57,7 @@ class Post extends Equatable {
         content,
       ];
 
-       Post copyWith({
+  Post copyWith({
     int? id,
     int? userId,
     int? classOrSchoolId,
@@ -72,7 +72,7 @@ class Post extends Equatable {
     String? profilePicture,
     String? classname,
     bool? isSaved,
-    List<String>? content,
+    List<Map<String,String>>? content,
   }) {
     return Post(
       id: id ?? this.id,

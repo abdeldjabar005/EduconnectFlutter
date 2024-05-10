@@ -1,4 +1,4 @@
-import 'package:quotes/core/utils/app_strings.dart';
+import 'package:educonnect/core/utils/app_strings.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 abstract class LangLocalDataSource {

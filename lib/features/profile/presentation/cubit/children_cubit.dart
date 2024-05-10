@@ -3,12 +3,12 @@ import 'dart:developer';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
-import 'package:quotes/core/error/failures.dart';
-import 'package:quotes/features/profile/data/models/child_model.dart';
-import 'package:quotes/features/profile/domain/usecases/add_child.dart';
-import 'package:quotes/features/profile/domain/usecases/get_children.dart';
-import 'package:quotes/features/profile/domain/usecases/remove_child.dart';
-import 'package:quotes/features/profile/domain/usecases/update_child.dart';
+import 'package:educonnect/core/error/failures.dart';
+import 'package:educonnect/features/profile/data/models/child_model.dart';
+import 'package:educonnect/features/profile/domain/usecases/add_child.dart';
+import 'package:educonnect/features/profile/domain/usecases/get_children.dart';
+import 'package:educonnect/features/profile/domain/usecases/remove_child.dart';
+import 'package:educonnect/features/profile/domain/usecases/update_child.dart';
 
 part 'children_state.dart';
 

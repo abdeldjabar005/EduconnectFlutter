@@ -1,19 +1,23 @@
 // post_screen.dart
+import 'package:educonnect/config/locale/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:quotes/config/themes/custom_text_style.dart';
-import 'package:quotes/core/api/end_points.dart';
-import 'package:quotes/core/utils/app_colors.dart';
-import 'package:quotes/core/utils/size_utils.dart';
-import 'package:quotes/features/classrooms/data/models/member_model.dart';
-import 'package:quotes/features/classrooms/presentation/cubit/members_cubit.dart';
-import 'package:quotes/features/posts/presentation/widgets/custom_image_view.dart';
+import 'package:educonnect/config/themes/custom_text_style.dart';
+import 'package:educonnect/core/api/end_points.dart';
+import 'package:educonnect/core/utils/app_colors.dart';
+import 'package:educonnect/core/utils/size_utils.dart';
+import 'package:educonnect/features/auth/presentation/cubit/auth_cubit.dart';
+import 'package:educonnect/features/classrooms/data/models/member_model.dart';
+import 'package:educonnect/features/classrooms/presentation/cubit/members_cubit.dart';
+import 'package:educonnect/features/posts/presentation/widgets/custom_image_view.dart';
+import 'package:educonnect/features/profile/data/models/child2_model.dart';
 
 class MembersScreen extends StatefulWidget {
   final int id;
   final String type;
-  const MembersScreen({Key? key, required this.id, required this.type}) : super(key: key);
+  const MembersScreen({Key? key, required this.id, required this.type})
+      : super(key: key);
 
   @override
   _MembersScreenState createState() => _MembersScreenState();
@@ -34,6 +38,11 @@ class _MembersScreenState extends State<MembersScreen>
     }
   }
 
+  Map<String, String> roleTranslations = {
+    'parent': 'والد',
+    'teacher': 'معلم',
+    'admin': 'مدير',
+  };
   @override
   Widget build(BuildContext context) {
     super.build(context);
@@ -64,65 +73,257 @@ class _MembersScreenState extends State<MembersScreen>
   }
 
   Widget _buildMember(MemberModel member) {
-    return Container(
-      height: 100.v,
-      width: double.infinity,
-      margin: const EdgeInsets.all(8),
-      padding: const EdgeInsets.all(8),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Stack(
-        children: [
-          Positioned(
-            left: 0,
-            top: 15,
-            child: Row(
-              children: [
-                CustomImageView(
-                  imagePath: '${EndPoints.storage}${member.image}',
-                  radius: BorderRadius.circular(50),
-                  height: 53.v,
-                  width: 53.v,
-                ),
-                const SizedBox(width: 15),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
+    final currentUser =
+        (context.read<AuthCubit>().state as AuthAuthenticated).user;
+    bool isRtl = Localizations.localeOf(context).languageCode == 'ar';
+
+    return GestureDetector(
+      onTap: () {
+        showModalBottomSheet(
+          context: context,
+          builder: (BuildContext context) {
+            return Container(
+              height: 500.v,
+              width: double.infinity,
+              padding: EdgeInsets.all(10),
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      SizedBox(width: 13.h),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            CustomImageView(
+                              imagePath: '${EndPoints.storage}${member.image}',
+                              radius: BorderRadius.circular(50),
+                              height: 60.v,
+                              width: 60.v,
+                            ),
+                            Text(
+                              "${member.firstName} ${member.lastName}",
+                              style: CustomTextStyles.titleMediumPoppinsGray900,
+                            ),
+                            Text(
+                              member.bio ??
+                                  AppLocalizations.of(context)!
+                                      .translate('no_bio')!,
+                              style: CustomTextStyles.bodyMediumRobotoGray700,
+                              softWrap: true,
+                            ),
+                            Text(
+                              member.contact ??
+                                  AppLocalizations.of(context)!
+                                      .translate('no_contact')!,
+                              style: CustomTextStyles.bodyMediumRobotoGray700,
+                              softWrap: true,
+                            ),
+                          ],
+                        ),
+                      ),
+                      if (currentUser.id != member.id)
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.gray250,
+                          ),
+                          onPressed: () {
+                            // TODO: Implement message functionality
+                          },
+                          child: Text(
+                            AppLocalizations.of(context)!.translate('message')!,
+                            style: TextStyle(color: Colors.black),
+                          ),
+                        ),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  if (member.role == 'parent') ...[
                     Text(
-                      ("${member.firstName} ${member.lastName}").length > 20
-                          ? '${("${member.firstName} ${member.lastName}").substring(0, 20)}...'
-                          : "${member.firstName} ${member.lastName}",
+                      AppLocalizations.of(context)!
+                          .translate('associated_children')!,
                       style: CustomTextStyles.titleMediumPoppinsGray900,
-                      overflow: TextOverflow.ellipsis,
                     ),
-                    Text(
-                      member.role,
-                      style: CustomTextStyles.bodyMediumRobotoGray700,
+                    Divider(),
+                    Flexible(
+                      child: member.children.isEmpty
+                          ? Center(
+                              child: Text(
+                                AppLocalizations.of(context)!
+                                    .translate('no_associated_children')!,
+                                style: const TextStyle(
+                                  fontSize: 18,
+                                  color: Colors.grey,
+                                ),
+                              ),
+                            )
+                          : ListView.builder(
+                              itemCount: member.children.length,
+                              itemBuilder: (context, index) {
+                                return Container(
+                                  height: 90,
+                                  width: double.infinity,
+                                  margin: const EdgeInsets.all(8),
+                                  padding: const EdgeInsets.all(8),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  child: Stack(
+                                    children: [
+                                      Positioned(
+                                        left: 0,
+                                        right: 0,
+                                        top: 8,
+                                        child: Row(
+                                          children: [
+                                            CircleAvatar(
+                                              radius: 27,
+                                              backgroundColor:
+                                                  AppColors.gray100,
+                                              child:
+                                                  Icon(size: 32, Icons.person),
+                                            ),
+                                            const SizedBox(width: 15),
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  ("${member.children[index].firstName} ${member.children[index].lastName}")
+                                                              .length >
+                                                          20
+                                                      ? '${("${member.children[index].firstName} ${member.children[index].lastName}").substring(0, 20)}...'
+                                                      : "${member.children[index].firstName} ${member.children[index].lastName}",
+                                                  style: const TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                ),
+                                                const SizedBox(height: 5),
+                                                Text(
+                                                  '${AppLocalizations.of(context)!.translate('son')!}: ${member.firstName} ${member.lastName}',
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              },
+                            ),
                     ),
                   ],
-                ),
-              ],
+                ],
+              ),
+            );
+          },
+        );
+      },
+      child: Container(
+        height: 90.v,
+        width: double.infinity,
+        margin: const EdgeInsets.all(8),
+        padding: const EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Stack(
+          children: [
+            Positioned(
+              left: 0,
+              top: 8,
+              child: Row(
+                children: [
+                  CustomImageView(
+                    imagePath: '${EndPoints.storage}${member.image}',
+                    radius: BorderRadius.circular(50),
+                    height: 53.v,
+                    width: 53.v,
+                  ),
+                  const SizedBox(width: 15),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        ("${member.firstName} ${member.lastName}").length > 20
+                            ? '${("${member.firstName} ${member.lastName}").substring(0, 20)}...'
+                            : "${member.firstName} ${member.lastName}",
+                        style: CustomTextStyles.titleMediumPoppinsGray900,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      const SizedBox(height: 1),
+                      Text(
+                        member.children.isEmpty
+                            ? (isRtl
+                                ? roleTranslations[member.role] ?? 'مستخدم'
+                                : member.role)
+                            : getChildrenString(member.children, context),
+                        style: CustomTextStyles.bodyMediumRobotoGray700,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
-          ),
-          Positioned(
-            right: 5,
-            top: 30,
-            child: InkWell(
-              onTap: () {
-                // Navigator.push(
-                //   context,
-                //   MaterialPageRoute(
-                //     builder: (context) => Message(id: id),
-                //   ),
-                // );
-              },
-              child: const Icon(FontAwesomeIcons.message),
+            Positioned(
+              right: 5,
+              top: 24,
+              child: InkWell(
+                onTap: () {
+                  // Navigator.push(
+                  //   context,
+                  //   MaterialPageRoute(
+                  //     builder: (context) => Message(id: id),
+                  //   ),
+                  // );
+                },
+                child: const Icon(FontAwesomeIcons.message),
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
+  }
+
+  String getChildrenString(List<Child2Model> children, BuildContext context) {
+    Map<String, List<String>> relations = {};
+
+    for (var child in children) {
+      if (relations.containsKey(child.relation)) {
+        relations[child.relation]!.add(child.firstName);
+      } else {
+        relations[child.relation] = [child.firstName];
+      }
+    }
+    const maxRelations = 2;
+    const maxChildrenPerRelation = 2;
+
+    List<String> limitedRelations = [];
+    int relationCount = 0;
+
+    for (var entry in relations.entries) {
+      if (relationCount >= maxRelations) break;
+
+      List<String> childrenNames = entry.value;
+      if (childrenNames.length > maxChildrenPerRelation) {
+        childrenNames = childrenNames.sublist(0, maxChildrenPerRelation);
+        childrenNames.add('...');
+      }
+
+      String translatedRelation =
+          AppLocalizations.of(context)!.translate(entry.key)!;
+      limitedRelations.add(
+          '$translatedRelation ${AppLocalizations.of(context)!.translate("of")!} ${childrenNames.join(', ')}');
+      relationCount++;
+    }
+
+    return limitedRelations.join(', ');
   }
 }

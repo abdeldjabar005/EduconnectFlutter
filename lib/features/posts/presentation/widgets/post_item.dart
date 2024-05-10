@@ -1,34 +1,38 @@
 // post_item.dart
 import 'dart:math';
+import 'dart:developer' as dev;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:quotes/config/themes/app_decoration.dart';
-import 'package:quotes/config/themes/custom_text_style.dart';
-import 'package:quotes/config/themes/theme_helper.dart';
-import 'package:quotes/core/api/end_points.dart';
-import 'package:quotes/core/utils/app_colors.dart';
-import 'package:quotes/core/utils/image_constant.dart';
-import 'package:quotes/core/utils/size_utils.dart';
-import 'package:quotes/features/posts/domain/entities/post.dart';
+import 'package:educonnect/config/themes/app_decoration.dart';
+import 'package:educonnect/config/themes/custom_text_style.dart';
+import 'package:educonnect/config/themes/theme_helper.dart';
+import 'package:educonnect/core/api/end_points.dart';
+import 'package:educonnect/core/utils/app_colors.dart';
+import 'package:educonnect/core/utils/image_constant.dart';
+import 'package:educonnect/core/utils/size_utils.dart';
+import 'package:educonnect/features/auth/presentation/cubit/auth_cubit.dart';
+import 'package:educonnect/features/classrooms/presentation/pages/class_details.dart';
+import 'package:educonnect/features/classrooms/presentation/pages/school_details.dart';
+import 'package:educonnect/features/posts/domain/entities/post.dart';
 import 'package:intl/intl.dart';
-import 'package:quotes/features/posts/presentation/cubit/like_cubit.dart';
-import 'package:quotes/features/posts/presentation/cubit/post_cubit.dart';
-import 'package:quotes/features/posts/presentation/widgets/custom_attachment_view.dart';
-import 'package:quotes/features/posts/presentation/widgets/custom_image_view.dart';
-import 'package:quotes/features/posts/presentation/widgets/custom_video_player.dart';
-import 'package:quotes/features/posts/presentation/widgets/image_detail.dart';
+import 'package:educonnect/features/posts/presentation/cubit/like_cubit.dart';
+import 'package:educonnect/features/posts/presentation/cubit/post_cubit.dart';
+import 'package:educonnect/features/posts/presentation/widgets/custom_attachment_view.dart';
+import 'package:educonnect/features/posts/presentation/widgets/custom_image_view.dart';
+import 'package:educonnect/features/posts/presentation/widgets/custom_video_player.dart';
+import 'package:educonnect/features/posts/presentation/widgets/image_detail.dart';
 
 class PostItem extends StatelessWidget {
   late Post post;
+  late String type;
 
-  PostItem({Key? key, required this.post}) : super(key: key);
+  PostItem({Key? key, required this.post, required this.type})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    var date = post.createdAt;
-    var time = DateFormat.jm().format(date);
-    var restOfDate = DateFormat.yMMMMd().format(date);
+    bool isRtl = Localizations.localeOf(context).languageCode == 'ar';
 
     return Container(
       padding: EdgeInsets.symmetric(
@@ -77,10 +81,53 @@ class PostItem extends StatelessWidget {
                         style: CustomTextStyles.bodyMediumRobotoGray900,
                       ),
                       SizedBox(height: 3.v),
-                      Text(
-                        post.classname,
-                        style: theme.textTheme.titleSmall,
-                      ),
+                      type == "post"
+                          ? InkWell(
+                              onTap: () {
+                                dev.log("clicked");
+                                final user = (context.read<AuthCubit>().state
+                                        as AuthAuthenticated)
+                                    .user;
+                                final postClassOrSchoolId =
+                                    post.classOrSchoolId;
+
+                                final schoolList = user.schools
+                                    .where((school) =>
+                                        school.id == postClassOrSchoolId)
+                                    .toList();
+                                final classList = user.classes
+                                    .where((classe) =>
+                                        classe.id == postClassOrSchoolId)
+                                    .toList();
+                                dev.log('schoolList: $schoolList');
+                                dev.log('classList: $classList');
+                                if (schoolList.isNotEmpty) {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          SchoolDetails(school: schoolList[0]),
+                                    ),
+                                  );
+                                } else if (classList.isNotEmpty) {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          ClassDetails(classe: classList[0]),
+                                    ),
+                                  );
+                                }
+                              },
+                              child: Text(
+                                post.classname,
+                                style: theme.textTheme.titleSmall,
+                              ),
+                            )
+                          : Text(
+                              post.classname,
+                              style: theme.textTheme.titleSmall,
+                            ),
                     ],
                   ),
                 ),
@@ -103,12 +150,13 @@ class PostItem extends StatelessWidget {
                         // );
                       },
                       child: Hero(
-                        tag: '${post.content[0]}_0',
+                        tag: '${post.content[0]['url']}_0',
                         child: Material(
                           color: Colors.transparent,
                           child: CustomVideoPlayer(
                             fit: BoxFit.cover,
-                            videoPath: '${EndPoints.storage}${post.content[0]}',
+                            videoPath:
+                                '${EndPoints.storage}${post.content[0]['url']}',
                             radius: BorderRadius.circular(
                               15.h,
                             ),
@@ -120,7 +168,9 @@ class PostItem extends StatelessWidget {
                       ? GestureDetector(
                           onTap: () {},
                           child: CustomAttachmentView(
-                            filePath: '${EndPoints.storage}${post.content[0]}',
+                            name: post.content[0]['name'],
+                            filePath:
+                                '${EndPoints.storage}${post.content[0]['url']}',
                           ),
                         )
                       : post.content.length == 1
@@ -130,7 +180,9 @@ class PostItem extends StatelessWidget {
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) => ImageDetailPage(
-                                      imageUrls: post.content,
+                                      imageUrls: post.content
+                                          .map((item) => item['url'] as String?)
+                                          .toList(),
                                       initialIndex: 0,
                                     ),
                                     fullscreenDialog: true,
@@ -139,14 +191,14 @@ class PostItem extends StatelessWidget {
                               },
                               child: Hero(
                                 // tag: post.content[0],
-                                tag: '${post.content[0]}_0',
+                                tag: '${post.content[0]['url']}_0',
 
                                 child: Material(
                                   color: Colors.transparent,
                                   child: CustomImageView(
                                     fit: BoxFit.cover,
                                     imagePath:
-                                        '${EndPoints.storage}${post.content[0]}',
+                                        '${EndPoints.storage}${post.content[0]['url']}',
                                     // height: 183.h,
                                     // width: 329.h,
                                     radius: BorderRadius.circular(
@@ -170,7 +222,8 @@ class PostItem extends StatelessWidget {
                                   childAspectRatio: 700 / 500,
                                   children: List<Widget>.generate(
                                       min(post.content.length, 4), (index) {
-                                    String imageUrl = post.content[index];
+                                    String? imageUrl =
+                                        post.content[index]['url'];
 
                                     // If its the last image
                                     if (index == 3) {
@@ -186,7 +239,10 @@ class PostItem extends StatelessWidget {
                                               MaterialPageRoute(
                                                 builder: (context) =>
                                                     ImageDetailPage(
-                                                  imageUrls: post.content,
+                                                  imageUrls: post.content
+                                                      .map((item) => item['url']
+                                                          as String?)
+                                                      .toList(),
                                                   initialIndex: index,
                                                 ),
                                                 fullscreenDialog: true,
@@ -195,7 +251,7 @@ class PostItem extends StatelessWidget {
                                           },
                                           child: Hero(
                                             tag:
-                                                '${post.content[index]}_$index',
+                                                '${post.content[index]['url']}_$index',
                                             // tag: imageUrl,
                                             child: Material(
                                               color: Colors.transparent,
@@ -219,7 +275,10 @@ class PostItem extends StatelessWidget {
                                               MaterialPageRoute(
                                                 builder: (context) =>
                                                     ImageDetailPage(
-                                                  imageUrls: post.content,
+                                                  imageUrls: post.content
+                                                      .map((item) => item['url']
+                                                          as String?)
+                                                      .toList(),
                                                   initialIndex: index,
                                                 ),
                                                 fullscreenDialog: true,
@@ -228,7 +287,7 @@ class PostItem extends StatelessWidget {
                                           },
                                           child: Hero(
                                             tag:
-                                                '${post.content[index]}_$index',
+                                                '${post.content[index]['url']}_$index',
                                             // tag: imageUrl,
                                             child: Material(
                                               color: Colors.transparent,
@@ -258,9 +317,7 @@ class PostItem extends StatelessWidget {
                                                         ),
                                                       ),
                                                       child: Text(
-                                                        '+' +
-                                                            remaining
-                                                                .toString(),
+                                                        '+$remaining',
                                                         style: TextStyle(
                                                             fontSize: 32,
                                                             color: AppColors
@@ -281,7 +338,10 @@ class PostItem extends StatelessWidget {
                                             MaterialPageRoute(
                                               builder: (context) =>
                                                   ImageDetailPage(
-                                                imageUrls: post.content,
+                                                imageUrls: post.content
+                                                    .map((item) =>
+                                                        item['url'] as String?)
+                                                    .toList(),
                                                 initialIndex: index,
                                               ),
                                               fullscreenDialog: true,
@@ -289,7 +349,8 @@ class PostItem extends StatelessWidget {
                                           );
                                         },
                                         child: Hero(
-                                          tag: '${post.content[index]}_$index',
+                                          tag:
+                                              '${post.content[index]['url']}_$index',
                                           // tag: imageUrl,
                                           child: Material(
                                             color: Colors.transparent,
@@ -428,23 +489,27 @@ class PostItem extends StatelessWidget {
             ],
           ),
           SizedBox(height: 13.v),
-          Row(
-            children: [
-              Text(
-                time,
-                style: theme.textTheme.bodyMedium,
-              ),
-              CustomImageView(
-                imagePath: ImageConstant.imgUser,
-                height: 10.adaptSize,
-                width: 10.adaptSize,
-                margin: EdgeInsets.symmetric(vertical: 3.v),
-              ),
-              Text(
-                restOfDate,
-                style: theme.textTheme.bodyMedium,
-              ),
-            ],
+          // Row(
+          //   children: [
+          //     Text(
+          //       time,
+          //       style: theme.textTheme.bodyMedium,
+          //     ),
+          //     CustomImageView(
+          //       imagePath: ImageConstant.imgUser,
+          //       height: 10.adaptSize,
+          //       width: 10.adaptSize,
+          //       margin: EdgeInsets.symmetric(vertical: 3.v),
+          //     ),
+          //     Text(
+          //       restOfDate,
+          //       style: theme.textTheme.bodyMedium,
+          //     ),
+          //   ],
+          // ),
+          Text(
+            isRtl ? timeAgoArabic(post.createdAt) : timeAgo(post.createdAt),
+            style: CustomTextStyles.bodyMediumRobotoGray500,
           ),
           SizedBox(height: 10.v),
         ],
@@ -452,6 +517,39 @@ class PostItem extends StatelessWidget {
     );
   }
 
+  String timeAgo(DateTime date) {
+    final now = DateTime.now();
+    final difference = now.difference(date);
+
+    if (difference.inSeconds < 60) {
+      return '${difference.inSeconds}s';
+    } else if (difference.inMinutes < 60) {
+      return '${difference.inMinutes}m';
+    } else if (difference.inHours < 24) {
+      return '${difference.inHours}h';
+    } else if (difference.inDays < 4) {
+      return '${difference.inDays}d';
+    } else {
+      return DateFormat.yMMMMd().format(date);
+    }
+  }
+
+  String timeAgoArabic(DateTime date) {
+    final now = DateTime.now();
+    final difference = now.difference(date);
+
+    if (difference.inSeconds < 60) {
+      return 'منذ ${difference.inSeconds} ثواني';
+    } else if (difference.inMinutes < 60) {
+      return 'منذ ${difference.inMinutes} دقائق';
+    } else if (difference.inHours < 24) {
+      return 'منذ ${difference.inHours} ساعات';
+    } else if (difference.inDays < 4) {
+      return 'منذ ${difference.inDays} أيام';
+    } else {
+      return DateFormat.yMMMMd('ar_SA').format(date);
+    }
+  }
   // _buildImageLayout(BuildContext context, List<String> images) {
   //   int imageCount = images.length;
 

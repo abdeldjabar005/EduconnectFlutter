@@ -1,6 +1,6 @@
 // post_model.dart
-import 'package:quotes/features/posts/data/models/comment_model.dart';
-import 'package:quotes/features/posts/domain/entities/post.dart';
+import 'package:educonnect/features/posts/data/models/comment_model.dart';
+import 'package:educonnect/features/posts/domain/entities/post.dart';
 
 class PostModel extends Post {
   PostModel({
@@ -18,7 +18,7 @@ class PostModel extends Post {
     required String profilePicture,
     required String classname,
     required bool isSaved,
-    required List<String> content,
+    required List<Map<String, dynamic>> content,
   }) : super(
           id: id,
           userId: userId,
@@ -38,42 +38,68 @@ class PostModel extends Post {
         );
 
   factory PostModel.fromJson(Map<String, dynamic> json) {
-    List<String> content = [];
+    int classOrSchoolId;
+    if (json['class_or_school_id'] is String) {
+      classOrSchoolId = int.parse(json['class_or_school_id']);
+    } else {
+      classOrSchoolId = json['class_or_school_id'];
+    }
+    List<Map<String, dynamic>> content = [];
     switch (json['type']) {
       case 'poll':
         content = (json['poll'] as List)
-            .map((item) => item is Map ? item['url'] : null)
+            .map((item) => item is Map
+                ? {
+                    'url': item['url'].toString(),
+                    'name': item['name'].toString()
+                  }
+                : null)
             .where((item) => item != null)
             .toList()
-            .cast<String>();
+            .cast<Map<String, dynamic>>();
         break;
       case 'picture':
         content = (json['pictures'] as List)
-            .map((item) => item is Map ? item['url'] : null)
+            .map((item) => item is Map
+                ? {
+                    'url': item['url'].toString(),
+                    'name': item['name'].toString()
+                  }
+                : null)
             .where((item) => item != null)
             .toList()
-            .cast<String>();
+            .cast<Map<String, dynamic>>();
         break;
       case 'video':
         content = (json['video'] as List)
-            .map((item) => item is Map ? item['url'] : null)
+            .map((item) => item is Map
+                ? {
+                    'url': item['url'].toString(),
+                    'name': item['name'].toString()
+                  }
+                : null)
             .where((item) => item != null)
             .toList()
-            .cast<String>();
+            .cast<Map<String, dynamic>>();
         break;
       case 'attachment':
         content = (json['attachment'] as List)
-            .map((item) => item is Map ? item['url'] : null)
+            .map((item) => item is Map
+                ? {
+                    'url': item['url'].toString(),
+                    'name': item['name'].toString()
+                  }
+                : null)
             .where((item) => item != null)
             .toList()
-            .cast<String>();
+            .cast<Map<String, dynamic>>();
         break;
-      
     }
+
     return PostModel(
       id: json["id"],
       userId: json["user_id"],
-      classOrSchoolId: json["class_or_school_id"],
+      classOrSchoolId: classOrSchoolId,
       text: json["text"],
       type: json["type"],
       createdAt: DateTime.parse(json["created_at"]),
@@ -106,7 +132,7 @@ class PostModel extends Post {
     String? profilePicture,
     String? classname,
     bool? isSaved,
-    List<String>? content,
+    List<Map<String, String>>? content,
   }) {
     return PostModel(
       id: id ?? this.id,
@@ -142,6 +168,6 @@ class PostModel extends Post {
         "profile_picture": profilePicture,
         "classname": classname,
         "isSaved": isSaved,
-        "content": content, 
+        "content": content,
       };
 }

@@ -1,8 +1,8 @@
-import 'package:quotes/features/classrooms/data/models/class_model.dart';
+import 'package:educonnect/features/classrooms/data/models/class_model.dart';
 
 class ClassMemberModel {
   final ClassModel classModel;
-  final bool isMember;
+  final int isMember;
 
   ClassMemberModel({required this.classModel, required this.isMember});
 

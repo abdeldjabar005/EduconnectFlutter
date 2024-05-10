@@ -3,16 +3,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:quotes/config/themes/custom_text_style.dart';
-import 'package:quotes/config/themes/theme_helper.dart';
-import 'package:quotes/core/utils/app_colors.dart';
-import 'package:quotes/core/utils/image_constant.dart';
-import 'package:quotes/core/utils/size_utils.dart';
+import 'package:educonnect/config/themes/custom_text_style.dart';
+import 'package:educonnect/config/themes/theme_helper.dart';
+import 'package:educonnect/core/utils/app_colors.dart';
+import 'package:educonnect/core/utils/image_constant.dart';
+import 'package:educonnect/core/utils/size_utils.dart';
 import 'package:intl/intl.dart';
-import 'package:quotes/features/posts/presentation/cubit/comment_cubit.dart';
-import 'package:quotes/features/posts/presentation/cubit/like_cubit.dart';
-import 'package:quotes/features/posts/presentation/widgets/custom_image_view.dart';
-import 'package:quotes/features/posts/domain/entities/comment.dart';
+import 'package:educonnect/features/posts/presentation/cubit/comment_cubit.dart';
+import 'package:educonnect/features/posts/presentation/cubit/like_cubit.dart';
+import 'package:educonnect/features/posts/presentation/widgets/custom_image_view.dart';
+import 'package:educonnect/features/posts/domain/entities/comment.dart';
 
 class ReplyItem extends StatelessWidget {
   late Comment reply;
@@ -21,6 +21,8 @@ class ReplyItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isRtl = Localizations.localeOf(context).languageCode == 'ar';
+
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -77,7 +79,9 @@ class ReplyItem extends StatelessWidget {
                             margin: EdgeInsets.symmetric(vertical: 3.v),
                           ),
                           Text(
-                            timeAgo(reply.createdAt),
+                            isRtl
+                                ? timeAgoArabic(reply.createdAt)
+                                : timeAgo(reply.createdAt),
                             style: CustomTextStyles.bodyMediumRobotoGray500,
                           ),
                         ],
@@ -235,6 +239,23 @@ class ReplyItem extends StatelessWidget {
       return '${difference.inDays}d';
     } else {
       return DateFormat.yMMMMd().format(date);
+    }
+  }
+
+  String timeAgoArabic(DateTime date) {
+    final now = DateTime.now();
+    final difference = now.difference(date);
+
+    if (difference.inSeconds < 60) {
+      return 'منذ ${difference.inSeconds} ثواني';
+    } else if (difference.inMinutes < 60) {
+      return 'منذ ${difference.inMinutes} دقائق';
+    } else if (difference.inHours < 24) {
+      return 'منذ ${difference.inHours} ساعات';
+    } else if (difference.inDays < 4) {
+      return 'منذ ${difference.inDays} أيام';
+    } else {
+      return DateFormat.yMMMMd('ar').format(date);
     }
   }
 }

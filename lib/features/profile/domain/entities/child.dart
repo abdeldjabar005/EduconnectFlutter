@@ -1,19 +1,21 @@
 import 'package:equatable/equatable.dart';
+import 'package:educonnect/features/classrooms/data/models/member_model.dart';
 
 class Child extends Equatable {
-  final int? id;
+  int? id;
   final String firstName;
   final String lastName;
-  final String grade;
-  final String relation;
-
-  const Child({
-    required this.id,
+  String? grade;
+  String? relation;
+  List<MemberModel> parents;
+  Child({
+    this.id,
     required this.firstName,
     required this.lastName,
-    required this.grade,
-    required this.relation,
-  });
+    this.grade,
+    this.relation,
+    List<MemberModel>? parents,
+  }) : parents = parents ?? [];
 
   @override
   List<Object?> get props => [id, firstName, lastName, grade, relation];

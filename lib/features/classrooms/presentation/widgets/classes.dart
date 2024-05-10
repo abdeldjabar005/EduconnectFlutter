@@ -1,15 +1,19 @@
 // post_screen.dart
+import 'dart:math';
+
+import 'package:educonnect/config/locale/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:quotes/config/themes/custom_text_style.dart';
-import 'package:quotes/core/api/end_points.dart';
-import 'package:quotes/core/utils/app_colors.dart';
-import 'package:quotes/core/utils/size_utils.dart';
-import 'package:quotes/features/classrooms/data/models/class_model.dart';
-import 'package:quotes/features/classrooms/data/models/member_model.dart';
-import 'package:quotes/features/classrooms/presentation/cubit/class_cubit.dart';
-import 'package:quotes/features/posts/presentation/widgets/custom_image_view.dart';
+import 'package:educonnect/config/themes/custom_text_style.dart';
+import 'package:educonnect/core/api/end_points.dart';
+import 'package:educonnect/core/utils/app_colors.dart';
+import 'package:educonnect/core/utils/size_utils.dart';
+import 'package:educonnect/features/classrooms/data/models/class_model.dart';
+import 'package:educonnect/features/classrooms/data/models/member_model.dart';
+import 'package:educonnect/features/classrooms/presentation/cubit/class_cubit.dart';
+import 'package:educonnect/features/classrooms/presentation/pages/class_details.dart';
+import 'package:educonnect/features/posts/presentation/widgets/custom_image_view.dart';
 
 class ClassesScreen extends StatefulWidget {
   final int id;
@@ -48,7 +52,9 @@ class _ClassesScreenState extends State<ClassesScreen>
               },
             );
           } else if (state is NoClasses) {
-            return Center(child: Text(state.message));
+            return Center(
+                child: Text(
+                    AppLocalizations.of(context)!.translate('no_classes')!));
           } else if (state is ClassError) {
             return Center(child: Text(state.message));
           } else if (state is ClassLoading) {
@@ -61,10 +67,62 @@ class _ClassesScreenState extends State<ClassesScreen>
     );
   }
 
-  Widget _buildClass(ClassModel classe, bool isMember) {
+  Widget _buildClass(ClassModel classe, int isMember) {
     return InkWell(
       onTap: () {
-        // Your navigation code here
+        if (isMember == 1) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ClassDetails(classe: classe),
+            ),
+          );
+        } else if (isMember == 0) {
+          showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: Text(
+                  AppLocalizations.of(context)!.translate('join_request')!),
+              content: Text(AppLocalizations.of(context)!
+                  .translate('send_join_request')!),
+              actions: [
+                TextButton(
+                  child: Text(AppLocalizations.of(context)!.translate('no')!),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+                TextButton(
+                  child: Text(AppLocalizations.of(context)!.translate('yes')!),
+                  onPressed: () {
+                    context
+                        .read<ClassCubit>()
+                        .sendJoinRequest(classe.id, widget.id);
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            ),
+          );
+        } else {
+          showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: Text(
+                  AppLocalizations.of(context)!.translate('join_request')!),
+              content: Text(AppLocalizations.of(context)!
+                  .translate('join_request_pending')!),
+              actions: [
+                TextButton(
+                  child: Text('Ok'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            ),
+          );
+        }
       },
       child: Container(
         margin: EdgeInsets.symmetric(vertical: 5.v),
@@ -100,11 +158,11 @@ class _ClassesScreenState extends State<ClassesScreen>
                     ),
                   ),
                   Text(
-                    ("By ${classe.teacherFirstName} ${classe.teacherLastName}")
+                    "${AppLocalizations.of(context)!.translate('by')!} ${classe.teacherFirstName} ${classe.teacherLastName}"
                                 .length >
                             20
-                        ? 'By ${("${classe.teacherFirstName} ${classe.teacherLastName}").substring(0, 20)}...'
-                        : "By ${classe.teacherFirstName} ${classe.teacherLastName}",
+                        ? '${AppLocalizations.of(context)!.translate('by')!} ${("${classe.teacherFirstName} ${classe.teacherLastName}").substring(0, min(20, ("${classe.teacherFirstName} ${classe.teacherLastName}").length))}...'
+                        : "${AppLocalizations.of(context)!.translate('by')!} ${classe.teacherFirstName} ${classe.teacherLastName}",
                     style:
                         CustomTextStyles.titleMediumPoppinsblacksmall2.copyWith(
                       color: AppColors.black900,
@@ -118,7 +176,12 @@ class _ClassesScreenState extends State<ClassesScreen>
               right: 10,
               top: 30,
               child: Icon(
-                isMember ? FontAwesomeIcons.arrowRight : FontAwesomeIcons.plus,
+                isMember == 1
+                    ? FontAwesomeIcons.arrowRight
+                    : isMember == 2
+                        ? FontAwesomeIcons.rotateRight
+                        : FontAwesomeIcons.plus,
+                // isMember ? FontAwesomeIcons.arrowRight : FontAwesomeIcons.plus,
                 color: Colors.black,
               ),
             ),

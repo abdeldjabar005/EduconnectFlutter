@@ -3,15 +3,16 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:quotes/config/themes/custom_text_style.dart';
-import 'package:quotes/core/utils/app_colors.dart';
-import 'package:quotes/core/utils/size_utils.dart';
-import 'package:quotes/core/widgets/custom_bottom_bar.dart';
-import 'package:quotes/features/profile/data/models/child_model.dart';
-import 'package:quotes/features/profile/presentation/cubit/children_cubit.dart';
-import 'package:quotes/features/profile/presentation/widgets/add_child.dart';
-import 'package:quotes/features/profile/presentation/widgets/update_child.dart';
-import 'package:quotes/injection_container.dart';
+import 'package:educonnect/config/locale/app_localizations.dart';
+import 'package:educonnect/config/themes/custom_text_style.dart';
+import 'package:educonnect/core/utils/app_colors.dart';
+import 'package:educonnect/core/utils/size_utils.dart';
+import 'package:educonnect/core/widgets/custom_bottom_bar.dart';
+import 'package:educonnect/features/profile/data/models/child_model.dart';
+import 'package:educonnect/features/profile/presentation/cubit/children_cubit.dart';
+import 'package:educonnect/features/profile/presentation/widgets/add_child.dart';
+import 'package:educonnect/features/profile/presentation/widgets/update_child.dart';
+import 'package:educonnect/injection_container.dart';
 
 class ManageChildren extends StatefulWidget {
   const ManageChildren({Key? key})
@@ -26,11 +27,6 @@ class ManageChildren extends StatefulWidget {
 }
 
 enum ActionItems { delete, update }
-
-final items = <ActionItems, String>{
-  ActionItems.delete: 'Delete',
-  ActionItems.update: 'Update',
-};
 
 class _ManageChildrenState extends State<ManageChildren> {
   @override
@@ -58,7 +54,7 @@ class _ManageChildrenState extends State<ManageChildren> {
             elevation: 0,
             centerTitle: true,
             title: Text(
-              "Manage Children",
+              AppLocalizations.of(context)!.translate('manage_children')!,
               style: TextStyle(
                 fontFamily: "Poppins",
                 color: AppColors.black900,
@@ -94,7 +90,8 @@ class _ManageChildrenState extends State<ManageChildren> {
                           child: Row(
                             children: [
                               Text(
-                                "Add a Child ...",
+                                AppLocalizations.of(context)!
+                                    .translate('add_child')!,
                                 style: CustomTextStyles.bodyMediumRobotoGray2
                                     .copyWith(
                                   color: AppColors.black900,
@@ -119,7 +116,9 @@ class _ManageChildrenState extends State<ManageChildren> {
                             },
                           );
                         } else if (state is ChildrenEmpty) {
-                          return Center(child: Text(state.message));
+                          return Center(
+                              child: Text(AppLocalizations.of(context)!
+                                  .translate('children_empty')!));
                         } else if (state is ChildrenError) {
                           return Center(child: Text(state.message));
                         } else if (state is ChildrenLoading) {
@@ -159,6 +158,11 @@ class _ManageChildrenState extends State<ManageChildren> {
   }
 
   Widget _childItem(ChildModel child, BuildContext context) {
+    final isRtl = Localizations.localeOf(context).languageCode == 'ar';
+    final items = <ActionItems, String>{
+      ActionItems.delete: isRtl ? 'حذف' : 'Delete',
+      ActionItems.update: isRtl ? 'تحديث' : 'Update',
+    };
     return Container(
       decoration: BoxDecoration(
         color: AppColors.whiteA700,
@@ -181,11 +185,13 @@ class _ManageChildrenState extends State<ManageChildren> {
                   fontSize: 16.v,
                 ),
               ),
-              Text("Grade level : ${child.grade}",
-                  style: CustomTextStyles.bodyMediumRobotoGray2.copyWith(
-                    color: AppColors.black900.withOpacity(0.6),
-                    fontSize: 14.v,
-                  )),
+              Text(
+                "${AppLocalizations.of(context)!.translate('grade_level')!} : ${AppLocalizations.of(context)!.translate(child.grade!)!}",
+                style: CustomTextStyles.bodyMediumRobotoGray2.copyWith(
+                  color: AppColors.black900.withOpacity(0.6),
+                  fontSize: 14.v,
+                ),
+              )
             ],
           ),
           PopupMenuButton<ActionItems>(
@@ -203,27 +209,30 @@ class _ManageChildrenState extends State<ManageChildren> {
                           borderRadius: BorderRadius.circular(20),
                         ),
                         title: Text(
-                          'Confirm',
+                          AppLocalizations.of(context)!.translate('confirm')!,
                           style: TextStyle(
                               color: AppColors.indigoA200,
                               fontWeight: FontWeight.bold),
                         ),
-                        content: const Text(
-                          'Are you sure you want to delete this child?',
+                        content: Text(
+                          AppLocalizations.of(context)!
+                              .translate('delete_child')!,
                           style: TextStyle(color: Colors.black54),
                         ),
                         actions: <Widget>[
                           TextButton(
                             onPressed: () => Navigator.of(context).pop(true),
-                            child: const Text(
-                              'DELETE',
+                            child: Text(
+                              AppLocalizations.of(context)!
+                                  .translate('delete')!,
                               style: TextStyle(color: Colors.red),
                             ),
                           ),
                           TextButton(
                             onPressed: () => Navigator.of(context).pop(false),
-                            child: const Text(
-                              'CANCEL',
+                            child: Text(
+                              AppLocalizations.of(context)!
+                                  .translate('cancel')!,
                               style: TextStyle(color: Colors.blue),
                             ),
                           ),

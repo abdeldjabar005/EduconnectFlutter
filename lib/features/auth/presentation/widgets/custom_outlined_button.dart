@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:quotes/config/themes/custom_text_style.dart';
-import 'package:quotes/core/utils/size_utils.dart';
+import 'package:educonnect/config/themes/custom_text_style.dart';
+import 'package:educonnect/core/utils/size_utils.dart';
 import 'base_button.dart';
 
 class CustomOutlinedButton extends BaseButton {

@@ -3,22 +3,23 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:quotes/config/themes/custom_text_style.dart';
-import 'package:quotes/core/utils/app_colors.dart';
-import 'package:quotes/core/utils/image_constant.dart';
-import 'package:quotes/core/utils/size_utils.dart';
-import 'package:quotes/features/auth/domain/entities/user.dart';
-import 'package:quotes/features/auth/presentation/cubit/auth_cubit.dart';
-import 'package:quotes/features/auth/presentation/widgets/custom_drop_down.dart';
-import 'package:quotes/features/auth/presentation/widgets/custom_elevated_button.dart';
-import 'package:quotes/features/auth/presentation/widgets/custom_text_form_field.dart';
-import 'package:quotes/features/classrooms/data/models/class_m.dart';
-import 'package:quotes/features/classrooms/data/models/school_m.dart';
-import 'package:quotes/features/classrooms/presentation/cubit/class_cubit.dart';
-import 'package:quotes/features/posts/presentation/widgets/custom_image_view.dart';
-import 'package:quotes/features/profile/presentation/cubit/children_cubit.dart';
+import 'package:educonnect/config/locale/app_localizations.dart';
+import 'package:educonnect/config/themes/custom_text_style.dart';
+import 'package:educonnect/core/utils/app_colors.dart';
+import 'package:educonnect/core/utils/image_constant.dart';
+import 'package:educonnect/core/utils/size_utils.dart';
+import 'package:educonnect/features/auth/domain/entities/user.dart';
+import 'package:educonnect/features/auth/presentation/cubit/auth_cubit.dart';
+import 'package:educonnect/features/auth/presentation/widgets/custom_drop_down.dart';
+import 'package:educonnect/features/auth/presentation/widgets/custom_elevated_button.dart';
+import 'package:educonnect/features/auth/presentation/widgets/custom_text_form_field.dart';
+import 'package:educonnect/features/classrooms/data/models/class_m.dart';
+import 'package:educonnect/features/classrooms/data/models/school_m.dart';
+import 'package:educonnect/features/classrooms/presentation/cubit/class_cubit.dart';
+import 'package:educonnect/features/posts/presentation/widgets/custom_image_view.dart';
+import 'package:educonnect/features/profile/presentation/cubit/children_cubit.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:quotes/features/profile/presentation/widgets/manage_school.dart';
+import 'package:educonnect/features/profile/presentation/widgets/manage_school.dart';
 import 'package:file_picker/file_picker.dart';
 
 class VerifySchool extends StatefulWidget {
@@ -78,7 +79,8 @@ class _VerifySchoolState extends State<VerifySchool> {
                 elevation: 0,
                 centerTitle: true,
                 title: Text(
-                  "Verify your school",
+                  AppLocalizations.of(context)!
+                                            .translate('verify_school')!,
                   style: TextStyle(
                     fontFamily: "Poppins",
                     color: AppColors.black900,
@@ -100,23 +102,27 @@ class _VerifySchoolState extends State<VerifySchool> {
                     children: [
                       SizedBox(height: 20.v),
                       Center(
-                        child: Text("Please Fill in the required Informations",
+                        child: Text(AppLocalizations.of(context)!
+                                            .translate('fill_all_fields')!,
                             textAlign: TextAlign.center,
                             style: CustomTextStyles.bodyMediumRobotoBlack),
                       ),
                       SizedBox(height: 20.v),
                       Center(
                         child: Text(
-                          "Provide the necessary documents to verify your school",
+                          AppLocalizations.of(context)!
+                                            .translate('provide_document')!,
                           textAlign: TextAlign.center,
                           style: CustomTextStyles.bodyMediumRobotoBlack2,
                         ),
                       ),
                       SizedBox(height: 40.v),
-                      _buildName(context, "School Email", emailController,
+                      _buildName(context, AppLocalizations.of(context)!
+                                            .translate('school_email')!, emailController,
                           TextInputType.emailAddress),
                       SizedBox(height: 20.v),
-                      _buildName(context, "Phone Number", phoneNumberController,
+                      _buildName(context, AppLocalizations.of(context)!
+                                            .translate('school_phone')!, phoneNumberController,
                           TextInputType.phone),
                       SizedBox(height: 20.v),
                       Row(
@@ -124,7 +130,8 @@ class _VerifySchoolState extends State<VerifySchool> {
                           Padding(
                             padding: EdgeInsets.only(left: 3.h),
                             child: Text(
-                              "Select File",
+                              AppLocalizations.of(context)!
+                                            .translate('select_file')!,
                               style: CustomTextStyles.titleMediumPoppinsGray900,
                             ),
                           ),
@@ -136,7 +143,8 @@ class _VerifySchoolState extends State<VerifySchool> {
                         child: InkWell(
                           onTap: pickFile,
                           child: selectedFile == null
-                              ? Text('Select File',
+                              ? Text(AppLocalizations.of(context)!
+                                            .translate('select_file')!,
                                   style: CustomTextStyles
                                       .titleMediumPoppinsGray40001
                                       .copyWith(
@@ -144,7 +152,8 @@ class _VerifySchoolState extends State<VerifySchool> {
                                     //fontWeight: FontWeight.w800,
                                   ))
                               : Text(
-                                  'File Selected: ${selectedFile!.path.split('/').last}',
+                                  '${AppLocalizations.of(context)!
+                                            .translate('file_selected')!}: ${selectedFile!.path.split('/').last}',
                                   style: CustomTextStyles
                                       .titleMediumPoppinsGray40001),
                         ),
@@ -234,12 +243,14 @@ class _VerifySchoolState extends State<VerifySchool> {
                   }
                 } else {
                   setState(() {
-                    errorMessage = 'Invalid email format';
+                    errorMessage = AppLocalizations.of(context)!
+                                            .translate('email_format')!;
                   });
                 }
               } else {
                 setState(() {
-                  errorMessage = 'Please fill all the fields';
+                  errorMessage = AppLocalizations.of(context)!
+                                            .translate('fill_all_fields')!;
                 });
               }
             },
@@ -252,7 +263,8 @@ class _VerifySchoolState extends State<VerifySchool> {
         backgroundColor: MaterialStateProperty.all(AppColors.indigoA300),
       ),
       isLoading: state is ClassLoading,
-      text: "Continue",
+      text: AppLocalizations.of(context)!
+                                            .translate('continue')!,
       margin: EdgeInsets.only(left: 2.h, right: 2.h),
       buttonTextStyle: CustomTextStyles.titleMediumPoppins,
     );
@@ -267,7 +279,8 @@ class _VerifySchoolState extends State<VerifySchool> {
           state is ClassError
               ? Text(
                   state.message.contains('Server Failure')
-                      ? "Server error"
+                      ? AppLocalizations.of(context)!
+                                            .translate('server_error')!
                       : state.message,
                   style: CustomTextStyles.titleMediumPoppinsBluegray100)
               : Text(errorMessage,

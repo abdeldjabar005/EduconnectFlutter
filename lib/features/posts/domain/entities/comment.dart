@@ -1,6 +1,6 @@
 // core/entities/comment.dart
 import 'package:equatable/equatable.dart';
-import 'package:quotes/features/posts/data/models/comment_model.dart';
+import 'package:educonnect/features/posts/data/models/comment_model.dart';
 
 class Comment extends Equatable {
   final int id;

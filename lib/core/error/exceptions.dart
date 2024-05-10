@@ -54,6 +54,11 @@ class EmailAlreadyExistsException extends ServerException {
       : super("Email already exists");
 }
 
+class StudentAlreadyAssociatedException extends ServerException {
+  const StudentAlreadyAssociatedException([message])
+      : super("Student already associated");
+}
+
 class InternalServerErrorException extends ServerException {
   const InternalServerErrorException([message])
       : super("Internal Server Error");

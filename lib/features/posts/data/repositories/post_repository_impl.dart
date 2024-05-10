@@ -1,16 +1,19 @@
 // post_repository_impl.dart
+import 'dart:io';
+
 import 'package:dartz/dartz.dart';
-import 'package:quotes/core/error/exceptions.dart';
-import 'package:quotes/core/error/failures.dart';
-import 'package:quotes/core/network/netwok_info.dart';
-import 'package:quotes/features/posts/data/datasources/post_local_data_source.dart';
-import 'package:quotes/features/posts/data/datasources/post_remote_data_source.dart';
-import 'package:quotes/features/posts/data/models/comment_model.dart';
-import 'package:quotes/features/posts/data/models/post_model.dart';
-import 'package:quotes/features/posts/domain/entities/comment.dart';
-import 'package:quotes/features/posts/domain/entities/like.dart';
-import 'package:quotes/features/posts/domain/entities/post.dart';
-import 'package:quotes/features/posts/domain/repositories/post_repository.dart';
+import 'package:educonnect/core/error/exceptions.dart';
+import 'package:educonnect/core/error/failures.dart';
+import 'package:educonnect/core/network/netwok_info.dart';
+import 'package:educonnect/features/posts/data/datasources/post_local_data_source.dart';
+import 'package:educonnect/features/posts/data/datasources/post_remote_data_source.dart';
+import 'package:educonnect/features/posts/data/models/comment_model.dart';
+import 'package:educonnect/features/posts/data/models/post_m.dart';
+import 'package:educonnect/features/posts/data/models/post_model.dart';
+import 'package:educonnect/features/posts/domain/entities/comment.dart';
+import 'package:educonnect/features/posts/domain/entities/like.dart';
+import 'package:educonnect/features/posts/domain/entities/post.dart';
+import 'package:educonnect/features/posts/domain/repositories/post_repository.dart';
 
 class PostRepositoryImpl implements PostRepository {
   final PostRemoteDataSource remoteDataSource;
@@ -29,6 +32,20 @@ class PostRepositoryImpl implements PostRepository {
       try {
         final remotePosts = await remoteDataSource.getPosts(page);
         return Right(remotePosts);
+      } on ServerException {
+        return Left(ServerFailure());
+      }
+    } else {
+      return Left(NetworkFailure());
+    }
+  }
+
+  @override
+  Future<Either<Failure, PostModel>> newPost(PostM post, List<File>? images, String? schoolClass) async {
+    if (await networkInfo.isConnected) {
+      try {
+        final remotePost = await remoteDataSource.newPost(post, images, schoolClass);
+        return Right(remotePost);
       } on ServerException {
         return Left(ServerFailure());
       }

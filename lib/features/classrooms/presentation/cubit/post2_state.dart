@@ -10,6 +10,7 @@ abstract class Post2State extends Equatable {
 class Post2Initial extends Post2State {}
 
 class Post2Loading extends Post2State {}
+class MembersLoading extends Post2State {}
 
 class Post2Loaded extends Post2State {
   final List<PostModel> posts;
@@ -28,6 +29,15 @@ class Post2Loaded extends Post2State {
   List<Object> get props => [posts, hasReachedMax];
 }
 
+class Post2Loaded2 extends Post2State {
+  final PostModel post;
+
+  Post2Loaded2({required this.post});
+
+  @override
+  List<Object> get props => [post];
+}
+
 class Post2Error extends Post2State {
   final String message;
 
@@ -41,6 +51,18 @@ class Post2NoData extends Post2State {
   final String message;
 
   Post2NoData(this.message);
+
+  @override
+  List<Object> get props => [message];
+}
+
+class AssociateStudentSuccess extends Post2State {}
+
+class StudentAlreadyAssociated extends Post2State {}
+class MembersError extends Post2State {
+  final String message;
+
+  MembersError(this.message);
 
   @override
   List<Object> get props => [message];

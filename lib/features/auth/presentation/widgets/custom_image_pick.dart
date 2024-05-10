@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:quotes/config/themes/custom_text_style.dart';
-import 'package:quotes/core/utils/app_colors.dart';
-import 'package:quotes/core/utils/size_utils.dart';
-import 'package:quotes/core/widgets/custom_icon_button.dart';
-import 'package:quotes/features/auth/presentation/widgets/custom_text_form_field.dart';
+import 'package:educonnect/config/themes/custom_text_style.dart';
+import 'package:educonnect/core/utils/app_colors.dart';
+import 'package:educonnect/core/utils/size_utils.dart';
+import 'package:educonnect/core/widgets/custom_icon_button.dart';
+import 'package:educonnect/features/auth/presentation/widgets/custom_text_form_field.dart';
 
 class ImageSelectionFormField extends StatefulWidget {
   final String text;

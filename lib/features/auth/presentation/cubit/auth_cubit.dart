@@ -2,15 +2,17 @@ import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:quotes/core/error/exceptions.dart';
-import 'package:quotes/features/auth/data/repositories/token_repository.dart';
-import 'package:quotes/features/auth/domain/entities/user.dart';
-import 'package:quotes/features/auth/domain/repositories/auth_repository.dart';
+import 'package:educonnect/core/error/exceptions.dart';
+import 'package:educonnect/features/auth/data/repositories/token_repository.dart';
+import 'package:educonnect/features/auth/domain/entities/user.dart';
+import 'package:educonnect/features/auth/domain/repositories/auth_repository.dart';
 import 'package:dartz/dartz.dart';
-import 'package:quotes/core/error/failures.dart';
-import 'package:quotes/features/classrooms/data/models/class_model.dart';
-import 'package:quotes/features/classrooms/data/models/school_m.dart';
-import 'package:quotes/features/classrooms/data/models/school_nodel.dart';
+import 'package:educonnect/core/error/failures.dart';
+import 'package:educonnect/features/classrooms/data/models/class_model.dart';
+import 'package:educonnect/features/classrooms/data/models/school_m.dart';
+import 'package:educonnect/features/classrooms/data/models/school_nodel.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+
 part 'auth_state.dart';
 
 class AuthCubit extends Cubit<AuthState> {
@@ -18,25 +20,36 @@ class AuthCubit extends Cubit<AuthState> {
   String selectedRole = '';
   late User? currentUser;
   final TokenProvider tokenProvider;
+  final FlutterSecureStorage secureStorage;
 
-  AuthCubit({required this.authRepository, required this.tokenProvider})
+  AuthCubit(
+      {required this.authRepository,
+      required this.tokenProvider,
+      required this.secureStorage})
       : super(AuthInitial());
 
-  Future<void> login(String email, String password) async {
+Future<Either<Failure, User>> login(String email, String password) async {
     emit(AuthLoading());
     final result = await authRepository.login(email, password);
-    result.fold((failure) {
+    return result.fold((failure) {
       if (failure is InvalidCredentialsException) {
         emit(AuthError(
             message: _mapFailureToMessage(InvalidCredentialsFailure())));
+            return Left(InvalidCredentialsFailure());
       } else {
         emit(AuthError(message: _mapFailureToMessage(failure)));
+        return Left(failure);
       }
-    }, (user) {
+    }, (user) async {
+      await secureStorage.write(key: 'email', value: email);
+      await secureStorage.write(key: 'password', value: password);
+
       currentUser = user;
       log("loginsuccesfully");
       emit(AuthAuthenticated(user: user));
       log(state.toString());
+          return Right(user);
+
     });
   }
 
@@ -59,11 +72,12 @@ class AuthCubit extends Cubit<AuthState> {
       } else {
         emit(AuthError(message: _mapFailureToMessage(failure)));
       }
-    },
-        (user) => {
-              currentUser = user,
-              emit(AuthEmailVerificationNeeded()),
-            });
+    }, (user) async {
+      currentUser = user;
+      emit(AuthEmailVerificationNeeded());
+      await secureStorage.write(key: 'email', value: email);
+      await secureStorage.write(key: 'password', value: password);
+    });
   }
 
   void updateVerificationCode(List<String> newCode) {
@@ -117,8 +131,23 @@ class AuthCubit extends Cubit<AuthState> {
 
   Future<void> logout() async {
     await tokenProvider.logout();
+    await secureStorage.delete(key: 'email');
+    await secureStorage.delete(key: 'password');
+
     currentUser = null;
     emit(AuthInitial());
+  }
+
+  Future<bool> autoLogin() async {
+    final email = await secureStorage.read(key: 'email');
+    final password = await secureStorage.read(key: 'password');
+  
+    if (email != null && password != null) {
+      final result = await login(email, password);
+      return result.isRight();
+    }
+  
+    return false;
   }
 
   void addSchool(SchoolModel school) {
@@ -193,6 +222,19 @@ class AuthCubit extends Cubit<AuthState> {
           .removeWhere((schoolModel) => schoolModel.id == id);
 
       final updatedUser = currentState.user.copyWith(school: null);
+      log(updatedUser.toString());
+      emit(AuthAuthenticated(user: updatedUser));
+    }
+  }
+
+  void leaveSchool(int id) {
+    final currentState = state;
+    if (currentState is AuthAuthenticated) {
+      currentState.user.schools
+          .removeWhere((schoolModel) => schoolModel.id == id);
+
+      final updatedUser =
+          currentState.user.copyWith(schools: currentState.user.schools);
       log(updatedUser.toString());
       emit(AuthAuthenticated(user: updatedUser));
     }

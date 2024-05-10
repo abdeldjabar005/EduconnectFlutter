@@ -1,11 +1,11 @@
 // get_class.dart
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
-import 'package:quotes/core/error/failures.dart';
-import 'package:quotes/core/usecases/usecase.dart';
-import 'package:quotes/features/classrooms/data/models/member_model.dart';
-import 'package:quotes/features/classrooms/domain/repositories/classroom_repository.dart';
-import 'package:quotes/features/posts/data/models/post_model.dart';
+import 'package:educonnect/core/error/failures.dart';
+import 'package:educonnect/core/usecases/usecase.dart';
+import 'package:educonnect/features/classrooms/data/models/member_model.dart';
+import 'package:educonnect/features/classrooms/domain/repositories/classroom_repository.dart';
+import 'package:educonnect/features/posts/data/models/post_model.dart';
 
 class GetMembersUseCase implements UseCase<List<MemberModel>, Params4> {
   final ClassroomRepository classroomRepository;

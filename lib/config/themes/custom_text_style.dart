@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:quotes/config/themes/theme_helper.dart';
-import 'package:quotes/core/utils/app_colors.dart';
-import 'package:quotes/core/utils/size_utils.dart';
+import 'package:educonnect/config/themes/theme_helper.dart';
+import 'package:educonnect/core/utils/app_colors.dart';
+import 'package:educonnect/core/utils/size_utils.dart';
 
 /// A collection of pre-defined text styles for customizing text appearance,
 /// categorized by different font families and weights.

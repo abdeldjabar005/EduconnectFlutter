@@ -2,17 +2,17 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:quotes/core/error/failures.dart';
-import 'package:quotes/features/auth/presentation/cubit/auth_cubit.dart';
-import 'package:quotes/features/posts/data/models/comment_model.dart';
-import 'package:quotes/features/posts/domain/entities/comment.dart';
-import 'package:quotes/features/posts/domain/usecases/get_comment.dart';
-import 'package:quotes/features/posts/domain/usecases/get_comments.dart';
-import 'package:quotes/features/posts/domain/usecases/post_comment.dart';
-import 'package:quotes/features/posts/domain/usecases/post_reply.dart';
+import 'package:educonnect/core/error/failures.dart';
+import 'package:educonnect/features/auth/presentation/cubit/auth_cubit.dart';
+import 'package:educonnect/features/posts/data/models/comment_model.dart';
+import 'package:educonnect/features/posts/domain/entities/comment.dart';
+import 'package:educonnect/features/posts/domain/usecases/get_comment.dart';
+import 'package:educonnect/features/posts/domain/usecases/get_comments.dart';
+import 'package:educonnect/features/posts/domain/usecases/post_comment.dart';
+import 'package:educonnect/features/posts/domain/usecases/post_reply.dart';
 import 'dart:developer';
 
-import 'package:quotes/features/posts/presentation/cubit/post_cubit.dart';
+import 'package:educonnect/features/posts/presentation/cubit/post_cubit.dart';
 
 part 'comment_state.dart';
 

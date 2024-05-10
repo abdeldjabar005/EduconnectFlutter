@@ -1,7 +1,7 @@
-import 'package:quotes/core/error/failures.dart';
+import 'package:educonnect/core/error/failures.dart';
 import 'package:dartz/dartz.dart';
-import 'package:quotes/core/usecases/usecase.dart';
-import 'package:quotes/features/splash/domain/repositories/lang_repository.dart';
+import 'package:educonnect/core/usecases/usecase.dart';
+import 'package:educonnect/features/splash/domain/repositories/lang_repository.dart';
 
 class ChangeLangUseCase implements UseCase<bool, String> {
   final LangRepository langRepository;

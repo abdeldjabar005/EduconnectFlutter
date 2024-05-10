@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:quotes/core/utils/app_colors.dart';
-import 'package:quotes/core/utils/app_strings.dart';
+import 'package:educonnect/core/utils/app_colors.dart';
+import 'package:educonnect/core/utils/app_strings.dart';
 
 ThemeData appTheme() {
   return ThemeData(

@@ -1,9 +1,9 @@
 import 'dart:developer';
 
-import 'package:quotes/core/api/api_consumer.dart';
-import 'package:quotes/core/api/end_points.dart';
-import 'package:quotes/core/error/exceptions.dart';
-import 'package:quotes/features/profile/data/models/child_model.dart';
+import 'package:educonnect/core/api/api_consumer.dart';
+import 'package:educonnect/core/api/end_points.dart';
+import 'package:educonnect/core/error/exceptions.dart';
+import 'package:educonnect/features/profile/data/models/child_model.dart';
 
 abstract class ProfileRemoteDataSource {
   Future<List<ChildModel>> getChildren();

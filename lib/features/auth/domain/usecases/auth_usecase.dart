@@ -1,9 +1,9 @@
 // Domain Layer - Use Cases
 
 import 'package:dartz/dartz.dart';
-import 'package:quotes/features/auth/domain/entities/user.dart';
-import 'package:quotes/core/error/failures.dart';
-import 'package:quotes/features/auth/domain/repositories/auth_repository.dart';
+import 'package:educonnect/features/auth/domain/entities/user.dart';
+import 'package:educonnect/core/error/failures.dart';
+import 'package:educonnect/features/auth/domain/repositories/auth_repository.dart';
 
 
 class LoginUseCase {

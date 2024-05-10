@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:quotes/config/themes/theme_helper.dart';
-import 'package:quotes/core/utils/app_colors.dart';
-import 'package:quotes/core/utils/image_constant.dart';
-import 'package:quotes/core/utils/size_utils.dart';
-import 'package:quotes/core/widgets/custom_bottom_bar.dart';
-import 'package:quotes/core/widgets/custom_icon_button.dart';
-import 'package:quotes/features/auth/presentation/cubit/auth_cubit.dart';
-import 'package:quotes/features/classrooms/presentation/cubit/class_cubit.dart';
-import 'package:quotes/features/classrooms/presentation/pages/school_details.dart';
-import 'package:quotes/features/posts/presentation/widgets/custom_image_view.dart';
-import 'package:quotes/features/profile/presentation/widgets/school_verified.dart';
-import 'package:quotes/features/profile/presentation/widgets/update_school.dart';
-import 'package:quotes/features/profile/presentation/widgets/verification_pending.dart';
-import 'package:quotes/features/profile/presentation/widgets/verify_school.dart';
+import 'package:educonnect/config/locale/app_localizations.dart';
+import 'package:educonnect/config/themes/theme_helper.dart';
+import 'package:educonnect/core/utils/app_colors.dart';
+import 'package:educonnect/core/utils/image_constant.dart';
+import 'package:educonnect/core/utils/size_utils.dart';
+import 'package:educonnect/core/widgets/custom_bottom_bar.dart';
+import 'package:educonnect/core/widgets/custom_icon_button.dart';
+import 'package:educonnect/features/auth/presentation/cubit/auth_cubit.dart';
+import 'package:educonnect/features/classrooms/presentation/cubit/class_cubit.dart';
+import 'package:educonnect/features/classrooms/presentation/pages/school_details.dart';
+import 'package:educonnect/features/posts/presentation/widgets/custom_image_view.dart';
+import 'package:educonnect/features/profile/presentation/widgets/school_verified.dart';
+import 'package:educonnect/features/profile/presentation/widgets/update_school.dart';
+import 'package:educonnect/features/profile/presentation/widgets/verification_pending.dart';
+import 'package:educonnect/features/profile/presentation/widgets/verify_school.dart';
 
 class ManageSchool extends StatelessWidget {
   ManageSchool({Key? key})
@@ -45,7 +46,7 @@ class ManageSchool extends StatelessWidget {
               elevation: 0,
               centerTitle: true,
               title: Text(
-                "Manage School",
+                AppLocalizations.of(context)!.translate('manage_school')!,
                 style: TextStyle(
                   fontFamily: "Poppins",
                   color: AppColors.black900,
@@ -80,7 +81,8 @@ class ManageSchool extends StatelessWidget {
                         width: 356 * MediaQuery.of(context).size.width / 414,
                         child: _buildFrame(
                           context,
-                          profile: "School Details",
+                          profile: AppLocalizations.of(context)!
+                              .translate('school_details')!,
                           icon: ImageConstant.details,
                           fill: IconButtonStyleHelper.fillindigoA400,
                         ),
@@ -104,7 +106,8 @@ class ManageSchool extends StatelessWidget {
                         width: 356 * MediaQuery.of(context).size.width / 414,
                         child: _buildFrame(
                           context,
-                          profile: "Modify Your School",
+                          profile: AppLocalizations.of(context)!
+                              .translate('edit_school')!,
                           icon: ImageConstant.edit,
                           fill: IconButtonStyleHelper.fillLightGreen500,
                         ),
@@ -122,29 +125,33 @@ class ManageSchool extends StatelessWidget {
                                 borderRadius: BorderRadius.circular(20),
                               ),
                               title: Text(
-                                'Confirm',
+                                AppLocalizations.of(context)!
+                                    .translate('confirm')!,
                                 style: TextStyle(
                                     color: AppColors.indigoA200,
                                     fontWeight: FontWeight.bold),
                               ),
-                              content: const Text(
-                                'Are you sure you want to delete this School?',
+                              content: Text(
+                                AppLocalizations.of(context)!
+                                    .translate('confirm_delete')!,
                                 style: TextStyle(color: Colors.black54),
                               ),
                               actions: <Widget>[
                                 TextButton(
                                   onPressed: () =>
                                       Navigator.of(context).pop(true),
-                                  child: const Text(
-                                    'DELETE',
+                                  child: Text(
+                                    AppLocalizations.of(context)!
+                                        .translate('delete')!,
                                     style: TextStyle(color: Colors.red),
                                   ),
                                 ),
                                 TextButton(
                                   onPressed: () =>
                                       Navigator.of(context).pop(false),
-                                  child: const Text(
-                                    'CANCEL',
+                                  child: Text(
+                                    AppLocalizations.of(context)!
+                                        .translate('cancel')!,
                                     style: TextStyle(color: Colors.blue),
                                   ),
                                 ),
@@ -166,7 +173,8 @@ class ManageSchool extends StatelessWidget {
                         width: 356 * MediaQuery.of(context).size.width / 414,
                         child: _buildFrame(
                           context,
-                          profile: "Delete Your School",
+                          profile: AppLocalizations.of(context)!
+                              .translate('delete_school')!,
                           icon: ImageConstant.delete,
                           fill: IconButtonStyleHelper.fillLightGreen,
                         ),
@@ -202,7 +210,8 @@ class ManageSchool extends StatelessWidget {
                                 356 * MediaQuery.of(context).size.width / 414,
                             child: _buildFrame(
                               context,
-                              profile: "School Verification",
+                              profile: AppLocalizations.of(context)!
+                                  .translate('school_verification')!,
                               icon: ImageConstant.verify,
                               fill: IconButtonStyleHelper.gold,
                             ),
@@ -231,7 +240,8 @@ class ManageSchool extends StatelessWidget {
                           context,
                           icon: ImageConstant.members,
                           fill: IconButtonStyleHelper.blue,
-                          profile: "Manage Members",
+                          profile: AppLocalizations.of(context)!
+                              .translate('manage_members')!,
                         ),
                       ),
                     ),
@@ -252,6 +262,8 @@ class ManageSchool extends StatelessWidget {
     required String icon,
     required BoxDecoration fill,
   }) {
+    bool isRtl = Localizations.localeOf(context).languageCode == 'ar';
+
     return Row(
       children: [
         CustomIconButton(
@@ -267,7 +279,8 @@ class ManageSchool extends StatelessWidget {
         ),
         Padding(
           padding: EdgeInsets.only(
-            left: 26.h,
+            left: 22.h,
+            right: 22.h,
             top: 16.v,
             bottom: 12.v,
           ),
@@ -280,7 +293,8 @@ class ManageSchool extends StatelessWidget {
         ),
         Spacer(),
         CustomImageView(
-          imagePath: ImageConstant.imgArrowRight,
+          imagePath:
+              isRtl ? ImageConstant.imgArrowLeft2 : ImageConstant.imgArrowRight,
           height: 25.v,
           width: 23.h,
           margin: EdgeInsets.only(

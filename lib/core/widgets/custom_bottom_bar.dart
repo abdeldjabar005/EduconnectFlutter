@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:quotes/config/themes/app_theme.dart';
-import 'package:quotes/core/utils/app_colors.dart';
-import 'package:quotes/core/utils/image_constant.dart';
-import 'package:quotes/core/utils/size_utils.dart';
-import 'package:quotes/features/posts/presentation/widgets/custom_image_view.dart';
+import 'package:educonnect/config/themes/app_theme.dart';
+import 'package:educonnect/core/utils/app_colors.dart';
+import 'package:educonnect/core/utils/image_constant.dart';
+import 'package:educonnect/core/utils/size_utils.dart';
+import 'package:educonnect/features/posts/presentation/widgets/custom_image_view.dart';
 
 class CustomBottomBar extends StatefulWidget {
   CustomBottomBar({this.onChanged});

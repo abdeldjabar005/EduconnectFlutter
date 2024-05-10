@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:quotes/core/usecases/usecase.dart';
-import 'package:quotes/core/utils/app_strings.dart';
-import 'package:quotes/features/splash/domain/usecases/change_lang.dart';
-import 'package:quotes/features/splash/domain/usecases/get_saved_lang.dart';
+import 'package:educonnect/core/usecases/usecase.dart';
+import 'package:educonnect/core/utils/app_strings.dart';
+import 'package:educonnect/features/splash/domain/usecases/change_lang.dart';
+import 'package:educonnect/features/splash/domain/usecases/get_saved_lang.dart';
 part 'locale_state.dart';
 
 class LocaleCubit extends Cubit<LocaleState> {

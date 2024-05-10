@@ -1,14 +1,15 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:quotes/core/utils/image_constant.dart';
+import 'package:educonnect/core/utils/image_constant.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 class CustomAttachmentView extends StatelessWidget {
+  final String? name;
   final String filePath;
-
-  CustomAttachmentView({required this.filePath});
+  
+  CustomAttachmentView({required this.name, required this.filePath});
 
   Future<void> _launchURL() async {
     if (await canLaunchUrlString(filePath)) {
@@ -22,7 +23,7 @@ class CustomAttachmentView extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: _launchURL,
-      child: const Card(
+      child: Card(
         elevation: 0,
         child: ListTile(
           leading: Icon(Icons.attach_file, size: 33, color: Colors.black),
@@ -34,7 +35,8 @@ class CustomAttachmentView extends StatelessWidget {
           // ),
           title: Text(
               // filePath.split('/').last,
-              'PDF File'),
+              name ?? 'Attachment File',
+              ),
           subtitle: Text('Tap to view/download'),
         ),
       ),

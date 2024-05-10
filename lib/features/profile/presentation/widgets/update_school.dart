@@ -3,22 +3,23 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:quotes/config/themes/custom_text_style.dart';
-import 'package:quotes/core/utils/app_colors.dart';
-import 'package:quotes/core/utils/image_constant.dart';
-import 'package:quotes/core/utils/size_utils.dart';
-import 'package:quotes/features/auth/presentation/cubit/auth_cubit.dart';
-import 'package:quotes/features/auth/presentation/widgets/custom_drop_down.dart';
-import 'package:quotes/features/auth/presentation/widgets/custom_elevated_button.dart';
-import 'package:quotes/features/auth/presentation/widgets/custom_image_pick.dart';
-import 'package:quotes/features/auth/presentation/widgets/custom_text_form_field.dart';
-import 'package:quotes/features/classrooms/data/models/class_m.dart';
-import 'package:quotes/features/classrooms/data/models/class_model.dart';
-import 'package:quotes/features/classrooms/data/models/school_m.dart';
-import 'package:quotes/features/classrooms/data/models/school_nodel.dart';
-import 'package:quotes/features/classrooms/presentation/cubit/class_cubit.dart';
-import 'package:quotes/features/posts/presentation/widgets/custom_image_view.dart';
-import 'package:quotes/features/profile/presentation/cubit/children_cubit.dart';
+import 'package:educonnect/config/locale/app_localizations.dart';
+import 'package:educonnect/config/themes/custom_text_style.dart';
+import 'package:educonnect/core/utils/app_colors.dart';
+import 'package:educonnect/core/utils/image_constant.dart';
+import 'package:educonnect/core/utils/size_utils.dart';
+import 'package:educonnect/features/auth/presentation/cubit/auth_cubit.dart';
+import 'package:educonnect/features/auth/presentation/widgets/custom_drop_down.dart';
+import 'package:educonnect/features/auth/presentation/widgets/custom_elevated_button.dart';
+import 'package:educonnect/features/auth/presentation/widgets/custom_image_pick.dart';
+import 'package:educonnect/features/auth/presentation/widgets/custom_text_form_field.dart';
+import 'package:educonnect/features/classrooms/data/models/class_m.dart';
+import 'package:educonnect/features/classrooms/data/models/class_model.dart';
+import 'package:educonnect/features/classrooms/data/models/school_m.dart';
+import 'package:educonnect/features/classrooms/data/models/school_nodel.dart';
+import 'package:educonnect/features/classrooms/presentation/cubit/class_cubit.dart';
+import 'package:educonnect/features/posts/presentation/widgets/custom_image_view.dart';
+import 'package:educonnect/features/profile/presentation/cubit/children_cubit.dart';
 import 'package:image_picker/image_picker.dart';
 
 class UpdateSchool extends StatefulWidget {
@@ -34,7 +35,6 @@ class _UpdateSchoolState extends State<UpdateSchool> {
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-
   @override
   void initState() {
     schoolNameController.text = widget.school.name;
@@ -42,10 +42,10 @@ class _UpdateSchoolState extends State<UpdateSchool> {
 
     super.initState();
   }
+
   TextEditingController schoolNameController = TextEditingController();
 
   TextEditingController addressController = TextEditingController();
-
 
   XFile? selectedImage;
 
@@ -83,7 +83,7 @@ class _UpdateSchoolState extends State<UpdateSchool> {
                 elevation: 0,
                 centerTitle: true,
                 title: Text(
-                  "Update the School",
+                  AppLocalizations.of(context)!.translate('update_school')!,
                   style: TextStyle(
                     fontFamily: "Poppins",
                     color: AppColors.black900,
@@ -104,23 +104,32 @@ class _UpdateSchoolState extends State<UpdateSchool> {
                     // crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       SizedBox(height: 20.v),
-                      _buildName(context, "School Name", schoolNameController),
+                      _buildName(
+                          context,
+                          AppLocalizations.of(context)!
+                              .translate('school_name')!,
+                          schoolNameController),
                       SizedBox(height: 20.v),
-                      _buildName(context, "Address", addressController),
+                      _buildName(
+                          context,
+                          AppLocalizations.of(context)!.translate('address')!,
+                          addressController),
                       SizedBox(height: 20.v),
-                                            Row(
+                      Row(
                         children: [
                           Padding(
                             padding: EdgeInsets.only(left: 3.h),
                             child: Text(
-                              "Select New Image",
+                              AppLocalizations.of(context)!
+                                  .translate('new_image')!,
                               style: CustomTextStyles.titleMediumPoppinsGray900,
                             ),
                           ),
                           Padding(
                             padding: EdgeInsets.only(left: 3.h),
                             child: Text(
-                              "(Optional)",
+                              AppLocalizations.of(context)!
+                                  .translate('optional')!,
                               style:
                                   CustomTextStyles.titleMediumPoppinsGray40001,
                             ),
@@ -133,7 +142,7 @@ class _UpdateSchoolState extends State<UpdateSchool> {
                         child: selectedImage == null
                             ? const Text('Select Image')
                             : Text(
-                                'Image Selected: ${selectedImage!.path.split('/').last}'),
+                                '${AppLocalizations.of(context)!.translate('image_selected')!} : ${selectedImage!.path.split('/').last}'),
                       ),
                       SizedBox(height: 30.v),
                       _buildContinue(context, state),
@@ -218,7 +227,8 @@ class _UpdateSchoolState extends State<UpdateSchool> {
                 }
               } else {
                 setState(() {
-                  errorMessage = 'Please fill at least one field';
+                  errorMessage = AppLocalizations.of(context)!
+                      .translate('fill_one_field')!;
                 });
               }
             },
@@ -231,7 +241,7 @@ class _UpdateSchoolState extends State<UpdateSchool> {
         backgroundColor: MaterialStateProperty.all(AppColors.indigoA300),
       ),
       isLoading: state is ClassLoading,
-      text: "Continue",
+      text: AppLocalizations.of(context)!.translate('continue')!,
       margin: EdgeInsets.only(left: 2.h, right: 2.h),
       buttonTextStyle: CustomTextStyles.titleMediumPoppins,
     );
@@ -246,7 +256,8 @@ class _UpdateSchoolState extends State<UpdateSchool> {
           state is ClassError
               ? Text(
                   state.message.contains('Server Failure')
-                      ? "Server error"
+                      ? AppLocalizations.of(context)!
+                                            .translate('server_error')!
                       : state.message,
                   style: CustomTextStyles.titleMediumPoppinsBluegray100)
               : Text(errorMessage,

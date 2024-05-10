@@ -4,21 +4,22 @@ import 'dart:developer' as dev;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:quotes/config/themes/custom_text_style.dart';
-import 'package:quotes/config/themes/theme_helper.dart';
-import 'package:quotes/core/api/end_points.dart';
-import 'package:quotes/core/utils/app_colors.dart';
-import 'package:quotes/core/utils/image_constant.dart';
-import 'package:quotes/core/utils/size_utils.dart';
-import 'package:quotes/features/posts/data/models/comment_model.dart';
-import 'package:quotes/features/posts/domain/entities/comment.dart';
-import 'package:quotes/features/posts/domain/entities/post.dart';
+import 'package:educonnect/config/locale/app_localizations.dart';
+import 'package:educonnect/config/themes/custom_text_style.dart';
+import 'package:educonnect/config/themes/theme_helper.dart';
+import 'package:educonnect/core/api/end_points.dart';
+import 'package:educonnect/core/utils/app_colors.dart';
+import 'package:educonnect/core/utils/image_constant.dart';
+import 'package:educonnect/core/utils/size_utils.dart';
+import 'package:educonnect/features/posts/data/models/comment_model.dart';
+import 'package:educonnect/features/posts/domain/entities/comment.dart';
+import 'package:educonnect/features/posts/domain/entities/post.dart';
 import 'package:intl/intl.dart';
-import 'package:quotes/features/posts/presentation/cubit/comment_cubit.dart';
-import 'package:quotes/features/posts/presentation/cubit/like_cubit.dart';
-import 'package:quotes/features/posts/presentation/cubit/post_cubit.dart';
-import 'package:quotes/features/posts/presentation/widgets/custom_image_view.dart';
-import 'package:quotes/features/posts/presentation/widgets/image_detail.dart';
+import 'package:educonnect/features/posts/presentation/cubit/comment_cubit.dart';
+import 'package:educonnect/features/posts/presentation/cubit/like_cubit.dart';
+import 'package:educonnect/features/posts/presentation/cubit/post_cubit.dart';
+import 'package:educonnect/features/posts/presentation/widgets/custom_image_view.dart';
+import 'package:educonnect/features/posts/presentation/widgets/image_detail.dart';
 
 class CommentDetails extends StatelessWidget {
   late Comment comment;
@@ -27,12 +28,13 @@ class CommentDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var date = comment.createdAt;
-    var time = DateFormat.jm().format(date);
-    var restOfDate = DateFormat.yMMMMd().format(date);
+    // var date = comment.createdAt;
+    // var time = DateFormat.jm().format(date);
+    // var restOfDate = DateFormat.yMMMMd().format(date);
+    bool isRtl = Localizations.localeOf(context).languageCode == 'ar';
 
     return Container(
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         color: Colors.white,
       ),
       padding: EdgeInsets.symmetric(
@@ -77,7 +79,8 @@ class CommentDetails extends StatelessWidget {
                       ),
                       SizedBox(height: 3.v),
                       Text(
-                        'parent', //TODO: Replace with actual implementation
+                        AppLocalizations.of(context)!.translate(
+                            "user")!, //TODO: Replace with actual implementation
                         style: theme.textTheme.titleSmall,
                       ),
                     ],
@@ -101,24 +104,30 @@ class CommentDetails extends StatelessWidget {
           ),
           SizedBox(height: 11.v),
 
-          Row(
-            children: [
-              Text(
-                time,
-                style: theme.textTheme.bodyMedium,
-              ),
-              CustomImageView(
-                imagePath: ImageConstant.imgUser,
-                height: 10.adaptSize,
-                width: 10.adaptSize,
-                margin: EdgeInsets.symmetric(vertical: 3.v),
-              ),
-              Text(
-                restOfDate,
-                style: theme.textTheme.bodyMedium,
-              ),
-            ],
-          ),
+          // Row(
+          //   children: [
+          //     Text(
+          //       time,
+          //       style: theme.textTheme.bodyMedium,
+          //     ),
+          //     CustomImageView(
+          //       imagePath: ImageConstant.imgUser,
+          //       height: 10.adaptSize,
+          //       width: 10.adaptSize,
+          //       margin: EdgeInsets.symmetric(vertical: 3.v),
+          //     ),
+          //     Text(
+          //       restOfDate,
+          //       style: theme.textTheme.bodyMedium,
+          //     ),
+          //   ],
+          // ),
+          Text(
+              isRtl
+                  ? timeAgoArabic(comment.createdAt)
+                  : timeAgo(comment.createdAt),
+              style: theme.textTheme.bodyMedium),
+
           SizedBox(height: 10.v),
           // devider
           Container(
@@ -132,24 +141,6 @@ class CommentDetails extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              // Expanded(
-              //   child: Row(
-              //     mainAxisAlignment: MainAxisAlignment.center,
-              //     children: [
-              //       Text(
-              //         // "222",
-              //         post.likesCount.toString(),
-              //         style: theme.textTheme.bodyLarge,
-              //       ),
-              //       SizedBox(width: 5.v),
-              //       Text(
-              //         'Likes',
-              //         style: theme.textTheme.bodyMedium,
-              //       ),
-              //     ],
-              //   ),
-              // ),
-
               Expanded(
                 child: InkWell(
                   onTap: () {
@@ -176,7 +167,7 @@ class CommentDetails extends StatelessWidget {
                           ),
                           SizedBox(width: 5.v),
                           Text(
-                            'Likes',
+                            AppLocalizations.of(context)!.translate("likes")!,
                             style: theme.textTheme.bodyMedium?.copyWith(
                               color: comment.isLiked ? Colors.blue : null,
                             ),
@@ -217,7 +208,7 @@ class CommentDetails extends StatelessWidget {
                     // ),
                     SizedBox(width: 5.v),
                     Text(
-                      'Comments',
+                      AppLocalizations.of(context)!.translate("comments")!,
                       style: theme.textTheme.bodyMedium,
                     ),
                   ],
@@ -237,5 +228,39 @@ class CommentDetails extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  String timeAgo(DateTime date) {
+    final now = DateTime.now();
+    final difference = now.difference(date);
+
+    if (difference.inSeconds < 60) {
+      return '${difference.inSeconds}s';
+    } else if (difference.inMinutes < 60) {
+      return '${difference.inMinutes}m';
+    } else if (difference.inHours < 24) {
+      return '${difference.inHours}h';
+    } else if (difference.inDays < 4) {
+      return '${difference.inDays}d';
+    } else {
+      return DateFormat.yMMMMd().format(date);
+    }
+  }
+
+  String timeAgoArabic(DateTime date) {
+    final now = DateTime.now();
+    final difference = now.difference(date);
+
+    if (difference.inSeconds < 60) {
+      return 'منذ ${difference.inSeconds} ثواني';
+    } else if (difference.inMinutes < 60) {
+      return 'منذ ${difference.inMinutes} دقائق';
+    } else if (difference.inHours < 24) {
+      return 'منذ ${difference.inHours} ساعات';
+    } else if (difference.inDays < 4) {
+      return 'منذ ${difference.inDays} أيام';
+    } else {
+      return DateFormat.yMMMMd('ar_SA').format(date);
+    }
   }
 }

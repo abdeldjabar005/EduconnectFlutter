@@ -1,12 +1,12 @@
 // Data Layer - Repositories
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:dartz/dartz.dart';
-import 'package:quotes/features/auth/data/datasources/auth_remote_data_source.dart';
-import 'package:quotes/core/error/exceptions.dart';
-import 'package:quotes/core/error/failures.dart';
+import 'package:educonnect/features/auth/data/datasources/auth_remote_data_source.dart';
+import 'package:educonnect/core/error/exceptions.dart';
+import 'package:educonnect/core/error/failures.dart';
 
-import 'package:quotes/features/auth/domain/entities/user.dart';
-import 'package:quotes/features/auth/domain/repositories/auth_repository.dart';
+import 'package:educonnect/features/auth/domain/entities/user.dart';
+import 'package:educonnect/features/auth/domain/repositories/auth_repository.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
   final AuthRemoteDataSource remoteDataSource;

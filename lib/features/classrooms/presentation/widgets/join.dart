@@ -2,19 +2,20 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:quotes/config/themes/custom_text_style.dart';
-import 'package:quotes/config/themes/theme_helper.dart';
-import 'package:quotes/core/utils/app_colors.dart';
-import 'package:quotes/core/utils/image_constant.dart';
-import 'package:quotes/core/utils/size_utils.dart';
-import 'package:quotes/features/auth/presentation/cubit/auth_cubit.dart';
-import 'package:quotes/features/auth/presentation/widgets/custom_elevated_button.dart';
-import 'package:quotes/features/auth/presentation/widgets/custom_text_form_field.dart';
-import 'package:quotes/features/classrooms/presentation/cubit/class_cubit.dart';
-import 'package:quotes/features/classrooms/presentation/pages/school_details.dart';
-import 'package:quotes/features/classrooms/presentation/pages/main_classroom.dart';
-import 'package:quotes/features/posts/presentation/widgets/custom_image_view.dart';
-import 'package:quotes/injection_container.dart';
+import 'package:educonnect/config/locale/app_localizations.dart';
+import 'package:educonnect/config/themes/custom_text_style.dart';
+import 'package:educonnect/config/themes/theme_helper.dart';
+import 'package:educonnect/core/utils/app_colors.dart';
+import 'package:educonnect/core/utils/image_constant.dart';
+import 'package:educonnect/core/utils/size_utils.dart';
+import 'package:educonnect/features/auth/presentation/cubit/auth_cubit.dart';
+import 'package:educonnect/features/auth/presentation/widgets/custom_elevated_button.dart';
+import 'package:educonnect/features/auth/presentation/widgets/custom_text_form_field.dart';
+import 'package:educonnect/features/classrooms/presentation/cubit/class_cubit.dart';
+import 'package:educonnect/features/classrooms/presentation/pages/school_details.dart';
+import 'package:educonnect/features/classrooms/presentation/pages/main_classroom.dart';
+import 'package:educonnect/features/posts/presentation/widgets/custom_image_view.dart';
+import 'package:educonnect/injection_container.dart';
 
 class Join extends StatefulWidget {
   Join({Key? key, required this.type})
@@ -52,7 +53,7 @@ class _JoinState extends State<Join> {
             elevation: 0,
             centerTitle: true,
             title: Text(
-              "Join a ${widget.type == "school" ? "School" : "Class"}",
+              "${AppLocalizations.of(context)!.translate("join_a") ?? "join a "}${widget.type == "school" ? AppLocalizations.of(context)!.translate("school")! : AppLocalizations.of(context)!.translate("class")!}",
               style: TextStyle(
                 fontFamily: "Poppins",
                 color: AppColors.black900,
@@ -95,6 +96,8 @@ class _JoinState extends State<Join> {
   }
 
   Widget _buildJoinSchool(BuildContext context, ClassState state) {
+    bool isRtl = Localizations.localeOf(context).languageCode == 'ar';
+
     return SingleChildScrollView(
       child: Form(
         key: formKey,
@@ -116,10 +119,10 @@ class _JoinState extends State<Join> {
                 ),
               ),
               Align(
-                alignment: Alignment.centerLeft,
+                alignment: isRtl ? Alignment.centerRight : Alignment.centerLeft,
                 child: Padding(
-                  padding: EdgeInsets.only(left: 14.h),
-                  child: Text("Code",
+                  padding: EdgeInsets.symmetric(horizontal: 16.h),
+                  child: Text(AppLocalizations.of(context)!.translate("code")!,
                       style: CustomTextStyles.titleMediumPoppinsGray900),
                 ),
               ),
@@ -134,7 +137,8 @@ class _JoinState extends State<Join> {
               SizedBox(
                 height: 30.v,
               ),
-              _buildButton(context, "Join a School"),
+              _buildButton(context,
+                  AppLocalizations.of(context)!.translate("join_school")!),
             ],
           ),
         ),
@@ -143,6 +147,8 @@ class _JoinState extends State<Join> {
   }
 
   Widget _buildJoinClass(BuildContext context, ClassState state) {
+    bool isRtl = Localizations.localeOf(context).languageCode == 'ar';
+
     return SingleChildScrollView(
       child: Form(
         key: formKey,
@@ -164,10 +170,10 @@ class _JoinState extends State<Join> {
                 ),
               ),
               Align(
-                alignment: Alignment.centerLeft,
+                alignment: isRtl ? Alignment.centerRight : Alignment.centerLeft,
                 child: Padding(
-                  padding: EdgeInsets.only(left: 14.h),
-                  child: Text("Code",
+                  padding: EdgeInsets.symmetric(horizontal: 16.h),
+                  child: Text(AppLocalizations.of(context)!.translate("code")!,
                       style: CustomTextStyles.titleMediumPoppinsGray900),
                 ),
               ),
@@ -182,7 +188,8 @@ class _JoinState extends State<Join> {
               SizedBox(
                 height: 30.v,
               ),
-              _buildButton(context, "Join a Class"),
+              _buildButton(context,
+                  AppLocalizations.of(context)!.translate("join_class")!),
             ],
           ),
         ),
@@ -202,9 +209,10 @@ class _JoinState extends State<Join> {
         validator: (value) {
           if (value!.isEmpty) {
             setState(() {
-              errorMessage = "Code cannot be empty";
+              // errorMessage =
+              // AppLocalizations.of(context)!.translate("code_empty")!;
             });
-            return "Code cannot be empty";
+            return AppLocalizations.of(context)!.translate("code_empty")!;
           }
           return null;
         },
@@ -216,7 +224,7 @@ class _JoinState extends State<Join> {
           ),
         ),
         controller: codeController,
-        hintText: "Enter the code",
+        hintText: AppLocalizations.of(context)!.translate("enter_code")!,
         textInputType: TextInputType.text,
         contentPadding: EdgeInsets.symmetric(horizontal: 21.h, vertical: 15.v),
       ),
@@ -238,7 +246,7 @@ class _JoinState extends State<Join> {
             });
             if (widget.type == "school") {
               context.read<ClassCubit>().joinSchool(codeController.text);
-              
+
               // sl.get<ClassCubit>().joinSchool(codeController.text);
             } else {
               context.read<ClassCubit>().joinClass(codeController.text);
@@ -269,10 +277,17 @@ class _JoinState extends State<Join> {
           state is ClassError
               ? Text(state.message,
                   style: CustomTextStyles.titleMediumPoppinsBluegray100)
-              : errorMessage.isNotEmpty
-                  ? Text(errorMessage,
+              : errorMessage == "You are already enrolled in this class"
+                  ? Text(
+                      AppLocalizations.of(context)!
+                          .translate("already_enrolled")!,
                       style: CustomTextStyles.titleMediumPoppinsBluegray100)
-                  : Container(),
+                  : errorMessage.isNotEmpty
+                      ? Text(
+                          AppLocalizations.of(context)!
+                              .translate("wrong_code")!,
+                          style: CustomTextStyles.titleMediumPoppinsBluegray100)
+                      : Container(),
         ],
       ),
     );

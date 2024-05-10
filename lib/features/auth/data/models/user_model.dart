@@ -1,6 +1,6 @@
-import 'package:quotes/features/auth/domain/entities/user.dart';
-import 'package:quotes/features/classrooms/data/models/class_model.dart';
-import 'package:quotes/features/classrooms/data/models/school_nodel.dart';
+import 'package:educonnect/features/auth/domain/entities/user.dart';
+import 'package:educonnect/features/classrooms/data/models/class_model.dart';
+import 'package:educonnect/features/classrooms/data/models/school_nodel.dart';
 
 class UserModel extends User {
   final String token;

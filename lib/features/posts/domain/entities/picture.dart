@@ -6,6 +6,7 @@ class Picture extends Equatable {
   final String url;
   final DateTime createdAt;
   final DateTime updatedAt;
+  String? name;
 
   Picture({
     required this.id,
@@ -13,6 +14,7 @@ class Picture extends Equatable {
     required this.url,
     required this.createdAt,
     required this.updatedAt,
+    this.name,
   });
 
   @override
@@ -22,5 +24,6 @@ class Picture extends Equatable {
         url,
         createdAt,
         updatedAt,
+        name,
       ];
 }

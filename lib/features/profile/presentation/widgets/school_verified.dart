@@ -2,11 +2,12 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:quotes/config/themes/custom_text_style.dart';
-import 'package:quotes/core/utils/app_colors.dart';
-import 'package:quotes/core/utils/image_constant.dart';
-import 'package:quotes/core/utils/size_utils.dart';
-import 'package:quotes/features/classrooms/presentation/cubit/class_cubit.dart';
+import 'package:educonnect/config/locale/app_localizations.dart';
+import 'package:educonnect/config/themes/custom_text_style.dart';
+import 'package:educonnect/core/utils/app_colors.dart';
+import 'package:educonnect/core/utils/image_constant.dart';
+import 'package:educonnect/core/utils/size_utils.dart';
+import 'package:educonnect/features/classrooms/presentation/cubit/class_cubit.dart';
 
 class SchoolVerified extends StatelessWidget {
   const SchoolVerified({Key? key})
@@ -31,7 +32,7 @@ class SchoolVerified extends StatelessWidget {
             elevation: 0,
             centerTitle: true,
             title: Text(
-              "School is verified",
+              AppLocalizations.of(context)!.translate('school_verified')!,
               style: TextStyle(
                 fontFamily: "Poppins",
                 color: AppColors.black900,
@@ -49,14 +50,16 @@ class SchoolVerified extends StatelessWidget {
                       height: 130.v, width: 130.v)),
               SizedBox(height: 40.v),
               Center(
-                child: Text("Your school has been verified successfully",
+                child: Text(
+                    AppLocalizations.of(context)!
+                        .translate('verified_succesfully')!,
                     textAlign: TextAlign.center,
                     style: CustomTextStyles.bodyMediumRobotoBlack),
               ),
               SizedBox(height: 20.v),
               Center(
                 child: Text(
-                  "Your school can now show up in the search results",
+                  AppLocalizations.of(context)!.translate('show_results')!,
                   textAlign: TextAlign.center,
                   style: CustomTextStyles.bodyMediumRobotoBlack2,
                 ),

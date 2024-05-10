@@ -1,14 +1,15 @@
+import 'package:educonnect/config/locale/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:quotes/config/routes/app_routes.dart';
-import 'package:quotes/core/utils/app_colors.dart';
-import 'package:quotes/core/utils/constants.dart';
-import 'package:quotes/core/widgets/custom_bottom_bar.dart';
-import 'package:quotes/core/widgets/home_page.dart';
-import 'package:quotes/features/auth/presentation/cubit/auth_cubit.dart';
-import 'package:quotes/features/classrooms/presentation/pages/main_classroom.dart';
-import 'package:quotes/features/posts/presentation/pages/new_post.dart';
-import 'package:quotes/features/profile/presentation/pages/main_profile.dart';
+import 'package:educonnect/config/routes/app_routes.dart';
+import 'package:educonnect/core/utils/app_colors.dart';
+import 'package:educonnect/core/utils/constants.dart';
+import 'package:educonnect/core/widgets/custom_bottom_bar.dart';
+import 'package:educonnect/core/widgets/home_page.dart';
+import 'package:educonnect/features/auth/presentation/cubit/auth_cubit.dart';
+import 'package:educonnect/features/classrooms/presentation/pages/main_classroom.dart';
+import 'package:educonnect/features/posts/presentation/pages/new_post.dart';
+import 'package:educonnect/features/profile/presentation/pages/main_profile.dart';
 
 class RootScreen extends StatefulWidget {
   @override
@@ -20,6 +21,7 @@ class _RootScreenState extends State<RootScreen> {
   final List<Widget> pages = [
     HomeScreen(),
     NewPost(),
+    // DefaultWidget(),
     MainClassroom(),
     MainProfile(),
   ];
@@ -34,9 +36,9 @@ class _RootScreenState extends State<RootScreen> {
             now.difference(lastPressedAt!) > Duration(seconds: 2)) {
           lastPressedAt = now;
           final snackBar = SnackBar(
-            content: const Text(
-              'Press back again to exit',
-              style: TextStyle(
+            content: Text(
+              AppLocalizations.of(context)!.translate('exit_message')!,
+              style: const TextStyle(
                 color: Colors.white,
                 fontSize: 16,
               ),
@@ -62,23 +64,26 @@ class _RootScreenState extends State<RootScreen> {
   }
 
   Widget _buildBottomBar(BuildContext context) {
-    return CustomBottomBar(onChanged: (BottomBarEnum type) {
-      setState(() {
-        switch (type) {
-          case BottomBarEnum.Home:
-            selectedIndex = 0;
-            break;
-          case BottomBarEnum.Messages:
-            selectedIndex = 1;
-            break;
-          case BottomBarEnum.Schools:
-            selectedIndex = 2;
-            break;
-          case BottomBarEnum.Profile:
-            selectedIndex = 3;
-            break;
-        }
-      });
-    });
+    return Directionality(
+      textDirection: TextDirection.ltr,
+      child: CustomBottomBar(onChanged: (BottomBarEnum type) {
+        setState(() {
+          switch (type) {
+            case BottomBarEnum.Home:
+              selectedIndex = 0;
+              break;
+            case BottomBarEnum.Messages:
+              selectedIndex = 1;
+              break;
+            case BottomBarEnum.Schools:
+              selectedIndex = 2;
+              break;
+            case BottomBarEnum.Profile:
+              selectedIndex = 3;
+              break;
+          }
+        });
+      }),
+    );
   }
 }

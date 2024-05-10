@@ -1,7 +1,7 @@
-import 'package:quotes/core/error/failures.dart';
+import 'package:educonnect/core/error/failures.dart';
 
 import 'package:dartz/dartz.dart';
-import 'package:quotes/features/splash/data/datasources/lang_local_data_source.dart';
+import 'package:educonnect/features/splash/data/datasources/lang_local_data_source.dart';
 
 import '../../../../core/error/exceptions.dart';
 import '../../domain/repositories/lang_repository.dart';

@@ -1,5 +1,5 @@
 // comment_model.dart
-import 'package:quotes/features/posts/domain/entities/comment.dart';
+import 'package:educonnect/features/posts/domain/entities/comment.dart';
 
 class CommentModel extends Comment {
    CommentModel({

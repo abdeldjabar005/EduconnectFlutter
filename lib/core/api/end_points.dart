@@ -8,12 +8,16 @@ class EndPoints {
   static const String randomQuote = '${baseUrl}quotes/random';
   static const String login = '${baseUrl}login';
   static const String signUp = '${baseUrl}register';
-  static const String posts = '${baseUrl}posts/class/16';
+  // static const String posts = '${baseUrl}posts/class/16';
+  static const String posts = '${baseUrl}posts/user/posts';
+
   static String post(int id) => '${baseUrl}posts/$id';
 
   static const String resendEmail = '${baseUrl}resendotp';
   static const String users = '${baseUrl}users';
   static const String verifyEmail = '${baseUrl}verify';
+
+  static const String newPost = '${baseUrl}posts';
 
   static String comments(int postId) => '${baseUrl}posts/$postId/all-comments';
   static String comment(int id) => '${baseUrl}posts/$id/comment';
@@ -27,15 +31,24 @@ class EndPoints {
 
   static const String joinSchool = '${baseUrl}school-join-requests/join-school';
   static const String joinClass = '${baseUrl}join-requests/class/join';
+  static const String sendJoinRequest = '${baseUrl}join-requests';
   static String getClass(int id) => '${baseUrl}posts/class/$id';
   static String getSchool(int id) => '${baseUrl}posts/school/$id';
   static String getMembers(int id) => '${baseUrl}schools/$id/members';
+  static String getStudents(int id) => '${baseUrl}schools/$id/students';
+  static String getClassStudents(int id) => '${baseUrl}classes/$id/students';
+  static String associateStudent(int id) => '${baseUrl}schools/$id/associate';
+  static String associateStudent2(int id) => '${baseUrl}classes/$id/associate';
+
   static String getClassMembers(int id) => '${baseUrl}classes/$id/members';
+
   static String getClasses(int id) => '${baseUrl}schools/$id/classes';
   static String removeClass(int? id) => '${baseUrl}classes/$id';
   static String updateClass(int? id) => '${baseUrl}classes/$id';
   static String removeSchool(int? id) => '${baseUrl}schools/$id';
   static String updateSchool(int? id) => '${baseUrl}schools/$id';
+  static String leaveSchool(int id) => '${baseUrl}schools/$id/leave';
+  static String leaveClass(int id) => '${baseUrl}classes/$id/leave';
   static const String getTeacherClasses = '${baseUrl}classes/owned';
   static const String getChildren = '${baseUrl}students/children/parent';
   static const String addChild = '${baseUrl}students';
@@ -44,5 +57,10 @@ class EndPoints {
   static String removeChild(int? id) => '${baseUrl}students/$id';
   static String updateChild(int? id) => '${baseUrl}students/$id';
 
-  static String schoolVerifyRequest(int? id ) => '${baseUrl}schools/$id/request/verification';
+  static String schoolVerifyRequest(int? id) =>
+      '${baseUrl}schools/$id/request/verification';
+
+  static String getSchoolRequests(int id) =>
+      '${baseUrl}school-join-requests/$id';
+  static String getClassRequests(int id) => '${baseUrl}join-requests/$id';
 }

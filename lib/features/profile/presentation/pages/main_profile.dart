@@ -1,22 +1,26 @@
+import 'package:educonnect/features/auth/presentation/pages/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:quotes/config/themes/custom_text_style.dart';
-import 'package:quotes/config/themes/theme_helper.dart';
-import 'package:quotes/core/utils/app_colors.dart';
-import 'package:quotes/core/utils/image_constant.dart';
-import 'package:quotes/core/utils/size_utils.dart';
-import 'package:quotes/core/widgets/custom_bottom_bar.dart';
-import 'package:quotes/core/widgets/custom_icon_button.dart';
-import 'package:quotes/features/auth/presentation/cubit/auth_cubit.dart';
-import 'package:quotes/features/classrooms/presentation/cubit/class_cubit.dart';
-import 'package:quotes/features/posts/presentation/widgets/custom_image_view.dart';
-import 'package:quotes/features/profile/presentation/cubit/children_cubit.dart';
-import 'package:quotes/features/profile/presentation/widgets/add_school.dart';
-import 'package:quotes/features/profile/presentation/widgets/manage_children.dart';
-import 'package:quotes/features/profile/presentation/widgets/manage_classes.dart';
-import 'package:quotes/features/profile/presentation/widgets/manage_school.dart';
-import 'package:quotes/features/profile/presentation/widgets/manage_schools.dart';
-import 'package:quotes/injection_container.dart';
+import 'package:educonnect/config/locale/app_localizations.dart';
+import 'package:educonnect/config/themes/custom_text_style.dart';
+import 'package:educonnect/config/themes/theme_helper.dart';
+import 'package:educonnect/core/api/end_points.dart';
+import 'package:educonnect/core/utils/app_colors.dart';
+import 'package:educonnect/core/utils/image_constant.dart';
+import 'package:educonnect/core/utils/size_utils.dart';
+import 'package:educonnect/core/widgets/custom_bottom_bar.dart';
+import 'package:educonnect/core/widgets/custom_icon_button.dart';
+import 'package:educonnect/features/auth/presentation/cubit/auth_cubit.dart';
+import 'package:educonnect/features/classrooms/presentation/cubit/class_cubit.dart';
+import 'package:educonnect/features/posts/presentation/widgets/custom_image_view.dart';
+import 'package:educonnect/features/profile/presentation/cubit/children_cubit.dart';
+import 'package:educonnect/features/profile/presentation/widgets/add_school.dart';
+import 'package:educonnect/features/profile/presentation/widgets/manage_children.dart';
+import 'package:educonnect/features/profile/presentation/widgets/manage_classes.dart';
+import 'package:educonnect/features/profile/presentation/widgets/manage_school.dart';
+import 'package:educonnect/features/profile/presentation/widgets/manage_schools.dart';
+import 'package:educonnect/features/splash/presentation/cubit/locale_cubit.dart';
+import 'package:educonnect/injection_container.dart';
 
 class MainProfile extends StatelessWidget {
   MainProfile({Key? key})
@@ -25,7 +29,11 @@ class MainProfile extends StatelessWidget {
         );
 
   GlobalKey<NavigatorState> navigatorKey = GlobalKey();
-
+  Map<String, String> roleTranslations = {
+    'parent': 'والد',
+    'teacher': 'معلم',
+    'admin': 'مدير',
+  };
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -55,6 +63,7 @@ class MainProfile extends StatelessWidget {
 
   Widget _buildProfileHome(BuildContext context) {
     final user = (context.read<AuthCubit>().state as AuthAuthenticated).user;
+    bool isRtl = Localizations.localeOf(context).languageCode == 'ar';
 
     return SingleChildScrollView(
       child: Container(
@@ -70,7 +79,6 @@ class MainProfile extends StatelessWidget {
                   imagePath:
                       ImageConstant.imgRectangle17100x100, // TODO:user.image
                   // imagePath: '${EndPoints.storage}${user.profilePicture}',
-
                   height: 100.adaptSize,
                   width: 100.adaptSize,
                   radius: BorderRadius.circular(
@@ -79,9 +87,10 @@ class MainProfile extends StatelessWidget {
                 ),
                 Padding(
                   padding: EdgeInsets.only(
-                    left: 25.h,
+                    left: 20.h,
                     top: 28.v,
                     bottom: 28.v,
+                    right: 20.h,
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -95,7 +104,9 @@ class MainProfile extends StatelessWidget {
                       ),
                       SizedBox(height: 2.v),
                       Text(
-                        user.role,
+                        isRtl
+                            ? roleTranslations[user.role] ?? 'مستخدم'
+                            : user.role,
                         style: CustomTextStyles.titleGray,
                       ),
                     ],
@@ -122,7 +133,8 @@ class MainProfile extends StatelessWidget {
                 width: 356 * MediaQuery.of(context).size.width / 414,
                 child: _buildFrame(
                   context,
-                  profile: "Manage Profile",
+                  profile: AppLocalizations.of(context)!
+                      .translate("manage_profile")!,
                   icon: ImageConstant.imgFavorite,
                   fill: IconButtonStyleHelper.fillindigoA400,
                 ),
@@ -137,15 +149,15 @@ class MainProfile extends StatelessWidget {
                     navigatorKey.currentState!
                         .push(MaterialPageRoute(builder: (context) {
                       if (user.role == 'parent') {
-                        return ManageChildren();
+                        return const ManageChildren();
                       } else if (user.role == 'teacher') {
                         // return ManageClass();
-                        return ManageClasses();
+                        return const ManageClasses();
                       } else if (user.role == 'admin') {
                         // return ManageSchools();
-                        if (user.school == null && !(state is SchoolLoaded) ||
+                        if (user.school == null && state is! SchoolLoaded ||
                             state is SchoolRemoved) {
-                          return AddSchool();
+                          return const AddSchool();
 
                           // return AddSchool();
                         } else {
@@ -166,12 +178,16 @@ class MainProfile extends StatelessWidget {
                     child: _buildFrame(
                       context,
                       profile: user.role == 'parent'
-                          ? "Manage Children"
+                          ? AppLocalizations.of(context)!
+                              .translate("manage_children")!
                           : user.role == 'teacher'
-                              ? "Manage Classes"
+                              ? AppLocalizations.of(context)!
+                                  .translate("manage_classes")!
                               : user.role == 'admin'
-                                  ? "Manage Schools"
-                                  : "Default",
+                                  ? AppLocalizations.of(context)!
+                                      .translate("manage_school")!
+                                  : AppLocalizations.of(context)!
+                                      .translate("default")!,
                       icon: user.role == 'parent'
                           ? ImageConstant.imgClose
                           : user.role == 'teacher'
@@ -204,7 +220,8 @@ class MainProfile extends StatelessWidget {
                 width: 356 * MediaQuery.of(context).size.width / 414,
                 child: _buildFrame(
                   context,
-                  profile: "Bookmarks",
+                  profile:
+                      AppLocalizations.of(context)!.translate("bookmarks")!,
                   icon: ImageConstant.imgBookmarkOrange300,
                   fill: IconButtonStyleHelper.fillOrange,
                 ),
@@ -214,12 +231,38 @@ class MainProfile extends StatelessWidget {
             InkWell(
               borderRadius: BorderRadius.circular(29.h),
               onTap: () {
-                navigatorKey.currentState!.push(MaterialPageRoute(
-                  builder: (context) {
-                    return DefaultWidget();
-                    // return ManageProfile();
-                  },
-                ));
+                if (AppLocalizations.of(context)!.isEnLocale) {
+                  BlocProvider.of<LocaleCubit>(context).toArabic();
+                } else {
+                  BlocProvider.of<LocaleCubit>(context).toEnglish();
+                }
+              },
+              child: Ink(
+                decoration: BoxDecoration(
+                  color: AppColors.whiteA700,
+                  borderRadius: BorderRadius.circular(29.h),
+                ),
+                width: 356 * MediaQuery.of(context).size.width / 414,
+                child: _buildFrame(
+                  context,
+                  profile: AppLocalizations.of(context)!
+                      .translate("change_language")!,
+                  icon: ImageConstant.imgSearchLightGreen400,
+                  fill: IconButtonStyleHelper.fillGreenA,
+                ),
+              ),
+            ),
+            SizedBox(height: 28.v),
+            InkWell(
+              borderRadius: BorderRadius.circular(29.h),
+              onTap: () async {
+                await context.read<AuthCubit>().logout();
+                if (context.mounted) {
+                  Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(
+                    MaterialPageRoute(builder: (context) => LoginScreen()),
+                    (Route<dynamic> route) => false,
+                  );
+                }
               },
               child: Ink(
                 decoration: BoxDecoration(
@@ -231,32 +274,7 @@ class MainProfile extends StatelessWidget {
                   context,
                   icon: ImageConstant.imgBoldDuotoneEssentional,
                   fill: IconButtonStyleHelper.fillRed,
-                  profile: "Help",
-                ),
-              ),
-            ),
-            SizedBox(height: 28.v),
-            InkWell(
-              borderRadius: BorderRadius.circular(29.h),
-              onTap: () {
-                navigatorKey.currentState!.push(MaterialPageRoute(
-                  builder: (context) {
-                    return DefaultWidget();
-                    // return ManageProfile();
-                  },
-                ));
-              },
-              child: Ink(
-                decoration: BoxDecoration(
-                  color: AppColors.whiteA700,
-                  borderRadius: BorderRadius.circular(29.h),
-                ),
-                width: 356 * MediaQuery.of(context).size.width / 414,
-                child: _buildFrame(
-                  context,
-                  profile: "Settings",
-                  icon: ImageConstant.imgSearchLightGreen400,
-                  fill: IconButtonStyleHelper.fillGreenA,
+                  profile: AppLocalizations.of(context)!.translate("logout")!,
                 ),
               ),
             ),
@@ -274,6 +292,7 @@ class MainProfile extends StatelessWidget {
     required String icon,
     required BoxDecoration fill,
   }) {
+    bool isRtl = Localizations.localeOf(context).languageCode == 'ar';
     return Row(
       children: [
         CustomIconButton(
@@ -292,6 +311,7 @@ class MainProfile extends StatelessWidget {
             left: 26.h,
             top: 16.v,
             bottom: 12.v,
+            right: 26.h,
           ),
           child: Text(
             profile,
@@ -302,11 +322,13 @@ class MainProfile extends StatelessWidget {
         ),
         Spacer(),
         CustomImageView(
-          imagePath: ImageConstant.imgArrowRight,
-          height: 25.v,
-          width: 23.h,
+          imagePath:
+              isRtl ? ImageConstant.imgArrowLeft2 : ImageConstant.imgArrowRight,
+          height: 20.v,
+          width: 18.h,
           margin: EdgeInsets.only(
             left: 17.v,
+            right: 17.v,
           ),
         ),
       ],

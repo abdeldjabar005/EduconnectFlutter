@@ -1,8 +1,8 @@
 // post_local_data_source.dart
 import 'dart:convert';
 
-import 'package:quotes/core/error/exceptions.dart';
-import 'package:quotes/features/posts/data/models/post_model.dart';
+import 'package:educonnect/core/error/exceptions.dart';
+import 'package:educonnect/features/posts/data/models/post_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 abstract class PostLocalDataSource {

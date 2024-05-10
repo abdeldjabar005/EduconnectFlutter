@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:quotes/core/utils/app_strings.dart';
-import 'package:quotes/core/widgets/RootScreen.dart';
-import 'package:quotes/core/widgets/custom_bottom_bar.dart';
-import 'package:quotes/core/widgets/home_page.dart';
-import 'package:quotes/features/auth/presentation/pages/login_screen.dart';
-import 'package:quotes/features/auth/presentation/pages/signup_screen.dart';
-import 'package:quotes/features/classrooms/presentation/widgets/join.dart';
-import 'package:quotes/features/profile/presentation/widgets/manage_children.dart';
-import 'package:quotes/features/profile/presentation/widgets/manage_school.dart';
+import 'package:educonnect/core/utils/app_strings.dart';
+import 'package:educonnect/core/widgets/RootScreen.dart';
+import 'package:educonnect/core/widgets/custom_bottom_bar.dart';
+import 'package:educonnect/core/widgets/home_page.dart';
+import 'package:educonnect/features/auth/presentation/pages/login_screen.dart';
+import 'package:educonnect/features/auth/presentation/pages/signup_screen.dart';
+import 'package:educonnect/features/classrooms/presentation/widgets/join.dart';
+import 'package:educonnect/features/profile/presentation/widgets/manage_children.dart';
+import 'package:educonnect/features/profile/presentation/widgets/manage_school.dart';
 import '../../features/posts/presentation/cubit/post_cubit.dart';
-import 'package:quotes/injection_container.dart' as di;
-import 'package:quotes/features/posts/presentation/pages/post_screen.dart';
+import 'package:educonnect/injection_container.dart' as di;
+import 'package:educonnect/features/posts/presentation/pages/post_screen.dart';
 
 class Routes {
   static const String initialRoute = '/';

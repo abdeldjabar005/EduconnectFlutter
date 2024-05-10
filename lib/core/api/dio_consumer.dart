@@ -3,13 +3,13 @@ import 'dart:io';
 import 'package:dio/adapter.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
-import 'package:quotes/core/api/api_consumer.dart';
-import 'package:quotes/core/api/app_interceptors.dart';
-import 'package:quotes/core/api/end_points.dart';
-import 'package:quotes/core/api/status_code.dart';
-import 'package:quotes/core/error/exceptions.dart';
-import 'package:quotes/features/auth/data/repositories/token_repository.dart';
-import 'package:quotes/injection_container.dart' as di;
+import 'package:educonnect/core/api/api_consumer.dart';
+import 'package:educonnect/core/api/app_interceptors.dart';
+import 'package:educonnect/core/api/end_points.dart';
+import 'package:educonnect/core/api/status_code.dart';
+import 'package:educonnect/core/error/exceptions.dart';
+import 'package:educonnect/features/auth/data/repositories/token_repository.dart';
+import 'package:educonnect/injection_container.dart' as di;
 
 class DioConsumer implements ApiConsumer {
   final Dio client;

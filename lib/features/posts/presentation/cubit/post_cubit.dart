@@ -1,13 +1,16 @@
+import 'dart:io';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:quotes/core/error/failures.dart';
-import 'package:quotes/core/usecases/usecase.dart';
-import 'package:quotes/features/classrooms/domain/usecases/get_class.dart';
-import 'package:quotes/features/posts/data/models/post_model.dart';
-import 'package:quotes/features/posts/domain/repositories/post_repository.dart';
-import 'package:quotes/features/posts/domain/usecases/check_liked.dart';
-import 'package:quotes/features/posts/domain/usecases/get_post.dart';
-import 'package:quotes/features/posts/domain/usecases/get_posts.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:educonnect/core/error/failures.dart';
+import 'package:educonnect/core/usecases/usecase.dart';
+import 'package:educonnect/features/classrooms/domain/usecases/get_class.dart';
+import 'package:educonnect/features/posts/data/models/post_m.dart';
+import 'package:educonnect/features/posts/data/models/post_model.dart';
+import 'package:educonnect/features/posts/domain/repositories/post_repository.dart';
+import 'package:educonnect/features/posts/domain/usecases/check_liked.dart';
+import 'package:educonnect/features/posts/domain/usecases/get_post.dart';
+import 'package:educonnect/features/posts/domain/usecases/get_posts.dart';
 import 'package:equatable/equatable.dart';
 part 'post_state.dart';
 
@@ -31,7 +34,6 @@ class PostCubit extends Cubit<PostState> {
       (posts) => PostLoaded(posts: posts),
     ));
   }
- 
 
   Future<void> getPost(int id) async {
     // emit(PostLoading());
@@ -45,7 +47,6 @@ class PostCubit extends Cubit<PostState> {
     });
   }
 
- 
 
   String _mapFailureToMessage(Failure failure) {
     switch (failure.runtimeType) {

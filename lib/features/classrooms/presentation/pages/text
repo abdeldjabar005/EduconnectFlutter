@@ -1,0 +1,161 @@
+\subsection*{Epic 2: School Management}
+This epic focuses on functionalities for teachers to create, manage, and verify schools.
+
+\subsubsection*{User Stories:}
+\textbf{User Story 2.1:} As a School principal, I want to create a new school by providing its name, address, and image so I can establish a learning environment for my students. \textbf{(Must Have)}
+\newline
+\textbf{Acceptance criteria:} User can enter school details, upload an optional image, and submit the creation request.
+\newline
+\textbf{User Story 2.2:} As a School principal, I want to edit the details of my existing school, such as name, address, or image \textbf{(Should Have)}
+\newline
+\textbf{Acceptance criteria:} User can access managing school page. User can select to modify its details.
+\newline
+\textbf{User Story 2.3:} As a School principal, I want to be able to delete a school that I created \textbf{(Should Have)}
+\newline
+\textbf{Acceptance criteria:} User can delete a school, with confirmation to prevent accidental deletion.
+\newline
+\textbf{User Story 2.4:} As a School principal, I want to request verification for my school to establish its legitimacy \textbf{(Must Have)}
+\newline
+\textbf{Acceptance criteria:} User can initiate a verification request with an option to provide documents. Admin reviews verification requests and approves/rejects them.
+
+\subsection*{Epic 3: User Management}
+This epic focuses on functionalities for managing users within schools.
+
+\subsubsection*{User Stories:}
+\textbf{User Story 3.1:} As a School principal who manages a school, I want to be able to invite other teachers to join my school by sending them the school’s code so I can collaborate with colleagues. \textbf{(Should Have)}
+\newline
+\textbf{Acceptance criteria:} User can invite other teachers by sending them the code for the school.
+\newline
+\textbf{User Story 3.2:} As a School principal managing a school, I want to be able to view a list of all users associated with my school, including their roles (teacher/parent), to track participation. \textbf{(Should Have)}
+\newline
+\textbf{Acceptance criteria:} User can access a list of users with their roles within the school.
+\newline
+\textbf{User Story 3.3:} As a School principal managing a school, I want to be able to remove a user from my school. \textbf{(Should Have)}
+\newline
+\textbf{Acceptance criteria:} User can remove a user from the school with appropriate confirmation.
+\newline
+\textbf{User Story 3.4:} As a User, I want to search for schools by name or keyword so I can find the school I'm interested in joining. \textbf{(Could Have)}
+\newline
+\textbf{Acceptance criteria:} User can search for schools using keywords or names. Search results display relevant schools.
+\newline
+\textbf{User Story 3.5:} As a User, I want to request to join a school by sending a request to the school principal managing the school so I can gain access to its resources. \textbf{(Could Have)}
+\newline
+\textbf{Acceptance criteria:} User can select a school and submit a join request with an optional message to the teacher.
+\newline
+\textbf{User Story 3.6:} As a User, I want to be able to join a school directly using a unique code provided by the school principal so I can easily access the school. \textbf{(Must Have)}
+\newline
+\textbf{Acceptance criteria:} User can enter a join code provided by a school principal and be granted access to the corresponding school.
+\newline
+\textbf{User Story 3.7:} As a User, I want to be able to leave a school \textbf{(Should Have)}
+\newline
+\textbf{Acceptance criteria:} User can leave a school.
+
+\subsection*{Epic 4: Class Management}
+This epic focuses on functionalities for creating and managing classes within schools.
+
+\subsubsection*{User Stories:}
+\textbf{User Story 4.1:} As a teacher, I want to create new classes within my school by specifying the class name, subject, and grade level so I can organize students for specific courses. \textbf{(Must Have)}
+\newline
+\textbf{Acceptance criteria:} User can access a class creation interface and define class details like name, subject, and grade level.
+\newline
+\textbf{User Story 4.2:} As a teacher, I want to be able to manage existing classes, such as editing details or removing the class \textbf{(Should Have)}
+\newline
+\textbf{Acceptance criteria:} User can access a list of their classes and edit details like name or description. They can also delete the class.
+\newline
+\textbf{User Story 4.3:} As a teacher managing a class, I want to be able to remove students from a class \textbf{(Should Have)}
+\newline
+\textbf{Acceptance criteria:} User can view a list of students enrolled in a class and remove them based on needs.
+\newline
+\textbf{User Story 4.5:} As a User, I want to be able to leave a class \textbf{(Should Have)}
+\newline
+\textbf{Acceptance criteria:} User can leave a class.
+\subsection*{Epic 5: Posts Management}
+This epic focuses on creating a posts system for teachers and school principals to share information and engage with other teachers and parents.
+
+\subsubsection*{User Stories:}
+\textbf{User Story 5.1:} As a teacher or school principal, I want to be able to create new posts for my class or school to share announcements, assignments, resources, or any other relevant information. \textbf{(Must Have)}
+\newline
+\textbf{Acceptance criteria:} User can access a post creation interface. The interface allows adding text content, images, video, attachment documents, or creating a poll with multiple-choice options.
+\newline
+\textbf{User Story 5.2:} As a User, I want to be able to see posts shared by teachers and school principals or other users for my classes or school to stay informed about announcements, assignments, and other updates. \textbf{(Must Have)}
+\newline
+\textbf{Acceptance criteria:} User can view a feed of posts relevant to their enrolled classes and school. or can check a specific class/school posts by navigating to the class/school details,  Posts display content type (text, image, video, document, poll) and basic information.
+\newline
+\textbf{User Story 5.3:} As a user, I want to be able to like posts. \textbf{(Should Have)}
+\newline
+\textbf{Acceptance criteria:} User can like a post, and the interface displays the total number of likes.
+\newline
+\textbf{User Story 5.4:} As a user, I want to be able to comment on posts. \textbf{(Should Have)}
+\newline
+\textbf{Acceptance criteria:} User can leave comments on a post. The system displays a list of comments for each post.
+\newline
+\textbf{User Story 5.5:} As a User, I want to be able to reply to comments left by other users. \textbf{(Could Have)}
+\newline
+\textbf{Acceptance criteria:} User can reply to existing comments on a post, creating a threaded conversation.
+\newline
+\textbf{User Story 5.6:} As a user, I want to be able to like comments and replies. \textbf{(Could Have)}
+\newline
+\textbf{Acceptance criteria:} User can like comments and replies, and the interface displays the number of likes for each.
+\newline
+\textbf{User Story 5.7:} As a user, I want to be able to bookmark posts so I can easily access them later. \textbf{(Could Have)}
+\newline
+\textbf{Acceptance criteria:} User can bookmark a post. The system stores bookmarked posts in a dedicated list accessible by the user.
+\newline
+\textbf{User Story 5.8:} As a user, I want to be able to access my list of bookmarked posts. \textbf{(Could Have)}
+\newline
+\textbf{Acceptance criteria:} User can access a list of their bookmarked posts, displaying relevant details and allowing them to revisit the original post.
+\subsection*{Epic 7: Parent Management and Child Association}
+This epic focuses on functionalities for parents to manage their children's profiles and link them to schools and classes.
+
+\subsubsection*{User Stories:}
+\textbf{User Story 7.1:} As a parent, I want to be able to create a profile for my child by providing their name, grade level. \textbf{(Must Have)}
+\newline
+\textbf{Acceptance criteria:} User can access a child profile creation interface and enter details like name, grade level.
+\newline
+\textbf{User Story 7.2:} As a parent, I want to be able to edit the details of my child's profile. \textbf{(Should Have)}
+\newline
+\textbf{Acceptance criteria:} User can access a list of their children's profiles and edit their information.
+\newline
+\textbf{User Story 7.3:} As a parent, I want to be able to delete a child's profile, with confirmation to prevent accidental deletion. \textbf{(Should Have)}
+\newline
+\textbf{Acceptance criteria:} User can delete a child's profile with a confirmation prompt.
+\newline
+\textbf{User Story 7.4:} As a parent, I want to be able to associate my child with a school by navigating to the school from my schools list. \textbf{(Could Have)}
+\newline
+\textbf{Acceptance criteria:} User can navigate to the school from a list of schools. Upon selecting a school, they can link their child's profile with it.
+\newline
+\textbf{User Story 7.5:} As a parent with a child, I want to be able to associate them with specific classes. \textbf{(Could Have)}
+\newline
+\textbf{Acceptance criteria:} User can view a list of classes they are already enrolled in, select specific classes to link the child's profile.
+\newline
+\textbf{User Story 7.6:} As a teacher, I want to be able to see a list of students enrolled in my class, including their associated parents. \textbf{(Could Have)}
+\newline
+\textbf{Acceptance criteria:} Teachers/admins can view a list of students in their class with their names and associated parent information.
+\newline
+\textbf{User Story 7.7:} As a school principal, I want to be able to see a list of all children associated with my school and their parents. \textbf{(Could Have)}
+\newline
+\textbf{Acceptance criteria:} School admins can access a list of all children associated with the school, including their names, parent information, and potentially linked classes.
+
+\subsection*{Epic 8: Secure and Efficient Messaging System}
+This epic focuses on creating a communication system for users to exchange messages directly within the application.
+
+\subsubsection*{User Stories:}
+\textbf{User Story 8.1:} As a user, I want to be able to access a dedicated messaging interface to initiate conversations with other users on the platform. \textbf{(Could Have)}
+\newline
+\textbf{Acceptance criteria:} User interface allows initiating chats, searching for users, and viewing a list of ongoing conversations.
+\newline
+\textbf{User Story 8.2:} As a user participating in a chat, I want to be able to send text messages, emojis, and potentially attachments. \textbf{(Could Have)}
+\newline
+\textbf{Acceptance criteria:} Messaging interface allows sending text messages, selecting emojis, and attaching files.
+\newline
+\textbf{User Story 8.3:} As a user, I want to be able to choose who I want to communicate with by selecting individual users from a school/class members list. \textbf{(Could Have)}
+\newline
+\textbf{Acceptance criteria:} User interface allows selecting recipients for a new message from a school or a class.
+\newline
+\textbf{User Story 8.4:} As a user participating in a chat, I want to be able to see the message history, including timestamps and sender information. \textbf{(Could Have)}
+\newline
+\textbf{Acceptance criteria:} Chat interface displays the complete message history with timestamps and sender names/avatars.
+\newline
+\textbf{User Story 8.5:} As a user, I want to be able to receive notifications for new messages so I can stay informed. \textbf{(Could Have)}
+\newline
+\textbf{Acceptance criteria:} Users can choose notification preferences for new messages based on their needs.

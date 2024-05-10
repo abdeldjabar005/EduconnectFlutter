@@ -2,56 +2,55 @@ import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
-import 'package:quotes/core/api/api_consumer.dart';
-import 'package:quotes/core/api/dio_consumer.dart';
-import 'package:quotes/core/network/netwok_info.dart';
-import 'package:quotes/features/auth/data/datasources/auth_remote_data_source.dart';
-import 'package:quotes/features/auth/data/repositories/auth_repository_impl.dart';
-import 'package:quotes/features/auth/data/repositories/token_repository.dart';
-import 'package:quotes/features/auth/domain/entities/user.dart';
-import 'package:quotes/features/auth/domain/repositories/auth_repository.dart';
-import 'package:quotes/features/classrooms/data/datasources/classroom_remote_data_source.dart';
-import 'package:quotes/features/classrooms/data/repositories/classroom_repository_impl.dart';
-import 'package:quotes/features/classrooms/domain/repositories/classroom_repository.dart';
-import 'package:quotes/features/classrooms/domain/usecases/get_class.dart';
-import 'package:quotes/features/classrooms/domain/usecases/get_memebrs.dart';
-import 'package:quotes/features/classrooms/presentation/cubit/class_cubit.dart';
-import 'package:quotes/features/classrooms/presentation/cubit/members_cubit.dart';
-import 'package:quotes/features/classrooms/presentation/cubit/post2_cubit.dart';
-import 'package:quotes/features/posts/data/datasources/post_local_data_source.dart';
-import 'package:quotes/features/posts/domain/usecases/check_liked.dart';
-import 'package:quotes/features/posts/domain/usecases/get_comment.dart';
-import 'package:quotes/features/posts/domain/usecases/get_post.dart';
-import 'package:quotes/features/posts/domain/usecases/like_comment.dart';
-import 'package:quotes/features/posts/domain/usecases/like_post.dart';
-import 'package:quotes/features/posts/domain/usecases/like_reply.dart';
-import 'package:quotes/features/posts/domain/usecases/post_comment.dart';
-import 'package:quotes/features/posts/domain/usecases/post_reply.dart';
-import 'package:quotes/features/posts/presentation/cubit/comment_cubit.dart';
-import 'package:quotes/features/posts/presentation/cubit/like_cubit.dart';
-import 'package:quotes/features/profile/data/datasources/profile_remote_data_source.dart';
-import 'package:quotes/features/profile/data/repositories/profile_repository_impl.dart';
-import 'package:quotes/features/profile/domain/repositories/profile_repository.dart';
-import 'package:quotes/features/profile/domain/usecases/add_child.dart';
-import 'package:quotes/features/profile/domain/usecases/get_children.dart';
-import 'package:quotes/features/profile/domain/usecases/remove_child.dart';
-import 'package:quotes/features/profile/domain/usecases/update_child.dart';
-import 'package:quotes/features/profile/presentation/cubit/children_cubit.dart';
-import 'package:quotes/features/splash/data/datasources/lang_local_data_source.dart';
-import 'package:quotes/features/splash/data/repositories/lang_repository_impl.dart';
-import 'package:quotes/features/splash/domain/repositories/lang_repository.dart';
-import 'package:quotes/features/splash/domain/usecases/change_lang.dart';
-import 'package:quotes/features/splash/domain/usecases/get_saved_lang.dart';
-import 'package:quotes/features/splash/presentation/cubit/locale_cubit.dart';
+import 'package:educonnect/core/api/api_consumer.dart';
+import 'package:educonnect/core/api/dio_consumer.dart';
+import 'package:educonnect/core/network/netwok_info.dart';
+import 'package:educonnect/features/auth/data/datasources/auth_remote_data_source.dart';
+import 'package:educonnect/features/auth/data/repositories/auth_repository_impl.dart';
+import 'package:educonnect/features/auth/data/repositories/token_repository.dart';
+import 'package:educonnect/features/auth/domain/repositories/auth_repository.dart';
+import 'package:educonnect/features/classrooms/data/datasources/classroom_remote_data_source.dart';
+import 'package:educonnect/features/classrooms/data/repositories/classroom_repository_impl.dart';
+import 'package:educonnect/features/classrooms/domain/repositories/classroom_repository.dart';
+import 'package:educonnect/features/classrooms/domain/usecases/get_class.dart';
+import 'package:educonnect/features/classrooms/domain/usecases/get_memebrs.dart';
+import 'package:educonnect/features/classrooms/presentation/cubit/class_cubit.dart';
+import 'package:educonnect/features/classrooms/presentation/cubit/members_cubit.dart';
+import 'package:educonnect/features/classrooms/presentation/cubit/post2_cubit.dart';
+import 'package:educonnect/features/posts/data/datasources/post_local_data_source.dart';
+import 'package:educonnect/features/posts/domain/usecases/check_liked.dart';
+import 'package:educonnect/features/posts/domain/usecases/get_comment.dart';
+import 'package:educonnect/features/posts/domain/usecases/get_post.dart';
+import 'package:educonnect/features/posts/domain/usecases/like_comment.dart';
+import 'package:educonnect/features/posts/domain/usecases/like_post.dart';
+import 'package:educonnect/features/posts/domain/usecases/like_reply.dart';
+import 'package:educonnect/features/posts/domain/usecases/post_comment.dart';
+import 'package:educonnect/features/posts/domain/usecases/post_reply.dart';
+import 'package:educonnect/features/posts/presentation/cubit/comment_cubit.dart';
+import 'package:educonnect/features/posts/presentation/cubit/like_cubit.dart';
+import 'package:educonnect/features/profile/data/datasources/profile_remote_data_source.dart';
+import 'package:educonnect/features/profile/data/repositories/profile_repository_impl.dart';
+import 'package:educonnect/features/profile/domain/repositories/profile_repository.dart';
+import 'package:educonnect/features/profile/domain/usecases/add_child.dart';
+import 'package:educonnect/features/profile/domain/usecases/get_children.dart';
+import 'package:educonnect/features/profile/domain/usecases/remove_child.dart';
+import 'package:educonnect/features/profile/domain/usecases/update_child.dart';
+import 'package:educonnect/features/profile/presentation/cubit/children_cubit.dart';
+import 'package:educonnect/features/splash/data/datasources/lang_local_data_source.dart';
+import 'package:educonnect/features/splash/data/repositories/lang_repository_impl.dart';
+import 'package:educonnect/features/splash/domain/repositories/lang_repository.dart';
+import 'package:educonnect/features/splash/domain/usecases/change_lang.dart';
+import 'package:educonnect/features/splash/domain/usecases/get_saved_lang.dart';
+import 'package:educonnect/features/splash/presentation/cubit/locale_cubit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:quotes/features/auth/presentation/cubit/auth_cubit.dart';
+import 'package:educonnect/features/auth/presentation/cubit/auth_cubit.dart';
 import 'core/api/app_interceptors.dart';
-import 'package:quotes/features/posts/data/datasources/post_remote_data_source.dart';
-import 'package:quotes/features/posts/data/repositories/post_repository_impl.dart';
-import 'package:quotes/features/posts/domain/repositories/post_repository.dart';
-import 'package:quotes/features/posts/domain/usecases/get_posts.dart';
-import 'package:quotes/features/posts/presentation/cubit/post_cubit.dart';
-import 'package:quotes/features/posts/domain/usecases/get_comments.dart';
+import 'package:educonnect/features/posts/data/datasources/post_remote_data_source.dart';
+import 'package:educonnect/features/posts/data/repositories/post_repository_impl.dart';
+import 'package:educonnect/features/posts/domain/repositories/post_repository.dart';
+import 'package:educonnect/features/posts/domain/usecases/get_posts.dart';
+import 'package:educonnect/features/posts/presentation/cubit/post_cubit.dart';
+import 'package:educonnect/features/posts/domain/usecases/get_comments.dart';
 
 final sl = GetIt.instance;
 
@@ -61,8 +60,8 @@ Future<void> init() async {
   // Blocs
   sl.registerFactory<LocaleCubit>(
       () => LocaleCubit(getSavedLangUseCase: sl(), changeLangUseCase: sl()));
-  sl.registerLazySingleton<AuthCubit>(
-      () => AuthCubit(authRepository: sl(), tokenProvider: sl()));
+  sl.registerLazySingleton<AuthCubit>(() => AuthCubit(
+      authRepository: sl(), tokenProvider: sl(), secureStorage: sl()));
   sl.registerFactory<PostCubit>(() => PostCubit(
         getPostsUseCase: sl(),
         getPostUseCase: sl(),
@@ -87,8 +86,11 @@ Future<void> init() async {
         classroomRepository: sl(),
         getMembersUseCase: sl(),
       ));
-  sl.registerFactory<Post2Cubit>(() =>
-      Post2Cubit(classroomRepository: sl(), getClassroomPostsUseCase: sl()));
+  sl.registerFactory<Post2Cubit>(() => Post2Cubit(
+        classroomRepository: sl(),
+        getClassroomPostsUseCase: sl(),
+        postRepository: sl(),
+      ));
   sl.registerFactory<ChildrenCubit>(() => ChildrenCubit(
       getChildrenUseCase: sl(),
       addChildUseCase: sl(),

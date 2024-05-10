@@ -3,17 +3,19 @@ import 'dart:developer';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:quotes/config/routes/app_routes.dart';
-import 'package:quotes/config/themes/custom_text_style.dart';
-import 'package:quotes/core/utils/app_colors.dart';
-import 'package:quotes/core/utils/image_constant.dart';
-import 'package:quotes/core/utils/size_utils.dart';
-import 'package:quotes/features/auth/presentation/cubit/auth_cubit.dart';
-import 'package:quotes/features/auth/presentation/pages/signup_screen.dart';
-import 'package:quotes/features/auth/presentation/widgets/custom_elevated_button.dart';
-import 'package:quotes/features/auth/presentation/widgets/custom_outlined_button.dart';
-import 'package:quotes/features/auth/presentation/widgets/custom_text_form_field.dart';
-import 'package:quotes/features/posts/presentation/widgets/custom_image_view.dart';
+import 'package:educonnect/config/locale/app_localizations.dart';
+import 'package:educonnect/config/routes/app_routes.dart';
+import 'package:educonnect/config/themes/custom_text_style.dart';
+import 'package:educonnect/core/utils/app_colors.dart';
+import 'package:educonnect/core/utils/image_constant.dart';
+import 'package:educonnect/core/utils/size_utils.dart';
+import 'package:educonnect/features/auth/presentation/cubit/auth_cubit.dart';
+import 'package:educonnect/features/auth/presentation/pages/signup_screen.dart';
+import 'package:educonnect/features/auth/presentation/widgets/custom_elevated_button.dart';
+import 'package:educonnect/features/auth/presentation/widgets/custom_outlined_button.dart';
+import 'package:educonnect/features/auth/presentation/widgets/custom_text_form_field.dart';
+import 'package:educonnect/features/posts/presentation/widgets/custom_image_view.dart';
+import 'package:educonnect/features/splash/presentation/cubit/locale_cubit.dart';
 
 // ignore_for_file: must_be_immutable
 class LoginScreen extends StatefulWidget {
@@ -60,14 +62,18 @@ class _LoginScreenState extends State<LoginScreen> {
                       Text("EduConnect",
                           style: CustomTextStyles.displayMedium45),
                       SizedBox(height: 35.v),
-                      Text("Login",
+                      Text(AppLocalizations.of(context)!.translate("login")!,
                           style: CustomTextStyles.titleMediumPoppinsBlack),
                       SizedBox(height: 30.v),
                       Align(
-                        alignment: Alignment.centerLeft,
+                        alignment:
+                            Localizations.localeOf(context).languageCode == 'ar'
+                                ? Alignment.centerRight
+                                : Alignment.centerLeft,
                         child: Padding(
-                          padding: EdgeInsets.only(left: 10.h),
-                          child: Text("Your Email",
+                          padding: EdgeInsets.symmetric(horizontal: 10.h),
+                          child: Text(
+                              AppLocalizations.of(context)!.translate("email")!,
                               style:
                                   CustomTextStyles.titleMediumPoppinsGray900),
                         ),
@@ -76,10 +82,15 @@ class _LoginScreenState extends State<LoginScreen> {
                       _buildEmail(context),
                       SizedBox(height: 18.v),
                       Align(
-                        alignment: Alignment.centerLeft,
+                        alignment:
+                            Localizations.localeOf(context).languageCode == 'ar'
+                                ? Alignment.centerRight
+                                : Alignment.centerLeft,
                         child: Padding(
-                          padding: EdgeInsets.only(left: 10.h),
-                          child: Text("Password",
+                          padding: EdgeInsets.symmetric(horizontal: 10.h),
+                          child: Text(
+                              AppLocalizations.of(context)!
+                                  .translate("password")!,
                               style:
                                   CustomTextStyles.titleMediumPoppinsGray900),
                         ),
@@ -99,13 +110,15 @@ class _LoginScreenState extends State<LoginScreen> {
                         text: TextSpan(
                           children: [
                             TextSpan(
-                              text: "Don’t have an account?",
+                              text: AppLocalizations.of(context)!
+                                  .translate("dont_have_account")!,
                               style:
                                   CustomTextStyles.titleMediumPoppinsff989898,
                             ),
                             TextSpan(text: " "),
                             TextSpan(
-                              text: "Sign up",
+                              text: AppLocalizations.of(context)!
+                                  .translate("sign_up")!,
                               style:
                                   CustomTextStyles.titleMediumPoppinsff648ddb,
                               recognizer: TapGestureRecognizer()
@@ -145,9 +158,9 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
         validator: (value) {
           if (value!.isEmpty) {
-            // Set the error message instead of returning it
             setState(() {
-              errorMessage = "Email cannot be empty";
+              errorMessage = AppLocalizations.of(context)!
+                  .translate("email_cant_be_empty")!;
             });
             return null;
           }
@@ -161,7 +174,7 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
         ),
         controller: emailController,
-        hintText: "Enter your email",
+        hintText: AppLocalizations.of(context)!.translate("enter_your_email")!,
         textInputType: TextInputType.emailAddress,
         contentPadding: EdgeInsets.symmetric(horizontal: 21.h, vertical: 15.v),
       ),
@@ -181,7 +194,8 @@ class _LoginScreenState extends State<LoginScreen> {
         validator: (value) {
           if (value!.isEmpty) {
             setState(() {
-              errorMessage = "Password cannot be empty";
+              errorMessage = AppLocalizations.of(context)!
+                  .translate("password_cant_be_empty")!;
             });
             return null;
           }
@@ -195,7 +209,8 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
         ),
         controller: passwordController,
-        hintText: "Enter your password",
+        hintText:
+            AppLocalizations.of(context)!.translate("enter_your_password")!,
         textInputAction: TextInputAction.done,
         suffix: GestureDetector(
           onTap: () {
@@ -230,9 +245,11 @@ class _LoginScreenState extends State<LoginScreen> {
           state is AuthError
               ? Text(
                   state.message.contains('Invalid credentials')
-                      ? "Wrong credentials"
+                      ? AppLocalizations.of(context)!
+                          .translate("wrong_credentials")!
                       : state.message.contains('Server Failure')
-                          ? "Server error"
+                          ? AppLocalizations.of(context)!
+                              .translate("server_error")!
                           : state.message,
                   style: CustomTextStyles.titleMediumPoppinsBluegray100)
 
@@ -246,7 +263,8 @@ class _LoginScreenState extends State<LoginScreen> {
             onTap: () {
               onTapTxtForgotPassword(context);
             },
-            child: Text("Forgot password?",
+            child: Text(
+                AppLocalizations.of(context)!.translate("forgot_password")!,
                 style: CustomTextStyles.titleMediumPoppinsPrimary),
           )
         ],
@@ -279,19 +297,22 @@ class _LoginScreenState extends State<LoginScreen> {
                           );
                     } else {
                       setState(() {
-                        errorMessage = 'Password is too short';
+                        errorMessage = AppLocalizations.of(context)!
+                            .translate("password_short")!;
                       });
                     }
                   } else {
                     setState(() {
-                      errorMessage = 'Invalid email format';
+                      errorMessage = AppLocalizations.of(context)!
+                          .translate("email_format")!;
                     });
                   }
                 }
               } else if (emailController.text.isEmpty ||
                   passwordController.text.isEmpty) {
                 setState(() {
-                  errorMessage = 'credentials can\'t be empty';
+                  errorMessage = AppLocalizations.of(context)!
+                      .translate("cant_empty_credentials")!;
                 });
               }
             },
@@ -304,20 +325,22 @@ class _LoginScreenState extends State<LoginScreen> {
         backgroundColor: MaterialStateProperty.all(AppColors.indigoA300),
       ),
       isLoading: state is AuthLoading,
-      text: "Continue",
+      text: AppLocalizations.of(context)!.translate("continue")!,
       margin: EdgeInsets.only(left: 10.h, right: 15.h),
       buttonTextStyle: CustomTextStyles.titleMediumPoppins,
     );
   }
 
-  /// Section Widget
   Widget _buildForty(BuildContext context) {
+    bool isRtl = Localizations.localeOf(context).languageCode == 'ar';
+
     return Align(
-      alignment: Alignment.centerLeft,
+      alignment: isRtl ? Alignment.centerRight : Alignment.centerLeft,
       child: Padding(
-        padding: EdgeInsets.only(left: 35.h, right: 15.h),
+        padding: EdgeInsets.symmetric(horizontal: 55.h),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.end,
+          textDirection: isRtl ? TextDirection.rtl : TextDirection.ltr,
           children: [
             Padding(
               padding: EdgeInsets.only(top: 14.v, bottom: 8.v),
@@ -328,7 +351,7 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
             Padding(
                 padding: EdgeInsets.symmetric(horizontal: 30.h, vertical: 3.v),
-                child: Text("Or ",
+                child: Text(AppLocalizations.of(context)!.translate("or")!,
                     style: CustomTextStyles.titleMediumPoppinsGray300)),
             Padding(
               padding: EdgeInsets.only(top: 14.v, bottom: 8.v),
@@ -346,7 +369,7 @@ class _LoginScreenState extends State<LoginScreen> {
   /// Section Widget
   Widget _buildLoginWithGoogle(BuildContext context) {
     return CustomOutlinedButton(
-      text: "Login with Google",
+      text: AppLocalizations.of(context)!.translate("login_with_google")!,
       margin: EdgeInsets.only(left: 10.h, right: 15.h),
       buttonStyle: ButtonStyle(
         shape: MaterialStateProperty.all(
@@ -362,7 +385,7 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       ),
       leftIcon: Container(
-        margin: EdgeInsets.only(right: 8.h),
+        margin: EdgeInsets.symmetric(horizontal: 8.h),
         child: CustomImageView(
             imagePath: ImageConstant.imgPngwing2,
             height: 24.adaptSize,
@@ -371,8 +394,12 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  /// Navigates to the forgotpasswordScreen when the action is triggered.
   onTapTxtForgotPassword(BuildContext context) {
-    Navigator.pushNamed(context, Routes.forgotpasswordRoute);
+    if (AppLocalizations.of(context)!.isEnLocale) {
+      BlocProvider.of<LocaleCubit>(context).toArabic();
+    } else {
+      BlocProvider.of<LocaleCubit>(context).toEnglish();
+    }
+    // Navigator.pushNamed(context, Routes.forgotpasswordRoute);
   }
 }

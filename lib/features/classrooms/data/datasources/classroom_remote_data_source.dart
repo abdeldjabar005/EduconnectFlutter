@@ -4,19 +4,23 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
-import 'package:quotes/core/api/api_consumer.dart';
-import 'package:quotes/core/api/end_points.dart';
-import 'package:quotes/core/error/exceptions.dart';
-import 'package:quotes/features/classrooms/data/models/class_m.dart';
-import 'package:quotes/features/classrooms/data/models/class_member.dart';
-import 'package:quotes/features/classrooms/data/models/class_model.dart';
-import 'package:quotes/features/classrooms/data/models/member_model.dart';
-import 'package:quotes/features/classrooms/data/models/school_m.dart';
-import 'package:quotes/features/classrooms/data/models/school_nodel.dart';
-import 'package:quotes/features/posts/data/models/post_model.dart';
+import 'package:educonnect/core/api/api_consumer.dart';
+import 'package:educonnect/core/api/end_points.dart';
+import 'package:educonnect/core/error/exceptions.dart';
+import 'package:educonnect/core/error/failures.dart';
+import 'package:educonnect/features/classrooms/data/models/class_m.dart';
+import 'package:educonnect/features/classrooms/data/models/class_member.dart';
+import 'package:educonnect/features/classrooms/data/models/class_model.dart';
+import 'package:educonnect/features/classrooms/data/models/member_model.dart';
+import 'package:educonnect/features/classrooms/data/models/request_model.dart';
+import 'package:educonnect/features/classrooms/data/models/school_m.dart';
+import 'package:educonnect/features/classrooms/data/models/school_nodel.dart';
+import 'package:educonnect/features/posts/data/models/post_model.dart';
+import 'package:educonnect/features/posts/data/models/post_result.dart';
+import 'package:educonnect/features/profile/data/models/child_model.dart';
 
 abstract class ClassroomRemoteDataSource {
-  Future<List<PostModel>> getPosts(int id, int page, String type);
+  Future<PostsResult> getPosts(int id, int page, String? type);
   Future<ClassModel> joinClass(String code);
   Future<SchoolModel> joinSchool(String code);
   Future<List<MemberModel>> getMembers(int id, String type);
@@ -30,29 +34,43 @@ abstract class ClassroomRemoteDataSource {
   Future<SchoolModel> updateSchool(int id, SchoolM schoolModel, File? image);
   Future<SchoolModel> schoolVerifyRequest(
       int id, String email, String phoneNumber, File? file);
+  Future<void> associateStudent(int studentId, int schoolId, String type);
+  Future<void> leave(int id, String type);
+  Future<void> sendJoinRequest(int id);
+  Future<List<ChildModel> > getStudents(int id, String type);
+  Future<List<RequestModel>> getRequests(int id, String type);
 }
 
 class ClassroomRemoteDataSourceImpl implements ClassroomRemoteDataSource {
   final ApiConsumer apiConsumer;
 
   ClassroomRemoteDataSourceImpl({required this.apiConsumer});
-
   @override
-  Future<List<PostModel>> getPosts(int id, int page, String type) async {
+  Future<PostsResult> getPosts(int id, int page, String? type) async {
     if (type == "school") {
       final response = await apiConsumer.get(
         "${EndPoints.getSchool(id)}?page=$page",
       );
-      return (response['data']['data'] as List)
+      final posts = (response['data']['data'] as List)
           .map((i) => PostModel.fromJson(i))
           .toList();
+      final meta = Meta(
+        currentPage: response['data']['meta']['current_page'],
+        lastPage: response['data']['meta']['last_page'],
+      );
+      return PostsResult(data: posts, meta: meta);
     } else {
       final response = await apiConsumer.get(
         "${EndPoints.getClass(id)}?page=$page",
       );
-      return (response['data']['data'] as List)
+      final posts = (response['data']['data'] as List)
           .map((i) => PostModel.fromJson(i))
           .toList();
+      final meta = Meta(
+        currentPage: response['data']['meta']['current_page'],
+        lastPage: response['data']['meta']['last_page'],
+      );
+      return PostsResult(data: posts, meta: meta);
     }
   }
 
@@ -73,6 +91,19 @@ class ClassroomRemoteDataSourceImpl implements ClassroomRemoteDataSource {
       throw const InvalidCodeException();
     } else {
       print(response);
+      throw ServerException();
+    }
+  }
+
+  @override
+  Future<void> sendJoinRequest(int id) async {
+    final response = await apiConsumer.post(EndPoints.sendJoinRequest, body: {
+      'class_id': id,
+    });
+
+    if (response['statusCode'] == 409) {
+      throw JoinedException();
+    } else if (response['statusCode'] != 200) {
       throw ServerException();
     }
   }
@@ -112,6 +143,44 @@ class ClassroomRemoteDataSourceImpl implements ClassroomRemoteDataSource {
     return (response['data'] as List)
         .map((i) => MemberModel.fromJson(i))
         .toList();
+  }
+  @override
+  Future<List<ChildModel>> getStudents(int id, String type) async {
+    String endpoint;
+    if (type == "school") {
+      endpoint = EndPoints.getStudents(id);
+    } else {
+      endpoint = EndPoints.getClassStudents(id);
+    }
+    final response = await apiConsumer.get(endpoint);
+    if (response['statusCode'] != 200) {
+      throw ServerException();
+    }
+    return (response['data'] as List)
+        .map((i) => ChildModel.fromJson(i))
+        .toList();
+  }
+
+  @override
+  Future<void> associateStudent(
+      int studentId, int schoolId, String type) async {
+    String endpoint;
+    if (type == 'school') {
+      endpoint = EndPoints.associateStudent(schoolId);
+    } else {
+      endpoint = EndPoints.associateStudent2(schoolId);
+    }
+    final response = await apiConsumer.post(
+      endpoint,
+      body: {
+        'student_id': studentId,
+      },
+    );
+    if (response['statusCode'] == 403) {
+      throw StudentAlreadyAssociatedException();
+    } else if (response['statusCode'] != 200) {
+      throw ServerException();
+    }
   }
 
   @override
@@ -286,5 +355,35 @@ class ClassroomRemoteDataSourceImpl implements ClassroomRemoteDataSource {
     } else {
       throw ServerException();
     }
+  }
+
+  @override
+  Future<void> leave(int id, String type) async {
+    String endpoint;
+    if (type == 'school') {
+      endpoint = EndPoints.leaveSchool(id);
+    } else {
+      endpoint = EndPoints.leaveClass(id);
+    }
+    final response = await apiConsumer.post(endpoint);
+    if (response['statusCode'] != 200) {
+      throw ServerException();
+    }
+  }
+  @override
+  Future<List<RequestModel>> getRequests(int id, String type) async {
+    String endpoint;
+    if (type == 'school') {
+      endpoint = EndPoints.getSchoolRequests(id);
+    } else {
+      endpoint = EndPoints.getClassRequests(id);
+    }
+    final response = await apiConsumer.get(endpoint);
+    if (response['statusCode'] != 200) {
+      throw ServerException();
+    }
+    return (response['data'] as List)
+        .map((i) => RequestModel.fromJson(i))
+        .toList();
   }
 }

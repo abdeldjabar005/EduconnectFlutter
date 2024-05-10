@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:quotes/config/routes/app_routes.dart';
-import 'package:quotes/core/utils/app_colors.dart';
-import 'package:quotes/core/utils/constants.dart';
-import 'package:quotes/core/widgets/Tab_Cubit.dart';
-import 'package:quotes/core/widgets/custom_bottom_bar.dart';
+import 'package:educonnect/config/routes/app_routes.dart';
+import 'package:educonnect/core/utils/app_colors.dart';
+import 'package:educonnect/core/utils/constants.dart';
+import 'package:educonnect/core/widgets/Tab_Cubit.dart';
+import 'package:educonnect/core/widgets/custom_bottom_bar.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -45,40 +45,43 @@ class _HomeScreenBodyState extends State<_HomeScreenBody>
   Widget build(BuildContext context) {
     return BlocBuilder<TabCubit, int>(
       builder: (context, state) {
-        return Scaffold(
-          backgroundColor: AppColors.gray500,
-          appBar: AppBar(
-            backgroundColor: AppColors.whiteA700,
-            elevation: 0,
-            title: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                _buildSearchWidget(),
-                _buildEduConnectText(),
-                _buildMessengerWidget(),
-              ],
-            ),
-            bottom: PreferredSize(
-              preferredSize: Size.fromHeight(kToolbarHeight),
-              child: AnimatedBuilder(
-                animation: _tabController.animation!,
-                builder: (BuildContext context, Widget? child) {
-                  double tabIndex = _tabController.animation!.value;
-                  int roundedTabIndex = tabIndex.round();
-                  return TabBar(
-                    tabs: Constants.getHomeScreenTabs(roundedTabIndex),
-                    controller: _tabController,
-                    onTap: (index) {
-                      context.read<TabCubit>().changeTab(index);
-                    },
-                  );
-                },
+        return Directionality(
+          textDirection: TextDirection.ltr,
+          child: Scaffold(
+            backgroundColor: AppColors.gray500,
+            appBar: AppBar(
+              backgroundColor: AppColors.whiteA700,
+              elevation: 0,
+              title: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  _buildSearchWidget(),
+                  _buildEduConnectText(),
+                  _buildMessengerWidget(),
+                ],
+              ),
+              bottom: PreferredSize(
+                preferredSize: Size.fromHeight(kToolbarHeight),
+                child: AnimatedBuilder(
+                  animation: _tabController.animation!,
+                  builder: (BuildContext context, Widget? child) {
+                    double tabIndex = _tabController.animation!.value;
+                    int roundedTabIndex = tabIndex.round();
+                    return TabBar(
+                      tabs: Constants.getHomeScreenTabs(roundedTabIndex, context),
+                      controller: _tabController,
+                      onTap: (index) {
+                        context.read<TabCubit>().changeTab(index);
+                      },
+                    );
+                  },
+                ),
               ),
             ),
-          ),
-          body: TabBarView(
-            controller: _tabController,
-            children: Constants.screens,
+            body: TabBarView(
+              controller: _tabController,
+              children: Constants.screens,
+            ),
           ),
         );
       },

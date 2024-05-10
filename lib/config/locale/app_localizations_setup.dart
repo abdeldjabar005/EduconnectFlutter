@@ -18,11 +18,16 @@ class AppLocalizationsSetup {
   ];
 
   static Locale? localeResolutionCallback(
-      Locale? locale, Iterable<Locale>? supportedLocales) {
-    for (Locale supportedLocale in supportedLocales!) {
-      if (supportedLocale.languageCode == locale!.languageCode &&
-          supportedLocale.countryCode == locale.countryCode) {
-        return supportedLocale;
+      List<Locale>? locales, Iterable<Locale> supportedLocales) {
+    if (locales == null || locales.isEmpty) {
+      return supportedLocales.first;
+    }
+    for (Locale locale in locales) {
+      for (Locale supportedLocale in supportedLocales) {
+        if (supportedLocale.languageCode == locale.languageCode &&
+            supportedLocale.countryCode == locale.countryCode) {
+          return supportedLocale;
+        }
       }
     }
     return supportedLocales.first;

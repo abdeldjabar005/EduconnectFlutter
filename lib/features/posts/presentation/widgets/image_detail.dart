@@ -1,11 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:quotes/core/api/end_points.dart';
-import 'package:quotes/core/utils/size_utils.dart';
-import 'package:quotes/features/posts/presentation/widgets/custom_image_view.dart';
+import 'package:educonnect/core/api/end_points.dart';
+import 'package:educonnect/core/utils/size_utils.dart';
+import 'package:educonnect/features/posts/presentation/widgets/custom_image_view.dart';
 
 class ImageDetailPage extends StatefulWidget {
-  final List<String> imageUrls;
+  final List<String?> imageUrls;
   final int initialIndex;
 
   ImageDetailPage({required this.imageUrls, this.initialIndex = 0});

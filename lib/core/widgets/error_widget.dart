@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:quotes/config/locale/app_localizations.dart';
-import 'package:quotes/core/utils/app_colors.dart';
-import 'package:quotes/core/utils/media_query_values.dart';
+import 'package:educonnect/config/locale/app_localizations.dart';
+import 'package:educonnect/core/utils/app_colors.dart';
+import 'package:educonnect/core/utils/media_query_values.dart';
 
 class ErrorWidget extends StatelessWidget {
   final VoidCallback? onPress;

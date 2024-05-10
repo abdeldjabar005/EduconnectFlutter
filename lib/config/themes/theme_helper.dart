@@ -1,6 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:quotes/core/utils/size_utils.dart';
+import 'package:educonnect/core/utils/size_utils.dart';
 
 String _postTheme = "primary";
 

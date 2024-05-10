@@ -1,12 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:quotes/core/utils/app_colors.dart';
-import 'package:quotes/features/classrooms/presentation/pages/classroom_posts.dart';
-import 'package:quotes/features/classrooms/presentation/widgets/classes.dart';
-import 'package:quotes/features/classrooms/presentation/widgets/members.dart';
-import 'package:quotes/features/posts/presentation/pages/new_post.dart';
-import 'package:quotes/features/posts/presentation/pages/post_screen.dart';
+import 'package:educonnect/config/locale/app_localizations.dart';
+import 'package:educonnect/core/utils/app_colors.dart';
+import 'package:educonnect/features/classrooms/presentation/pages/classroom_posts.dart';
+import 'package:educonnect/features/classrooms/presentation/widgets/classes.dart';
+import 'package:educonnect/features/classrooms/presentation/widgets/members.dart';
+import 'package:educonnect/features/posts/presentation/pages/new_post.dart';
+import 'package:educonnect/features/posts/presentation/pages/post_screen.dart';
 
 class Constants {
   static void showErrorDialog(
@@ -40,11 +41,11 @@ class Constants {
         gravity: gravity ?? ToastGravity.BOTTOM);
   }
 
-  static List<Tab> getHomeScreenTabs(int index) {
+  static List<Tab> getHomeScreenTabs(int index, context) {
     return [
       Tab(
         child: Text(
-          'Explore',
+          AppLocalizations.of(context)!.translate('explore')!,
           style: TextStyle(
             fontFamily: 'Poppins',
             fontWeight: FontWeight.bold,
@@ -54,7 +55,7 @@ class Constants {
       ),
       Tab(
         child: Text(
-          'School',
+          AppLocalizations.of(context)!.translate('schools')!,
           style: TextStyle(
             fontFamily: 'Poppins',
             fontWeight: FontWeight.bold,
@@ -64,7 +65,7 @@ class Constants {
       ),
       Tab(
         child: Text(
-          'Class',
+          AppLocalizations.of(context)!.translate('classes')!,
           style: TextStyle(
             fontFamily: 'Poppins',
             fontWeight: FontWeight.bold,
@@ -75,11 +76,11 @@ class Constants {
     ];
   }
 
-  static List<Tab> getHomeScreenTabs2(int index) {
+  static List<Tab> getHomeScreenTabs2(int index, context) {
     return [
       Tab(
         child: Text(
-          'Posts',
+          AppLocalizations.of(context)!.translate('posts')!,
           style: TextStyle(
             fontFamily: 'Poppins',
             fontWeight: FontWeight.bold,
@@ -89,7 +90,7 @@ class Constants {
       ),
       Tab(
         child: Text(
-          'Classes',
+          AppLocalizations.of(context)!.translate('classes')!,
           style: TextStyle(
             fontFamily: 'Poppins',
             fontWeight: FontWeight.bold,
@@ -99,7 +100,7 @@ class Constants {
       ),
       Tab(
         child: Text(
-          'Members',
+          AppLocalizations.of(context)!.translate('members')!,
           style: TextStyle(
             fontFamily: 'Poppins',
             fontWeight: FontWeight.bold,
@@ -110,11 +111,11 @@ class Constants {
     ];
   }
 
-  static List<Tab> getHomeScreenTabs3(int index) {
+  static List<Tab> getHomeScreenTabs3(int index, context) {
     return [
       Tab(
         child: Text(
-          'Posts',
+          AppLocalizations.of(context)!.translate('posts')!,
           style: TextStyle(
             fontFamily: 'Poppins',
             fontWeight: FontWeight.bold,
@@ -124,7 +125,7 @@ class Constants {
       ),
       Tab(
         child: Text(
-          'Members',
+          AppLocalizations.of(context)!.translate('members')!,
           style: TextStyle(
             fontFamily: 'Poppins',
             fontWeight: FontWeight.bold,
@@ -135,19 +136,19 @@ class Constants {
     ];
   }
 
-  static const List<Widget> screens = [
+  static List<Widget> screens = [
     PostScreen(),
-    NewPost(),
-    // Center(
-    //   child: Text('School Screen'),
-    // ),
+    // NewPost(),
+    Center(
+      child: Text('School Screen'),
+    ),
     Center(
       child: Text('Class Screen'),
     ),
   ];
-  static List<Widget> screens2(int id) {
+  static List<Widget> screens2(int id, String name) {
     return [
-      ClassroomPosts(id: id, type: "school"),
+      ClassroomPosts(id: id, type: "school", name: name),
       ClassesScreen(
         id: id,
       ),
@@ -155,9 +156,9 @@ class Constants {
     ];
   }
 
-  static List<Widget> screens3(int id) {
+  static List<Widget> screens3(int id, String name) {
     return [
-      ClassroomPosts(id: id, type: "class"),
+      ClassroomPosts(id: id, type: "class", name: name),
       MembersScreen(id: id, type: "class"),
     ];
   }

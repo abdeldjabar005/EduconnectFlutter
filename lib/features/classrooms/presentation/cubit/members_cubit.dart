@@ -1,10 +1,12 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:quotes/core/error/failures.dart';
-import 'package:quotes/features/classrooms/data/models/member_model.dart';
-import 'package:quotes/features/classrooms/domain/repositories/classroom_repository.dart';
-import 'package:quotes/features/classrooms/domain/usecases/get_memebrs.dart';
+import 'package:educonnect/core/error/exceptions.dart';
+import 'package:educonnect/core/error/failures.dart';
+import 'package:educonnect/features/classrooms/data/models/member_model.dart';
+import 'package:educonnect/features/classrooms/data/models/request_model.dart';
+import 'package:educonnect/features/classrooms/domain/repositories/classroom_repository.dart';
+import 'package:educonnect/features/classrooms/domain/usecases/get_memebrs.dart';
 
 part 'members_state.dart';
 
@@ -72,6 +74,24 @@ class MembersCubit extends Cubit<MembersState> {
         },
       );
     }
+  }
+
+
+  Future<void> getRequests(int id, String type) async {
+    emit(MembersLoading());
+    final result = await classroomRepository.getRequests(id, type);
+    result.fold(
+      (failure) {
+        emit(MembersError(_mapFailureToMessage(failure)));
+      },
+      (requests) {
+        if (requests.isNotEmpty) {
+          emit(RequestsLoaded(requests));
+        } else {
+          emit(NoRequests("No requests"));
+        }
+      },
+    );
   }
 
   String _mapFailureToMessage(Failure failure) {

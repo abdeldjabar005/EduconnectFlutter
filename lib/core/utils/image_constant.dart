@@ -37,13 +37,17 @@ class ImageConstant {
 
   static String imgArrowLeft = '$imagePath/img_arrow_left.svg';
 
+  static String imgArrowRight = '$imagePath/angle_right.svg';
+
+  static String imgArrowLeft2 = '$imagePath/angle_left.svg';
+
   // Home images
   static String imgRectangle17100x100 =
       '$imagePath/img_rectangle_17_100x100.png';
 
   static String imgFavorite = '$imagePath/img_favorite.png';
 
-  static String imgArrowRight = '$imagePath/img_arrow_right.svg';
+  // static String imgArrowRight = '$imagePath/img_arrow_right.svg';
 
   static String imgClose = '$imagePath/img_close.png';
   static String school = '$imagePath/school.svg';
@@ -78,24 +82,26 @@ class ImageConstant {
 
   static String imgGroup21 = '$imagePath/img_group_21.svg';
 
-  static String imageNotFound = 'assets/images/image_not_found.png';
-  static String imgClass = 'assets/images/class.png';
-  static String imgSchool = 'assets/images/school.png';
+  static String imageNotFound = '$imagePath/image_not_found.png';
+  static String imgClass = '$imagePath/class.png';
+  static String imgSchool = '$imagePath/school.png';
 
-  static String imgClass2 = 'assets/images/class2.png';
-  static String imgSchool2 = 'assets/images/school2.png';
+  static String imgClass2 = '$imagePath/class2.png';
+  static String imgSchool2 = '$imagePath/school2.png';
 
-  static String details = 'assets/images/manageSchool/details.svg';
-  static String edit = 'assets/images/manageSchool/edit.svg';
-  static String delete = 'assets/images/manageSchool/delete.svg';
-  static String verify = 'assets/images/manageSchool/verify.svg';
-  static String members = 'assets/images/manageSchool/members.svg';
-  static String pending = 'assets/images/manageSchool/pending.png';
-  static String verify2 = 'assets/images/manageSchool/verify.png';
+  static String details = '$imagePath/manageSchool/details.svg';
+  static String edit = '$imagePath/manageSchool/edit.svg';
+  static String delete = '$imagePath/manageSchool/delete.svg';
+  static String verify = '$imagePath/manageSchool/verify.svg';
+  static String members = '$imagePath/manageSchool/members.svg';
+  static String pending = '$imagePath/manageSchool/pending.png';
+  static String verify2 = '$imagePath/manageSchool/verify.png';
 
-  static String gallery = 'assets/images/post/gallery.svg';
-  static String camera = 'assets/images/post/camera.svg';
-  static String attachment = 'assets/images/post/attachment.svg';
-  static String attachmentBlack = 'assets/images/post/attachment-black.png';
-  static String poll = 'assets/images/post/poll.svg';
+  static String gallery = '$imagePath/post/gallery.svg';
+  static String camera = '$imagePath/post/camera.svg';
+  static String attachment = '$imagePath/post/attachment.svg';
+  static String attachmentBlack = '$imagePath/post/attachment-black.png';
+  static String poll = '$imagePath/post/poll.svg';
+
+  static String edu = '$imagePath/edu.png';
 }

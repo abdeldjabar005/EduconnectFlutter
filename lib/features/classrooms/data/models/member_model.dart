@@ -1,4 +1,5 @@
-import 'package:quotes/features/classrooms/domain/entities/member.dart';
+import 'package:educonnect/features/classrooms/domain/entities/member.dart';
+import 'package:educonnect/features/profile/data/models/child2_model.dart';
 
 class MemberModel extends Member {
   MemberModel({
@@ -7,12 +8,18 @@ class MemberModel extends Member {
     required String lastName,
     required String role,
     required String image,
+    String? bio,
+    String? contact,
+    List<Child2Model>? children,
   }) : super(
           id: id,
           firstName: firstName,
           lastName: lastName,
           role: role,
           image: image,
+          children: children,
+          bio: bio,
+          contact: contact,
         );
 
   factory MemberModel.fromJson(Map<String, dynamic> json) {
@@ -22,6 +29,12 @@ class MemberModel extends Member {
       lastName: json['last_name'],
       role: json['role'],
       image: json['profile_picture'],
+      children: json['children'] != null
+          ? List<Child2Model>.from(
+              json['children'].map((x) => Child2Model.fromJson(x)))
+          : null,
+      bio: json['bio'],
+      contact: json['contact'],
     );
   }
 

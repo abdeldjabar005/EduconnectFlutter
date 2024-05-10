@@ -1,7 +1,7 @@
 // Domain Layer - Repositories
 
 import 'package:dartz/dartz.dart';
-import 'package:quotes/features/auth/domain/entities/user.dart';
+import 'package:educonnect/features/auth/domain/entities/user.dart';
 import '../../../../core/error/failures.dart';
 
 abstract class AuthRepository {

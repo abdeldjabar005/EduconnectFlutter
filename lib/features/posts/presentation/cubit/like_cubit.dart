@@ -2,11 +2,11 @@ import 'dart:math';
 
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:quotes/features/posts/domain/entities/comment.dart';
-import 'package:quotes/features/posts/domain/entities/post.dart';
-import 'package:quotes/features/posts/domain/usecases/like_comment.dart';
-import 'package:quotes/features/posts/domain/usecases/like_post.dart';
-import 'package:quotes/features/posts/domain/usecases/like_reply.dart';
+import 'package:educonnect/features/posts/domain/entities/comment.dart';
+import 'package:educonnect/features/posts/domain/entities/post.dart';
+import 'package:educonnect/features/posts/domain/usecases/like_comment.dart';
+import 'package:educonnect/features/posts/domain/usecases/like_post.dart';
+import 'package:educonnect/features/posts/domain/usecases/like_reply.dart';
 
 part 'like_state.dart';
 

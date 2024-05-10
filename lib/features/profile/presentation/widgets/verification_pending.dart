@@ -3,11 +3,12 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:quotes/config/themes/custom_text_style.dart';
-import 'package:quotes/core/utils/app_colors.dart';
-import 'package:quotes/core/utils/image_constant.dart';
-import 'package:quotes/core/utils/size_utils.dart';
-import 'package:quotes/features/classrooms/presentation/cubit/class_cubit.dart';
+import 'package:educonnect/config/locale/app_localizations.dart';
+import 'package:educonnect/config/themes/custom_text_style.dart';
+import 'package:educonnect/core/utils/app_colors.dart';
+import 'package:educonnect/core/utils/image_constant.dart';
+import 'package:educonnect/core/utils/size_utils.dart';
+import 'package:educonnect/features/classrooms/presentation/cubit/class_cubit.dart';
 
 class VerificationPending extends StatefulWidget {
   const VerificationPending({Key? key})
@@ -54,7 +55,7 @@ class _VerificationPendingState extends State<VerificationPending>
             elevation: 0,
             centerTitle: true,
             title: Text(
-              "Verification Pending",
+              AppLocalizations.of(context)!.translate('verification_pending')!,
               style: TextStyle(
                 fontFamily: "Poppins",
                 color: AppColors.black900,
@@ -82,14 +83,16 @@ class _VerificationPendingState extends State<VerificationPending>
               ),
               SizedBox(height: 40.v),
               Center(
-                child: Text("Your verification request is pending",
+                child: Text(
+                    AppLocalizations.of(context)!
+                        .translate('your_verification_pending')!,
                     textAlign: TextAlign.center,
                     style: CustomTextStyles.bodyMediumRobotoBlack),
               ),
               SizedBox(height: 20.v),
               Center(
                 child: Text(
-                  "Support team will verify your school and notify you soon",
+                  AppLocalizations.of(context)!.translate('support_team')!,
                   textAlign: TextAlign.center,
                   style: CustomTextStyles.bodyMediumRobotoBlack2,
                 ),

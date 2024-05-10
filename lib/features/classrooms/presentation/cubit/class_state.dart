@@ -11,6 +11,8 @@ class ClassInitial extends ClassState {}
 
 class ClassLoading extends ClassState {}
 
+class ClassLoading2 extends ClassState {}
+
 class ClassLoaded extends ClassState {
   final ClassModel classe;
 
@@ -67,6 +69,19 @@ class NoClasses extends ClassState {
 
 class SchoolRemoved extends ClassState {}
 
+class LeftSuccess extends ClassState {}
+
+class RequestSent extends ClassState {}
+
+class StudentsLoaded extends ClassState {
+  final List<ChildModel> students;
+
+  StudentsLoaded(this.students);
+
+  @override
+  List<Object> get props => [students];
+}
+
 class ClassError extends ClassState {
   final String message;
 
@@ -75,6 +90,7 @@ class ClassError extends ClassState {
   @override
   List<Object> get props => [message];
 }
+
 
 // class ClassJoined extends ClassState {
 //   final ClassModel classModel;

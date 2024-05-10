@@ -1,4 +1,4 @@
-import 'package:quotes/features/posts/domain/entities/poll.dart';
+import 'package:educonnect/features/posts/domain/entities/poll.dart';
 
 class PollModel extends Poll {
   const PollModel({
