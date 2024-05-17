@@ -1,3 +1,5 @@
+import 'package:educonnect/features/auth/presentation/pages/forgot_password/forgotpassword.dart';
+import 'package:educonnect/features/splash/presentation/screens/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:educonnect/core/utils/app_strings.dart';
@@ -29,13 +31,15 @@ class Routes {
   static const String manageChildren = '/manage-children';
   static const String manageSchool = '/manage-school';
   static const String classRoom = '/classroom';
-  
 }
 
 class AppRoutes {
   static Route? onGenerateRoute(RouteSettings routeSettings) {
     switch (routeSettings.name) {
       case Routes.initialRoute:
+        return MaterialPageRoute(builder: (context) {
+          return SplashScreen();
+        });
       case Routes.loginRoute:
         return MaterialPageRoute(builder: (context) {
           return LoginScreen();
@@ -48,7 +52,7 @@ class AppRoutes {
 
       case Routes.forgotpasswordRoute:
         return MaterialPageRoute(builder: (context) {
-          return SignupScreen();
+          return ForgotPasswordScreen();
         });
 
       case Routes.postRoute:
@@ -86,7 +90,7 @@ class AppRoutes {
         return MaterialPageRoute(builder: (context) {
           return ManageSchool();
         });
-      
+
       default:
         return undefinedRoute();
     }

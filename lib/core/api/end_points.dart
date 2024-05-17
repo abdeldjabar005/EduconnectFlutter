@@ -17,6 +17,11 @@ class EndPoints {
   static const String users = '${baseUrl}users';
   static const String verifyEmail = '${baseUrl}verify';
 
+  static const String forgotPassword = '${baseUrl}forgot-password';
+  static const String validateOtp = '${baseUrl}validate-otp';
+  static const String resetPassword = '${baseUrl}reset-password';
+  
+
   static const String newPost = '${baseUrl}posts';
 
   static String comments(int postId) => '${baseUrl}posts/$postId/all-comments';

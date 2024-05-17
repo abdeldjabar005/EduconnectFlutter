@@ -395,11 +395,12 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   onTapTxtForgotPassword(BuildContext context) {
-    if (AppLocalizations.of(context)!.isEnLocale) {
-      BlocProvider.of<LocaleCubit>(context).toArabic();
-    } else {
-      BlocProvider.of<LocaleCubit>(context).toEnglish();
-    }
+    Navigator.pushNamed(context, Routes.forgotpasswordRoute);
+    // if (AppLocalizations.of(context)!.isEnLocale) {
+    //   BlocProvider.of<LocaleCubit>(context).toArabic();
+    // } else {
+    //   BlocProvider.of<LocaleCubit>(context).toEnglish();
+    // }
     // Navigator.pushNamed(context, Routes.forgotpasswordRoute);
   }
 }

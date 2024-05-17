@@ -103,5 +103,5 @@ class ImageConstant {
   static String attachmentBlack = '$imagePath/post/attachment-black.png';
   static String poll = '$imagePath/post/poll.svg';
 
-  static String edu = '$imagePath/edu.png';
+  static String edu = '$imagePath/manageSchool/educonnect.png';
 }

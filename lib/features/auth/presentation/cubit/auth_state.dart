@@ -42,6 +42,8 @@ class AuthCodeEntry extends AuthState {
 class AuthEmailVerificationNeeded extends AuthState {}
 
 class AuthEmailVerified extends AuthState {}
+class AuthCodeSent extends AuthState {}
+class AuthPasswordReset extends AuthState {}
 class AuthUnauthenticated extends AuthState {
   @override
   List<Object> get props => [];

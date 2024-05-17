@@ -273,6 +273,42 @@ class _SchoolDetailsState extends State<SchoolDetails>
                           }
                         }
                         break;
+                         case 'Invite':
+                        if (user.id == widget.school.adminId) {
+                          if (context.mounted) {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: Text(AppLocalizations.of(context)!
+                                      .translate('invite_users')!),
+                                  content: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: <Widget>[
+                                      Text(AppLocalizations.of(context)!
+                                          .translate('to_invite_school')!),
+                                      SizedBox(height: 10),
+                                      SelectableText(
+                                        widget.school.code!,
+                                        style: CustomTextStyles.displayMedium45,
+                                      ),
+                                    ],
+                                  ),
+                                  actions: <Widget>[
+                                    TextButton(
+                                      child: Text(AppLocalizations.of(context)!
+                                          .translate('close')!),
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          }
+                        }
+                        break;
                       case 'Leave':
                         if (user.id != widget.school.adminId) {
                           if (context.mounted) {
@@ -422,6 +458,16 @@ class _SchoolDetailsState extends State<SchoolDetails>
                               Icon(Icons.mail, color: AppColors.indigoA200),
                           title: Text(AppLocalizations.of(context)!
                               .translate('school_requests')!),
+                        ),
+                      ),
+                       if (user.id == widget.school.adminId)
+                      PopupMenuItem<String>(
+                        value: 'Invite',  
+                        child: ListTile(
+                          contentPadding: EdgeInsets.zero,
+                          leading: Icon(Icons.add, color: AppColors.indigoA200),
+                          title: Text(AppLocalizations.of(context)!
+                              .translate('invite')!),
                         ),
                       ),
                     PopupMenuItem<String>(

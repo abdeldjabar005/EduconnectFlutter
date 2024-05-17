@@ -28,14 +28,14 @@ class AuthCubit extends Cubit<AuthState> {
       required this.secureStorage})
       : super(AuthInitial());
 
-Future<Either<Failure, User>> login(String email, String password) async {
+  Future<Either<Failure, User>> login(String email, String password) async {
     emit(AuthLoading());
     final result = await authRepository.login(email, password);
     return result.fold((failure) {
       if (failure is InvalidCredentialsException) {
         emit(AuthError(
             message: _mapFailureToMessage(InvalidCredentialsFailure())));
-            return Left(InvalidCredentialsFailure());
+        return Left(InvalidCredentialsFailure());
       } else {
         emit(AuthError(message: _mapFailureToMessage(failure)));
         return Left(failure);
@@ -48,8 +48,7 @@ Future<Either<Failure, User>> login(String email, String password) async {
       log("loginsuccesfully");
       emit(AuthAuthenticated(user: user));
       log(state.toString());
-          return Right(user);
-
+      return Right(user);
     });
   }
 
@@ -80,10 +79,6 @@ Future<Either<Failure, User>> login(String email, String password) async {
     });
   }
 
-  void updateVerificationCode(List<String> newCode) {
-    emit(AuthCodeEntry(verificationCode: newCode));
-  }
-
   Future<void> verifyEmail(String email, String verificationCode) async {
     emit(AuthLoading());
     final result = await authRepository.verifyEmail(email, verificationCode);
@@ -96,6 +91,51 @@ Future<Either<Failure, User>> login(String email, String password) async {
     } on ServerException {
       emit(AuthError(message: 'Server Failure'));
     }
+  }
+
+  Future<void> forgotPassword(String email) async {
+    emit(AuthLoading());
+    final result = await authRepository.forgotPassword(email);
+    result.fold((failure) {
+      if (failure is EmailDoesNotExistException) {
+        emit(AuthError(
+            message: _mapFailureToMessage(EmailDoesNotExistFailure())));
+      } else {
+        emit(AuthError(message: _mapFailureToMessage(failure)));
+      }
+    }, (right) {
+      emit(AuthCodeSent());
+    });
+  }
+
+  Future<void> validateOtp(String code) async {
+    emit(AuthLoading());
+    final result = await authRepository.validateOtp(code);
+    result.fold((failure) {
+      if (failure is InvalidCodeException) {
+        emit(AuthError(message: _mapFailureToMessage(InvalidCodeFailure())));
+      } else {
+        emit(AuthError(message: _mapFailureToMessage(failure)));
+      }
+    }, (right) {
+      emit(AuthEmailVerified());
+    });
+  }
+
+  Future<void> resetPassword(String password, String confirmPassword) async {
+    emit(AuthLoading());
+    final result =
+        await authRepository.resetPassword(password, confirmPassword);
+    result.fold((failure) {
+      if (failure is InvalidCredentialsException) {
+        emit(AuthError(
+            message: _mapFailureToMessage(InvalidCredentialsFailure())));
+      } else {
+        emit(AuthError(message: _mapFailureToMessage(failure)));
+      }
+    }, (right) {
+      emit(AuthPasswordReset());
+    });
   }
 
   User? getCurrentUser() {
@@ -141,12 +181,13 @@ Future<Either<Failure, User>> login(String email, String password) async {
   Future<bool> autoLogin() async {
     final email = await secureStorage.read(key: 'email');
     final password = await secureStorage.read(key: 'password');
-  
+    log(email.toString());
+    log(password.toString());
     if (email != null && password != null) {
       final result = await login(email, password);
       return result.isRight();
     }
-  
+
     return false;
   }
 
@@ -266,6 +307,11 @@ Future<Either<Failure, User>> login(String email, String password) async {
         return 'Invalid credentials';
       case EmailAlreadyExistsFailure:
         return 'Email already exists';
+      case EmailDoesNotExistFailure:
+        return 'Email does not exist';
+      case InvalidCodeFailure:
+        return 'Invalid code';
+
       default:
         return 'Unexpected error';
     }

@@ -62,6 +62,12 @@ class CustomTextStyles {
         color: AppColors.gray300,
         fontWeight: FontWeight.w600,
       );
+  static get titleMediumPoppinsGray3002 =>
+      theme.textTheme.titleMedium!.poppins.copyWith(
+        color: AppColors.gray300,
+        fontSize: 16.fSize,
+        fontWeight: FontWeight.w600,
+      );
   static get titleMediumPoppinsGray900 =>
       theme.textTheme.titleMedium!.poppins.copyWith(
         color: postTheme.gray90001,

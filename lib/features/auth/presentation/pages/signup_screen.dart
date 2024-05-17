@@ -71,15 +71,21 @@ class _SignupScreenState extends State<SignupScreen> {
     );
   }
 
+  late AuthCubit authCubit;
+
   @override
   void initState() {
     startTimer();
+    authCubit = context.read<AuthCubit>();
+
     super.initState();
   }
 
   @override
   void dispose() {
     _timer.cancel();
+    authCubit.reset();
+
     super.dispose();
   }
 

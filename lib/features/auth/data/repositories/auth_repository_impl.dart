@@ -68,4 +68,35 @@ class AuthRepositoryImpl implements AuthRepository {
       return Left(ServerFailure());
     }
   }
+  @override 
+  Future<Either<Failure, void>> forgotPassword(String email) async {
+    try {
+      await remoteDataSource.forgotPassword(email);
+      return Right(null);
+    } on EmailDoesNotExistException {
+      return Left(EmailDoesNotExistFailure());
+    } on ServerException {
+      return Left(ServerFailure());
+    }
+  }
+  @override
+  Future<Either<Failure, void>> validateOtp(String code) async {
+    try {
+      await remoteDataSource.validateOtp(code);
+      return Right(null);
+    } on InvalidCodeException {
+      return Left(InvalidCodeFailure());
+    } on ServerException {
+      return Left(ServerFailure());
+    }
+  }
+  @override
+  Future<Either<Failure, void>> resetPassword(String password, String confirmPassword) async {
+    try {
+      await remoteDataSource.resetPassword(password, confirmPassword);
+      return Right(null);
+    } on ServerException {
+      return Left(ServerFailure());
+    }
+  }
 }

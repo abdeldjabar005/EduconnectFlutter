@@ -14,6 +14,9 @@ abstract class AuthRemoteDataSource {
       String email, String password, String confirmPassword);
   Future<UserModel> verifyEmail(String email, String verificationCode);
   Future<void> resendEmail(String email);
+  Future<void> forgotPassword(String email);
+  Future<void> validateOtp(String code);
+  Future<void> resetPassword(String password, String confirmPassword);
 }
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
@@ -100,6 +103,68 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         EndPoints.resendEmail,
         body: {
           'email': email,
+        },
+      ).timeout(const Duration(seconds: 10));
+
+      if (response['statusCode'] == 200) {
+        return;
+      } else {
+        throw ServerException();
+      }
+    } on TimeoutException {
+      throw const ServerException();
+    }
+  }
+  @override
+  Future<void> forgotPassword(String email) async {
+    try {
+      final response = await apiConsumer.post(
+        EndPoints.forgotPassword,
+        body: {
+          'email': email,
+        },
+      ).timeout(const Duration(seconds: 10));
+
+      if (response['statusCode'] == 200) {
+        return;
+      } else if (response['statusCode'] == 404) {
+        throw EmailDoesNotExistException();
+      } else {
+        throw ServerException();
+      }
+    } on TimeoutException {
+      throw const ServerException();
+    }
+  }
+  @override
+  Future<void> validateOtp(String code) async {
+    try {
+      final response = await apiConsumer.post(
+        EndPoints.validateOtp,
+        body: {
+          'otp': code,
+        },
+      ).timeout(const Duration(seconds: 10));
+
+      if (response['statusCode'] == 200) {
+        return;
+      } else if (response['statusCode'] == 400) {
+        throw InvalidCodeException();
+      } else {
+        throw ServerException();
+      }
+    } on TimeoutException {
+      throw const ServerException();
+    }
+  }
+  @override
+  Future<void> resetPassword(String password, String confirmPassword) async {
+    try {
+      final response = await apiConsumer.post(
+        EndPoints.resetPassword,
+        body: {
+          'password': password,
+          'password_confirmation': confirmPassword,
         },
       ).timeout(const Duration(seconds: 10));
 
