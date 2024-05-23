@@ -243,7 +243,7 @@ class _AddClassState extends State<AddClass> {
                           contentPadding: EdgeInsets.symmetric(
                               horizontal: 21.h, vertical: 15.v),
                           icon: Container(
-                            margin: EdgeInsets.fromLTRB(30.h, 18.v, 9.h, 18.v),
+                            margin: EdgeInsets.fromLTRB(20.h, 18.v, 9.h, 18.v),
                             child: CustomImageView(
                               imagePath: ImageConstant.imgArrowdown,
                               height: 20.adaptSize,

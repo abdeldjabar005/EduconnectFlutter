@@ -1,3 +1,6 @@
+import 'package:educonnect/core/utils/app_colors.dart';
+import 'package:educonnect/features/chat/presentation/cubit/contacts_cubit.dart';
+import 'package:educonnect/features/chat/presentation/cubit/messages_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:educonnect/config/locale/app_localizations_setup.dart';
@@ -32,6 +35,9 @@ class EduApp extends StatelessWidget {
           BlocProvider(create: (context) => di.sl<MembersCubit>()),
           BlocProvider(create: (context) => di.sl<Post2Cubit>()),
           BlocProvider(create: (context) => di.sl<ChildrenCubit>()),
+          BlocProvider(create: (context) => di.sl<ContactsCubit>()),
+          BlocProvider(create: (context) => di.sl<MessagesCubit>()),
+          
         ],
         child: BlocBuilder<LocaleCubit, LocaleState>(
           buildWhen: (previousState, currentState) {
@@ -43,6 +49,7 @@ class EduApp extends StatelessWidget {
                 return MaterialApp(
                   title: AppStrings.appName,
                   theme: ThemeData(
+                    scaffoldBackgroundColor: AppColors.whiteA700,
                     popupMenuTheme: PopupMenuThemeData(
                       elevation: 2.0, // This controls the shadow.
                       shape: RoundedRectangleBorder(

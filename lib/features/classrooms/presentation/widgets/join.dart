@@ -237,8 +237,8 @@ class _JoinState extends State<Join> {
     return Center(
       child: CustomElevatedButton(
         isLoading: state is ClassLoading,
-        height: 41.v,
-        width: 143.h,
+        height: 44.v,
+        width: 165.h,
         onPressed: () {
           if (formKey.currentState!.validate()) {
             setState(() {

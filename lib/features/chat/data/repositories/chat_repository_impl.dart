@@ -5,6 +5,8 @@ import 'package:educonnect/core/error/exceptions.dart';
 import 'package:educonnect/core/error/failures.dart';
 import 'package:educonnect/core/network/netwok_info.dart';
 import 'package:educonnect/features/chat/data/datasources/chat_remote_data_source.dart';
+import 'package:educonnect/features/chat/data/models/contact_model.dart';
+import 'package:educonnect/features/chat/data/models/message_model.dart';
 import 'package:educonnect/features/chat/domain/entities/message.dart';
 import 'package:educonnect/features/chat/domain/repositories/chat_repository.dart';
 
@@ -18,10 +20,25 @@ class ChatRepositoryImpl implements ChatRepository {
   });
 
   @override
-  Future<Either<Failure, void>> sendMessage(Message message) async {
+  Future<Either<Failure, List<MessageModel>>> getMessages(
+      int chatRoomId) async {
     if (await networkInfo.isConnected) {
       try {
-        await remoteDataSource.sendMessage(message);
+        final remoteMessages = await remoteDataSource.getMessages(chatRoomId);
+        return Right(remoteMessages);
+      } on ServerException {
+        return Left(ServerFailure());
+      }
+    } else {
+      return Left(NetworkFailure());
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> sendMessage(int id, String message) async {
+    if (await networkInfo.isConnected) {
+      try {
+        await remoteDataSource.sendMessage(id, message);
         return Right(unit);
       } on ServerException {
         return Left(ServerFailure());
@@ -32,11 +49,11 @@ class ChatRepositoryImpl implements ChatRepository {
   }
 
   @override
-  Stream<Either<Failure, List<Message>>> getMessages(String chatRoomId) {
-    if (networkInfo.isConnected) {
+  Future<Either<Failure, List<ContactModel>>> getContacts() async {
+    if (await networkInfo.isConnected) {
       try {
-        final remoteMessages = remoteDataSource.getMessages(chatRoomId);
-        return Right(remoteMessages);
+        final remoteContacts = await remoteDataSource.getContacts();
+        return Right(remoteContacts);
       } on ServerException {
         return Left(ServerFailure());
       }

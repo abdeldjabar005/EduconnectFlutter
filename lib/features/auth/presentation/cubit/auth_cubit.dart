@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
+import 'package:dash_chat_2/dash_chat_2.dart';
 import 'package:equatable/equatable.dart';
 import 'package:educonnect/core/error/exceptions.dart';
 import 'package:educonnect/features/auth/data/repositories/token_repository.dart';
@@ -143,7 +144,16 @@ class AuthCubit extends Cubit<AuthState> {
         ? (state as AuthAuthenticated).user
         : null;
   }
-
+  ChatUser getChatUser() {
+    final user = getCurrentUser();
+    return ChatUser(
+      id: user!.id.toString(),
+      firstName: user.firstName,
+      lastName: user.lastName,
+      profileImage: user.profilePicture,
+      
+    );
+  }
   void emitAuthenticated() {
     emit(AuthAuthenticated(user: currentUser!));
   }

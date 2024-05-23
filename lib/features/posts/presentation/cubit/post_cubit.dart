@@ -31,7 +31,13 @@ class PostCubit extends Cubit<PostState> {
     final response = await getPostsUseCase(Params(page: page));
     emit(response.fold(
       (failure) => PostError(message: _mapFailureToMessage(failure)),
-      (posts) => PostLoaded(posts: posts),
+      (posts) {
+         final hasReachedMax = posts.length < 6;
+        return PostLoaded(
+          posts: posts,
+          hasReachedMax: hasReachedMax,
+        );
+      },
     ));
   }
 
@@ -46,7 +52,6 @@ class PostCubit extends Cubit<PostState> {
       emit(PostLoaded2(post: post));
     });
   }
-
 
   String _mapFailureToMessage(Failure failure) {
     switch (failure.runtimeType) {

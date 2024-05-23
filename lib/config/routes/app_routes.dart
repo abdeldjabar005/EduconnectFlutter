@@ -1,4 +1,7 @@
 import 'package:educonnect/features/auth/presentation/pages/forgot_password/forgotpassword.dart';
+import 'package:educonnect/features/chat/data/models/contact_model.dart';
+import 'package:educonnect/features/chat/presentation/pages/chat_list_screen.dart';
+import 'package:educonnect/features/chat/presentation/pages/chat_screen.dart';
 import 'package:educonnect/features/splash/presentation/screens/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -31,6 +34,8 @@ class Routes {
   static const String manageChildren = '/manage-children';
   static const String manageSchool = '/manage-school';
   static const String classRoom = '/classroom';
+  static const String chatList = '/chat-list';
+  static const String chat = '/chat';
 }
 
 class AppRoutes {
@@ -90,7 +95,13 @@ class AppRoutes {
         return MaterialPageRoute(builder: (context) {
           return ManageSchool();
         });
-
+      case Routes.chatList:
+        return MaterialPageRoute(builder: (_) => ChatListScreen());
+      case Routes.chat:
+        final ContactModel contact = routeSettings.arguments as ContactModel;
+        return MaterialPageRoute(
+          builder: (_) => ChatScreen(contact: contact),
+        );
       default:
         return undefinedRoute();
     }

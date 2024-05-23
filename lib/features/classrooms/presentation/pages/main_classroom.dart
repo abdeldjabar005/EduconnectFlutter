@@ -204,19 +204,19 @@ class MainClassroom extends StatelessWidget {
       BuildContext context, Function() onPressed, String buttonText) {
     return CustomElevatedButton(
       height: 40.v,
-      width: 127.h,
+      width: 135.h,
       onPressed: onPressed,
       buttonStyle: ButtonStyle(
-        shape: MaterialStateProperty.all(
+        shape: WidgetStateProperty.all(
           RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20),
           ),
         ),
-        backgroundColor: MaterialStateProperty.all(AppColors.indigoA300),
+        backgroundColor: WidgetStateProperty.all(AppColors.indigoA300),
       ),
       text: buttonText,
       margin: EdgeInsets.only(left: 2.h, right: 2.h),
-      buttonTextStyle: CustomTextStyles.titleMediumPoppins12,
+      buttonTextStyle: CustomTextStyles.titleMediumPoppins10,
     );
   }
 
@@ -345,7 +345,6 @@ class MainClassroom extends StatelessWidget {
                     } else {
                       return Container();
                     }
-                    
                   }),
                 ],
               ),
@@ -498,7 +497,7 @@ class MainClassroom extends StatelessWidget {
   Widget _buildButton2(BuildContext context, String buttonText, String type) {
     return CustomElevatedButton(
       height: 40.v,
-      width: 127.h,
+      width: 135.h,
       onPressed: () {
         Navigator.of(context).push(
           MaterialPageRoute(
@@ -507,16 +506,16 @@ class MainClassroom extends StatelessWidget {
         );
       },
       buttonStyle: ButtonStyle(
-        shape: MaterialStateProperty.all(
+        shape: WidgetStateProperty.all(
           RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20),
           ),
         ),
-        backgroundColor: MaterialStateProperty.all(AppColors.indigoA300),
+        backgroundColor: WidgetStateProperty.all(AppColors.indigoA300),
       ),
       text: buttonText,
       margin: EdgeInsets.only(left: 2.h, right: 2.h),
-      buttonTextStyle: CustomTextStyles.titleMediumPoppins12,
+      buttonTextStyle: CustomTextStyles.titleMediumPoppins10,
     );
   }
 

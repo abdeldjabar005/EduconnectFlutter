@@ -1,72 +1,65 @@
-import 'package:laravel_echo_null/laravel_echo_null.dart';
+import 'package:educonnect/core/api/end_points.dart';
+import 'package:pusher_client_fixed/pusher_client_fixed.dart';
 
-import 'package:pusher_client/pusher_client.dart';
-
-class LaravelEcho {
-  static LaravelEcho? _singleton;
-  static late Echo _echo;
+class LaravelPusher {
+  static LaravelPusher? _singleton;
+  static late PusherClient _pusher;
   final String token;
+  final _subscribedChannels = <String>{};
 
-  LaravelEcho._({
+  LaravelPusher._({
     required this.token,
   }) {
-    _echo = createLaravelEcho(token);
+    _pusher = createPusherClient(token);
   }
 
-  factory LaravelEcho.init({
-    required String token,
+  factory LaravelPusher.init({
+    required String? token,
   }) {
     if (_singleton == null || token != _singleton?.token) {
-      _singleton = LaravelEcho._(token: token);
+      _singleton = LaravelPusher._(token: token!);
     }
 
     return _singleton!;
   }
 
-  static Echo get instance => _echo;
+  static PusherClient get instance => _pusher;
 
-  static String get socketId => _echo.socketId() ?? "11111.11111111";
-}
+  void subscribe(String channelName) {
+    if (!_subscribedChannels.contains(channelName)) {
+      _pusher.subscribe(channelName);
+      _subscribedChannels.add(channelName);
+    }
+  }
 
-class PusherConfig {
-  static const appId = "";
-  static const key = "";
-  static const secret = "";
-  static const cluster = "";
-  static const hostEndPoint = "";
-  static const hostAuthEndPoint = "$hostEndPoint/api/broadcasting/auth";
-  static const port = 6001;
+  void unsubscribe(String channelName) {
+    _pusher.unsubscribe(channelName);
+    _subscribedChannels.remove(channelName);
+  }
 }
 
 PusherClient createPusherClient(String token) {
   PusherOptions options = PusherOptions(
-    wsPort: PusherConfig.port,
-    encrypted: true,
-    host: PusherConfig.hostEndPoint,
-    cluster: PusherConfig.cluster,
+    host: '127.0.0.1',
+    wsPort: 6001,
+    wssPort: 6001,
+    encrypted: false,
     auth: PusherAuth(
-      PusherConfig.hostAuthEndPoint,
+      EndPoints.auth,
       headers: {
         'Authorization': "Bearer $token",
         'Content-Type': "application/json",
-        'Accept': 'application/json'
+        'Accept': 'application/json' 
       },
     ),
   );
 
   PusherClient pusherClient = PusherClient(
-    PusherConfig.key,
+    'localKey',
     options,
-    autoConnect: false,
+    autoConnect: true,
     enableLogging: true,
   );
 
   return pusherClient;
-}
-
-Echo createLaravelEcho(String token) {
-  return Echo(
-    client: createPusherClient(token),
-    broadcaster: EchoBroadcasterType.Pusher,
-  );
 }

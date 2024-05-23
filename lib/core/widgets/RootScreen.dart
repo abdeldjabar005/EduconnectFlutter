@@ -1,4 +1,5 @@
 import 'package:educonnect/config/locale/app_localizations.dart';
+import 'package:educonnect/features/chat/presentation/pages/chat_list_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:educonnect/config/routes/app_routes.dart';
@@ -20,7 +21,8 @@ class _RootScreenState extends State<RootScreen> {
   int selectedIndex = 0;
   final List<Widget> pages = [
     HomeScreen(),
-    NewPost(),
+    // NewPost(),
+    ChatListScreen(),
     // DefaultWidget(),
     MainClassroom(),
     MainProfile(),

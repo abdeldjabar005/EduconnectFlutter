@@ -1,4 +1,9 @@
 import 'package:dio/dio.dart';
+import 'package:educonnect/features/chat/data/datasources/chat_remote_data_source.dart';
+import 'package:educonnect/features/chat/data/repositories/chat_repository_impl.dart';
+import 'package:educonnect/features/chat/domain/repositories/chat_repository.dart';
+import 'package:educonnect/features/chat/presentation/cubit/contacts_cubit.dart';
+import 'package:educonnect/features/chat/presentation/cubit/messages_cubit.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
@@ -96,7 +101,12 @@ Future<void> init() async {
       addChildUseCase: sl(),
       removeChildUseCase: sl(),
       updateChildUseCase: sl()));
-
+  sl.registerFactory<MessagesCubit>(() => MessagesCubit(
+        chatRepository: sl(),
+      ));
+  sl.registerFactory<ContactsCubit>(() => ContactsCubit(
+        chatRepository: sl(),
+      ));
   // Use cases
   sl.registerLazySingleton<GetSavedLangUseCase>(
       () => GetSavedLangUseCase(langRepository: sl()));
@@ -141,7 +151,10 @@ Future<void> init() async {
         networkInfo: sl(),
         remoteDataSource: sl(),
       ));
-
+  sl.registerLazySingleton<ChatRepository>(() => ChatRepositoryImpl(
+        remoteDataSource: sl(),
+        networkInfo: sl(),
+      ));
   sl.registerLazySingleton<LangRepository>(
       () => LangRepositoryImpl(langLocalDataSource: sl()));
 
@@ -158,6 +171,9 @@ Future<void> init() async {
       () => ClassroomRemoteDataSourceImpl(apiConsumer: sl()));
   sl.registerLazySingleton<ProfileRemoteDataSource>(
       () => ProfileRemoteDataSourceImpl(apiConsumer: sl()));
+  sl.registerLazySingleton<ChatRemoteDataSource>(() => ChatRemoteDataSourceImpl(
+        apiConsumer: sl(),
+      ));
   //! Core
   sl.registerLazySingleton<NetworkInfo>(
       () => NetworkInfoImpl(connectionChecker: sl()));

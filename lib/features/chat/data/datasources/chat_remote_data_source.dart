@@ -1,55 +1,51 @@
-import 'dart:async';
-import 'dart:convert';
-
 import 'package:educonnect/core/api/api_consumer.dart';
 import 'package:educonnect/core/api/end_points.dart';
-import 'package:educonnect/core/api/pusher_service.dart';
 import 'package:educonnect/core/error/exceptions.dart';
+import 'package:educonnect/features/chat/data/models/contact_model.dart';
 import 'package:educonnect/features/chat/data/models/message_model.dart';
-import 'package:pusher_client/pusher_client.dart';
 
 abstract class ChatRemoteDataSource {
-  Future<void> sendMessage(MessageModel message);
-  Stream<List<MessageModel>> getMessages(String chatRoomId);
+  Future<void> sendMessage(int id, String message);
+  Future<List<MessageModel>> getMessages(int chatRoomId);
+  Future<List<ContactModel>> getContacts();
 }
 
 class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
   final ApiConsumer apiConsumer;
-  final PusherService pusherService;
 
-  ChatRemoteDataSourceImpl({required this.apiConsumer, required this.pusherService});
+  ChatRemoteDataSourceImpl({required this.apiConsumer});
 
   @override
-  Future<void> sendMessage(MessageModel message) async {
+  Future<void> sendMessage(int id, String message) async {
     final response = await apiConsumer.post(
       EndPoints.sendMessage,
-      body: message.toJson(),
+      body: {'id': id, 'message': message},
     );
-    if (response['statusCode'] != 201) {
+    if (response['statusCode'] != 200) {
       throw ServerException();
     }
   }
 
   @override
-  Stream<List<MessageModel>> getMessages(String chatRoomId) async* {
-    final StreamController<List<MessageModel>> _controller = StreamController<List<MessageModel>>();
-    
-    pusherService.subscribe('private-chatify.$chatRoomId');
-    pusherService.bind('private-chatify.$chatRoomId', 'my-event', (PusherEvent event) {
-      final data = jsonDecode(event.data!);
-      final message = MessageModel.fromJson(data);
-      _controller.add([message]); // Emit the new message
-    });
-  
-    final response = await apiConsumer.get(EndPoints.getMessages);
+  Future<List<MessageModel>> getMessages(int chatRoomId) async {
+    final response =
+        await apiConsumer.post(EndPoints.getMessages, body: {'id': chatRoomId});
     if (response['statusCode'] != 200) {
       throw ServerException();
     }
-  
-    yield* _controller.stream; // Emit the messages from the StreamController
-  
-    yield (response['data']['data'] as List)
+    return (response['data']['messages'] as List)
         .map((i) => MessageModel.fromJson(i))
+        .toList();
+  }
+
+  @override
+  Future<List<ContactModel>> getContacts() async {
+    final response = await apiConsumer.get(EndPoints.getContacts);
+    if (response['statusCode'] != 200) {
+      throw ServerException();
+    }
+    return (response['data']['contacts'] as List)
+        .map((i) => ContactModel.fromJson(i))
         .toList();
   }
 }

@@ -1,4 +1,3 @@
-// post_screen.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:educonnect/config/locale/app_localizations.dart';
@@ -30,7 +29,6 @@ class _PostScreenState extends State<PostScreen>
   @override
   void initState() {
     super.initState();
-    // context.read<PostCubit>().getPosts(1);
     _pagingController.addPageRequestListener((pageKey) {
       context.read<PostCubit>().getPosts(pageKey);
     });
@@ -38,6 +36,12 @@ class _PostScreenState extends State<PostScreen>
 
   Future<void> _refresh() async {
     _pagingController.refresh();
+  }
+
+  @override
+  void dispose() {
+    _pagingController.dispose();
+    super.dispose();
   }
 
   @override
@@ -52,61 +56,40 @@ class _PostScreenState extends State<PostScreen>
           child: BlocListener<PostCubit, PostState>(
             listener: (context, state) {
               if (state is PostLoaded) {
-                _pagingController.itemList ??= [];
-                if (state.posts.isNotEmpty) {
-                  _pagingController.appendPage(
-                      state.posts,
-                      state.hasReachedMax
-                          ? null
-                          : _pagingController.nextPageKey! + 1);
-                } else {
+                final isLastPage = state.hasReachedMax;
+                if (isLastPage) {
                   _pagingController.appendLastPage(state.posts);
+                } else {
+                  final nextPageKey = _pagingController.nextPageKey! + 1;
+                  _pagingController.appendPage(state.posts, nextPageKey);
                 }
+              } else if (state is PostError) {
+                _pagingController.error = state.message;
               }
             },
-            child: BlocBuilder<PostCubit, PostState>(
-              builder: (context, state) {
-                if (state is PostLoaded && state.posts.isEmpty) {
-                  return Container(
-                    padding: const EdgeInsets.all(20),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          AppLocalizations.of(context)!
-                              .translate("welcome_edu")!,
-                          style: const TextStyle(
-                              fontSize: 24, fontWeight: FontWeight.bold),
-                        ),
-                        const SizedBox(height: 20),
-                        Text(
-                          AppLocalizations.of(context)!.translate("no_posts")!,
-                          style: const TextStyle(fontSize: 18),
-                          textAlign: TextAlign.center,
-                        ),
-                      ],
-                    ),
-                  );
-                } else {
-                  return PagedListView<int, PostModel>(
-                    pagingController: _pagingController,
-                    builderDelegate: PagedChildBuilderDelegate<PostModel>(
-                      itemBuilder: (context, post, index) => GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  PostDetailPage(post: post, type: 'post'),
-                            ),
-                          );
-                        },
-                        child: PostItem(post: post, type: 'post'),
+            child: PagedListView<int, PostModel>(
+              pagingController: _pagingController,
+              builderDelegate: PagedChildBuilderDelegate<PostModel>(
+                noItemsFoundIndicatorBuilder: (context) => Center(
+                  child: Text(
+                    AppLocalizations.of(context)!.translate("no_posts")!,
+                    style: const TextStyle(fontSize: 18),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                itemBuilder: (context, post, index) => GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            PostDetailPage(post: post, type: 'post'),
                       ),
-                    ),
-                  );
-                }
-              },
+                    );
+                  },
+                  child: PostItem(post: post, type: 'post'),
+                ),
+              ),
             ),
           ),
         ),

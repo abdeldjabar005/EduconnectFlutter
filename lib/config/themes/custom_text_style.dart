@@ -118,6 +118,12 @@ class CustomTextStyles {
         fontSize: 12.v,
         fontWeight: FontWeight.w400,
       );
+      static get titleMediumPoppins10 =>
+      theme.textTheme.titleSmall!.poppins.copyWith(
+        color: postTheme.whiteA700,
+        fontSize: 10.v,
+        fontWeight: FontWeight.w400,
+      );
   static get titleMediumPoppinsgray600 =>
       theme.textTheme.titleMedium!.poppins.copyWith(
         color: AppColors.gray600,
@@ -181,6 +187,12 @@ class CustomTextStyles {
   static get titleMediumPoppinsGray40001 =>
       theme.textTheme.titleSmall!.poppins.copyWith(
         color: AppColors.gray40001,
+        fontWeight: FontWeight.w500,
+      );
+       static get titleMediumPoppinsGray40002 =>
+      theme.textTheme.titleSmall!.poppins.copyWith(
+        color: AppColors.gray40001,
+        fontSize: 14,
         fontWeight: FontWeight.w500,
       );
   static get titleMediumBlueA200 => theme.textTheme.titleMedium!.copyWith(

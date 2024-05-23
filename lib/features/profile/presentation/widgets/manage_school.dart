@@ -1,3 +1,5 @@
+import 'package:educonnect/core/utils/logger.dart';
+import 'package:educonnect/features/classrooms/data/models/school_nodel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:educonnect/config/locale/app_localizations.dart';
@@ -64,54 +66,80 @@ class ManageSchool extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     SizedBox(height: 44.v),
-                    InkWell(
-                      borderRadius: BorderRadius.circular(29.h),
-                      onTap: () {
-                        Navigator.push(context, MaterialPageRoute(
-                          builder: (context) {
-                            return SchoolDetails(school: user.school!);
-                          },
-                        ));
+                    BlocBuilder<ClassCubit, ClassState>(
+                      builder: (context, state) {
+                        final authState = context.watch<AuthCubit>().state;
+                        if (authState is AuthAuthenticated) {
+                          final user = authState.user;
+                          SchoolModel school = user.school!;
+                          return InkWell(
+                            borderRadius: BorderRadius.circular(29.h),
+                            onTap: () {
+                              Navigator.push(context, MaterialPageRoute(
+                                builder: (context) {
+                                  wLog(user.school!);
+                                  return SchoolDetails(school: school);
+                                },
+                              ));
+                            },
+                            child: Ink(
+                              decoration: BoxDecoration(
+                                color: AppColors.whiteA700,
+                                borderRadius: BorderRadius.circular(29.h),
+                              ),
+                              width:
+                                  356 * MediaQuery.of(context).size.width / 414,
+                              child: _buildFrame(
+                                context,
+                                profile: AppLocalizations.of(context)!
+                                    .translate('school_details')!,
+                                icon: ImageConstant.details,
+                                fill: IconButtonStyleHelper.fillindigoA400,
+                              ),
+                            ),
+                          );
+                        } else {
+                          return Container();
+                        }
                       },
-                      child: Ink(
-                        decoration: BoxDecoration(
-                          color: AppColors.whiteA700,
-                          borderRadius: BorderRadius.circular(29.h),
-                        ),
-                        width: 356 * MediaQuery.of(context).size.width / 414,
-                        child: _buildFrame(
-                          context,
-                          profile: AppLocalizations.of(context)!
-                              .translate('school_details')!,
-                          icon: ImageConstant.details,
-                          fill: IconButtonStyleHelper.fillindigoA400,
-                        ),
-                      ),
                     ),
                     SizedBox(height: 20.v),
-                    InkWell(
-                      borderRadius: BorderRadius.circular(29.h),
-                      onTap: () {
-                        Navigator.push(context, MaterialPageRoute(
-                          builder: (context) {
-                            return UpdateSchool(school: user.school!);
-                          },
-                        ));
+                    BlocBuilder<ClassCubit, ClassState>(
+                      builder: (context, state) {
+                        final authState = context.watch<AuthCubit>().state;
+                        if (authState is AuthAuthenticated) {
+                          final user = authState.user;
+                          SchoolModel school = user.school!;
+
+                          return InkWell(
+                            borderRadius: BorderRadius.circular(29.h),
+                            onTap: () {
+                              Navigator.push(context, MaterialPageRoute(
+                                builder: (context) {
+                                  return UpdateSchool(school: school);
+                                },
+                              ));
+                            },
+                            child: Ink(
+                              decoration: BoxDecoration(
+                                color: AppColors.whiteA700,
+                                borderRadius: BorderRadius.circular(29.h),
+                              ),
+                              width:
+                                  356 * MediaQuery.of(context).size.width / 414,
+                              child: _buildFrame(
+                                context,
+                                profile: AppLocalizations.of(context)!
+                                    .translate('edit_school')!,
+                                icon: ImageConstant.edit,
+                                fill: IconButtonStyleHelper.fillLightGreen500,
+                              ),
+                            ),
+                          );
+                        } else {
+                          return Container();
+                        }
                       },
-                      child: Ink(
-                        decoration: BoxDecoration(
-                          color: AppColors.whiteA700,
-                          borderRadius: BorderRadius.circular(29.h),
-                        ),
-                        width: 356 * MediaQuery.of(context).size.width / 414,
-                        child: _buildFrame(
-                          context,
-                          profile: AppLocalizations.of(context)!
-                              .translate('edit_school')!,
-                          icon: ImageConstant.edit,
-                          fill: IconButtonStyleHelper.fillLightGreen500,
-                        ),
-                      ),
                     ),
                     SizedBox(height: 28.v),
                     InkWell(

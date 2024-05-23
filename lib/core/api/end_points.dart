@@ -5,6 +5,10 @@ class EndPoints {
   static const String baseUrl = 'http://localhost:8000/api/';
   static const String storage = 'http://localhost:8000/storage/';
 
+  static const String chatifyUrl = 'http://127.0.0.1:8000/chatify/api/';
+
+  static const String auth = '${chatifyUrl}chat/auth';
+
   static const String randomQuote = '${baseUrl}quotes/random';
   static const String login = '${baseUrl}login';
   static const String signUp = '${baseUrl}register';
@@ -20,7 +24,10 @@ class EndPoints {
   static const String forgotPassword = '${baseUrl}forgot-password';
   static const String validateOtp = '${baseUrl}validate-otp';
   static const String resetPassword = '${baseUrl}reset-password';
-  
+
+  static const String getContacts = '${chatifyUrl}getContacts';
+  static const String getMessages = '${chatifyUrl}fetchMessages';
+  static const String sendMessage = '${chatifyUrl}sendMessage';
 
   static const String newPost = '${baseUrl}posts';
 
