@@ -36,7 +36,6 @@ class _ResetPasswordState extends State<ResetPassword> {
 
     return BlocConsumer<AuthCubit, AuthState>(
       listener: (context, state) {
-
         if (state is AuthError) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
@@ -48,10 +47,9 @@ class _ResetPasswordState extends State<ResetPassword> {
           Navigator.of(context).pushAndRemoveUntil(
               MaterialPageRoute(
                 builder: (context) => Success(),
-              )
-            , (route) => false);
+              ),
+              (route) => false);
         }
-
       },
       builder: (context, state) {
         return SafeArea(
@@ -66,22 +64,31 @@ class _ResetPasswordState extends State<ResetPassword> {
                     child: Form(
                       key: formKey,
                       child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            'Set a new password',
-                            style: theme.textTheme.titleLarge,
+                          SizedBox(height: 50.v),
+                          Align(
+                            alignment: isRtl
+                                ? Alignment.centerRight
+                                : Alignment.centerLeft,
+                            child: Text(
+                              AppLocalizations.of(context)!
+                                  .translate("set_new_password")!,
+                              style: CustomTextStyles.titleMediumPoppinsBlack2,
+                            ),
                           ),
-                          const SizedBox(
-                            height: 20,
+                          const SizedBox(height: 20),
+                          Align(
+                            alignment: isRtl
+                                ? Alignment.centerRight
+                                : Alignment.centerLeft,
+                            child: Text(
+                              AppLocalizations.of(context)!
+                                  .translate("new_password")!,
+                              style: CustomTextStyles.titleMediumPoppinsGray900,
+                            ),
                           ),
-                          Text(
-                            'Create a new password, Ensure it is different from your previous password for security reasons',
-                            style: CustomTextStyles.titleMediumPoppinsGray900,
-                          ),
-                          const SizedBox(
-                            height: 20,
-                          ),
+                          const SizedBox(height: 20),
                           SizedBox(height: 16.v),
                           Padding(
                             padding: EdgeInsets.only(left: 3.h),
@@ -112,44 +119,30 @@ class _ResetPasswordState extends State<ResetPassword> {
                               AppLocalizations.of(context)!
                                   .translate("confirm_password")!,
                               confirmpasswordController),
-                          const SizedBox(
-                            height: 20,
-                          ),
-                          CustomElevatedButton(
-                            text: "Update Password",
-                            buttonStyle: ElevatedButton.styleFrom(
-                              backgroundColor: AppColors.indigoA100,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12.h),
-                              ),
-                            ),
-                            onPressed: () {
-                              if (formKey.currentState!.validate()) {
-                                // BlocProvider.of<AuthCubit>(context)
-                                //     .forgotPassword(emailController.text);
-                              }
-                            },
-                          ),
+                          const SizedBox(height: 20),
+                          _buildVerifyCodeButton(context, state),
+                          SizedBox(height: 8.v),
+                          _buildErrorCode(context, state),
                         ],
                       ),
                     ),
                   ),
                 ),
-                Positioned(
-                  top: 15.0,
-                  left: isRtl ? null : 11.0,
-                  right: isRtl ? 11.0 : null,
-                  child: FloatingActionButton(
-                    mini: true,
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    backgroundColor: AppColors.black900.withOpacity(0.1),
-                    elevation: 0.0,
-                    child:
-                        const Icon(Icons.arrow_back_sharp, color: Colors.black),
-                  ),
-                ),
+                // Positioned(
+                //   top: 15.0,
+                //   left: isRtl ? null : 11.0,
+                //   right: isRtl ? 11.0 : null,
+                //   child: FloatingActionButton(
+                //     mini: true,
+                //     onPressed: () {
+                //       Navigator.of(context).pop();
+                //     },
+                //     backgroundColor: AppColors.black900.withOpacity(0.1),
+                //     elevation: 0.0,
+                //     child:
+                //         const Icon(Icons.arrow_back_sharp, color: Colors.black),
+                //   ),
+                // ),
               ],
             ),
           ),
@@ -160,38 +153,55 @@ class _ResetPasswordState extends State<ResetPassword> {
 
   Widget _buildVerifyCodeButton(BuildContext context, AuthState state) {
     return CustomElevatedButton(
-      onPressed: state is AuthLoading ||
-              passwordController.text.isEmpty ||
-              confirmpasswordController.text.isEmpty
+      onPressed: state is AuthLoading
           ? null
           : () {
-              if (formKey.currentState!.validate()) {
-                context.read<AuthCubit>().resetPassword(
-                    passwordController.text, confirmpasswordController.text);
+              if (passwordController.text.isNotEmpty &&
+                  confirmpasswordController.text.isNotEmpty) {
+                setState(() {
+                  errorMessage = '';
+                });
+
+                if (formKey.currentState!.validate()) {
+                  if (passwordController.text ==
+                      confirmpasswordController.text) {
+                    if (passwordController.text.length >= 6) {
+                      context.read<AuthCubit>().resetPassword(
+                            passwordController.text,
+                            confirmpasswordController.text,
+                          );
+                    } else {
+                      setState(() {
+                        errorMessage = AppLocalizations.of(context)!
+                            .translate("password_short")!;
+                      });
+                    }
+                  } else {
+                    setState(() {
+                      errorMessage = AppLocalizations.of(context)!
+                          .translate("password_does_not_match")!;
+                    });
+                  }
+                }
+              } else if (passwordController.text.isEmpty ||
+                  confirmpasswordController.text.isEmpty) {
+                setState(() {
+                  errorMessage = AppLocalizations.of(context)!
+                      .translate("cant_empty_credentials")!;
+                });
               }
             },
       buttonStyle: ButtonStyle(
-        elevation: MaterialStateProperty.all(0),
-        splashFactory: NoSplash.splashFactory,
-        backgroundColor: MaterialStateProperty.resolveWith<Color>(
-          (Set<MaterialState> states) {
-            if (states.contains(MaterialState.disabled) ||
-                passwordController.text.isEmpty ||
-                confirmpasswordController.text.isEmpty) {
-              return AppColors.indigoA300.withOpacity(0.4);
-            }
-            return AppColors.indigoA300;
-          },
-        ),
-        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+        shape: MaterialStateProperty.all(
           RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20),
           ),
         ),
+        backgroundColor: MaterialStateProperty.all(AppColors.indigoA300),
       ),
       isLoading: state is AuthLoading,
       text: AppLocalizations.of(context)!.translate("continue")!,
-      margin: EdgeInsets.only(left: 6.h, right: 6.h),
+      margin: EdgeInsets.only(left: 10.h, right: 15.h),
       buttonTextStyle: CustomTextStyles.titleMediumPoppins,
     );
   }

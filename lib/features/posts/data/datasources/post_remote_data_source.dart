@@ -12,7 +12,7 @@ import 'package:educonnect/features/posts/data/models/post_model.dart';
 import 'package:educonnect/features/posts/domain/entities/like.dart';
 
 abstract class PostRemoteDataSource {
-  Future<List<PostModel>> getPosts(int page);
+  Future<List<PostModel>> getPosts(int page, String type);
   Future<List<CommentModel>> getComments(int postId);
   Future<CommentModel> getComment(int postId);
   Future<void> postComment(int postId, String comment);
@@ -32,10 +32,26 @@ class PostRemoteDataSourceImpl implements PostRemoteDataSource {
   PostRemoteDataSourceImpl({required this.apiConsumer});
 
   @override
-  Future<List<PostModel>> getPosts(int page) async {
-    final response = await apiConsumer.get(
-      "${EndPoints.posts}?page=$page",
-    );
+  Future<List<PostModel>> getPosts(int page, String type) async {
+    String endPoint;
+    switch (type) {
+      case 'explore':
+        endPoint = EndPoints.posts;
+        break;
+      case 'school':
+        endPoint = EndPoints.schoolPosts;
+        break;
+      case 'class':
+        endPoint = EndPoints.classPosts;
+        break;
+      case 'bookmarks':
+        endPoint = EndPoints.bookmarkPosts;
+        break;
+      default:
+        throw Exception('Invalid post type');
+    }
+  
+    final response = await apiConsumer.get("$endPoint?page=$page");
     return (response['data']['data'] as List)
         .map((i) => PostModel.fromJson(i))
         .toList();

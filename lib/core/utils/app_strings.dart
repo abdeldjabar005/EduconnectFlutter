@@ -10,6 +10,7 @@ class AppStrings {
   static const String unexpectedError = 'Unexpected Error';
   static const String englishCode = 'en';
   static const String arabicCode = 'ar';
+  static const String frenchCode = 'fr';
   static const String locale = 'locale';
   static const String login = 'login';
   static const String email = 'email';
@@ -18,6 +19,4 @@ class AppStrings {
   static const String signup = 'Sign Up';
   static const String loginSuccess = 'loginSuccess';
   static const String logout = 'logout';
-  
-
 }

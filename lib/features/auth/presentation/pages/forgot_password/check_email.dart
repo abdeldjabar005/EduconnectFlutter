@@ -73,7 +73,7 @@ class _CheckEmailState extends State<CheckEmail> {
           // ScaffoldMessenger.of(context).showSnackBar(
           //   SnackBar(content: Text(state.message)),
           // );
-        } else if (state is AuthCodeSent) {
+        } else if (state is AuthEmailVerified) {
           Navigator.of(context).pushAndRemoveUntil(
               MaterialPageRoute(
                 builder: (context) => ResetPassword(),

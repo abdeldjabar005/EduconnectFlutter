@@ -4,6 +4,7 @@ import 'package:educonnect/features/chat/data/repositories/chat_repository_impl.
 import 'package:educonnect/features/chat/domain/repositories/chat_repository.dart';
 import 'package:educonnect/features/chat/presentation/cubit/contacts_cubit.dart';
 import 'package:educonnect/features/chat/presentation/cubit/messages_cubit.dart';
+import 'package:educonnect/features/profile/presentation/cubit/profile_cubit.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
@@ -106,6 +107,10 @@ Future<void> init() async {
       ));
   sl.registerFactory<ContactsCubit>(() => ContactsCubit(
         chatRepository: sl(),
+      ));
+  sl.registerFactory<ProfileCubit>(() => ProfileCubit(
+        profileRepository: sl(),
+        authCubit: sl(),
       ));
   // Use cases
   sl.registerLazySingleton<GetSavedLangUseCase>(

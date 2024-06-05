@@ -2,17 +2,16 @@ import 'package:educonnect/config/locale/app_localizations.dart';
 import 'package:educonnect/features/chat/presentation/pages/chat_list_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:educonnect/config/routes/app_routes.dart';
 import 'package:educonnect/core/utils/app_colors.dart';
-import 'package:educonnect/core/utils/constants.dart';
 import 'package:educonnect/core/widgets/custom_bottom_bar.dart';
 import 'package:educonnect/core/widgets/home_page.dart';
 import 'package:educonnect/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:educonnect/features/classrooms/presentation/pages/main_classroom.dart';
-import 'package:educonnect/features/posts/presentation/pages/new_post.dart';
 import 'package:educonnect/features/profile/presentation/pages/main_profile.dart';
 
 class RootScreen extends StatefulWidget {
+  const RootScreen({super.key});
+
   @override
   _RootScreenState createState() => _RootScreenState();
 }
@@ -20,9 +19,9 @@ class RootScreen extends StatefulWidget {
 class _RootScreenState extends State<RootScreen> {
   int selectedIndex = 0;
   final List<Widget> pages = [
-    HomeScreen(),
+    const HomeScreen(),
     // NewPost(),
-    ChatListScreen(),
+    const ChatListScreen(),
     // DefaultWidget(),
     MainClassroom(),
     MainProfile(),
@@ -35,7 +34,7 @@ class _RootScreenState extends State<RootScreen> {
       onWillPop: () async {
         final now = DateTime.now();
         if (lastPressedAt == null ||
-            now.difference(lastPressedAt!) > Duration(seconds: 2)) {
+            now.difference(lastPressedAt!) > const Duration(seconds: 2)) {
           lastPressedAt = now;
           final snackBar = SnackBar(
             content: Text(
@@ -46,7 +45,7 @@ class _RootScreenState extends State<RootScreen> {
               ),
             ),
             backgroundColor: AppColors.indigoA300,
-            duration: Duration(seconds: 2),
+            duration: const Duration(seconds: 2),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(20),
             ),

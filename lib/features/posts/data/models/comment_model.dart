@@ -2,7 +2,7 @@
 import 'package:educonnect/features/posts/domain/entities/comment.dart';
 
 class CommentModel extends Comment {
-   CommentModel({
+  CommentModel({
     required int id,
     required int postId,
     required int userId,
@@ -51,7 +51,7 @@ class CommentModel extends Comment {
       lastName: json["last_name"],
       profilePicture: json["profile_picture"]?.isNotEmpty == true
           ? json["profile_picture"]
-          : 'assets/images/edu.png',
+          : 'users-avatar/avatar.png',
     );
   }
 

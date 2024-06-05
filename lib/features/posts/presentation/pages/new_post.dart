@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:educonnect/config/locale/app_localizations.dart';
+import 'package:educonnect/core/api/end_points.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:educonnect/config/themes/custom_text_style.dart';
@@ -51,8 +52,14 @@ class _NewPostState extends State<NewPost> {
     });
   }
 
+  Map<String, String> roleTranslations = {
+    'parent': 'والد',
+    'teacher': 'معلم',
+    'admin': 'مدير',
+  };
   @override
   Widget build(BuildContext context) {
+    bool isRtl = Localizations.localeOf(context).languageCode == 'ar';
     final authState = context.watch<AuthCubit>().state;
     if (authState is AuthAuthenticated) {
       final user = authState.user;
@@ -115,7 +122,9 @@ class _NewPostState extends State<NewPost> {
                                   color: AppColors.gray200,
                                   width: 1.h,
                                 ),
-                                imagePath: ImageConstant.imgRectangle17100x100,
+                                imagePath:
+                                    '${EndPoints.storage}${user.profilePicture}',
+
                                 // imagePath: '${EndPoints.storage}${user.profilePicture}',
 
                                 height: 60.adaptSize,
@@ -140,67 +149,72 @@ class _NewPostState extends State<NewPost> {
                                     ),
                                     SizedBox(height: 3.v),
                                     Text(
-                                      AppLocalizations.of(context)!.translate(
-                                          'user')!, //TODO: Replace with actual implementation
-                                      style: theme.textTheme.titleSmall,
+                                      isRtl
+                                          ? roleTranslations[user.role] ??
+                                              'مستخدم'
+                                          : (user.role == 'admin'
+                                              ? 'School Admin'
+                                              : user.role),
+                                      style: CustomTextStyles.titleGray,
                                     ),
                                   ],
                                 ),
                               ),
                               SizedBox(width: 20.h),
-                              (widget.id == null || widget.name == null)
-                                  ? Flexible(
-                                      child: Container(
-                                        height: 60,
-                                        width: 150,
-                                        child: DropdownButtonFormField<String>(
-                                          value: selectedClassId?.toString(),
-                                          decoration: InputDecoration(
-                                            border: OutlineInputBorder(),
-                                            labelText:
-                                                AppLocalizations.of(context)!
-                                                    .translate('select_class')!,
-                                            labelStyle: TextStyle(
-                                                color: Colors.black,
-                                                fontSize: 14.h),
-                                          ),
-                                          dropdownColor: AppColors.whiteA700,
-                                          style: TextStyle(color: Colors.black),
-                                          items: classes.map((classItem) {
-                                            return DropdownMenuItem<String>(
-                                              value: classItem.id.toString(),
-                                              child: Text(classItem.name),
-                                            );
-                                          }).toList(),
-                                          onChanged: (String? newValue) {
-                                            setState(() {
-                                              selectedClassId =
-                                                  int.tryParse(newValue ?? '');
-                                              selectedClassName = classes
-                                                  .firstWhere((classItem) =>
-                                                      classItem.id
-                                                          ?.toString() ==
-                                                      newValue)
-                                                  .name;
-                                            });
-                                          },
-                                          validator: (value) {
-                                            if (value == null ||
-                                                value.isEmpty) {
-                                              return AppLocalizations.of(
-                                                      context)!
-                                                  .translate(
-                                                      'please_select_class')!;
-                                            }
-                                            return null;
-                                          },
-                                        ),
-                                      ),
-                                    )
-                                  : Container(
-                                      height: 50,
-                                      width: 150,
-                                    ),
+                              // (widget.id == null || widget.name == null)
+                              //     ? Flexible(
+                              //         child: Container(
+                              //           height: 60,
+                              //           width: 150,
+                              //           child: DropdownButtonFormField<String>(
+                              //             value: selectedClassId?.toString(),
+                              //             decoration: InputDecoration(
+                              //               border: OutlineInputBorder(),
+                              //               labelText:
+                              //                   AppLocalizations.of(context)!
+                              //                       .translate('select_class')!,
+                              //               labelStyle: TextStyle(
+                              //                   color: Colors.black,
+                              //                   fontSize: 14.h),
+                              //             ),
+                              //             dropdownColor: AppColors.whiteA700,
+                              //             style: TextStyle(color: Colors.black),
+                              //             items: classes.map((classItem) {
+                              //               return DropdownMenuItem<String>(
+                              //                 value: classItem.id.toString(),
+                              //                 child: Text(classItem.name),
+                              //               );
+                              //             }).toList(),
+                              //             onChanged: (String? newValue) {
+                              //               setState(() {
+                              //                 selectedClassId =
+                              //                     int.tryParse(newValue ?? '');
+                              //                 selectedClassName = classes
+                              //                     .firstWhere((classItem) =>
+                              //                         classItem.id
+                              //                             ?.toString() ==
+                              //                         newValue)
+                              //                     .name;
+                              //               });
+                              //             },
+                              //             validator: (value) {
+                              //               if (value == null ||
+                              //                   value.isEmpty) {
+                              //                 return AppLocalizations.of(
+                              //                         context)!
+                              //                     .translate(
+                              //                         'please_select_class')!;
+                              //               }
+                              //               return null;
+                              //             },
+                              //           ),
+                              //         ),
+                              //       )
+                              //     :
+                              Container(
+                                height: 50,
+                                width: 130,
+                              ),
                             ],
                           ),
                         ),

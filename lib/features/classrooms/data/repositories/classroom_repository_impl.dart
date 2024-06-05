@@ -280,4 +280,18 @@ class ClassroomRepositoryImpl implements ClassroomRepository {
       return Left(NetworkFailure());
     }
   }
+  @override
+  Future<Either<Failure, List<String>>>
+      generateCodes(String type, int id, int number) async {
+    if (await networkInfo.isConnected) {
+      try {
+        final remoteResponse = await remoteDataSource.generateCodes(type, id, number);
+        return Right(remoteResponse);
+      } on ServerException {
+        return Left(ServerFailure());
+      }
+    } else {
+      return Left(NetworkFailure());
+    }
+  }
 }

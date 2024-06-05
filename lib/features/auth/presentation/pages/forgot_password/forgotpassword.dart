@@ -88,7 +88,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                                   top: 10.h, left: 10.h, right: 10.h),
                               child: Text(
                                   // AppLocalizations.of(context)!.translate("email")!,
-                                  "Forgot Password",
+                                  AppLocalizations.of(context)!.translate("forgot_password")!,
                                   style: CustomTextStyles
                                       .titleMediumPoppinsBlack2),
                             ),
@@ -106,7 +106,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                               padding: EdgeInsets.symmetric(horizontal: 10.h),
                               child: Text(
                                   // AppLocalizations.of(context)!.translate("email")!,
-                                  'Enter your email to reset your password',
+                                  AppLocalizations.of(context)!.translate("enter_email_to_reset")!,
+                                  // 'Enter your email to reset your password',
                                   style: CustomTextStyles
                                       .titleMediumPoppinsGray3002),
                             ),

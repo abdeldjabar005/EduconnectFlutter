@@ -350,17 +350,7 @@ class _UpdateChildState extends State<UpdateChild> {
                   errorMessage = '';
                 });
 
-                if (_formKey.currentState!.validate()) {
-                  context.read<ChildrenCubit>().updateChild(
-                        ChildModel(
-                          id: widget.child.id,
-                          firstName: firstNameController.text,
-                          lastName: lastNameController.text,
-                          grade: selectedGrade,
-                          relation: selectedRealtion,
-                        ),
-                      );
-                }
+                
               } else {
                 setState(() {
                   errorMessage = AppLocalizations.of(context)!

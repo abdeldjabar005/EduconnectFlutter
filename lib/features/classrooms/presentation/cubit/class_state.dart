@@ -82,6 +82,15 @@ class StudentsLoaded extends ClassState {
   List<Object> get props => [students];
 }
 
+class CodesGenerated extends ClassState {
+  final List<String> codes;
+
+  CodesGenerated(this.codes);
+
+  @override
+  List<Object> get props => [codes];
+}
+
 class ClassError extends ClassState {
   final String message;
 

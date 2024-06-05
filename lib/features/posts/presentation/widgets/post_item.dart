@@ -60,7 +60,8 @@ class PostItem extends StatelessWidget {
                     color: AppColors.gray200,
                     width: 1.h,
                   ),
-                  imagePath: post.profilePicture,
+                  imagePath:
+                      'http://127.0.0.1:8000/storage/${post.profilePicture}',
                   height: 40.adaptSize,
                   width: 40.adaptSize,
                   radius: BorderRadius.circular(

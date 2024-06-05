@@ -118,7 +118,7 @@ class CustomTextStyles {
         fontSize: 12.v,
         fontWeight: FontWeight.w400,
       );
-      static get titleMediumPoppins10 =>
+  static get titleMediumPoppins10 =>
       theme.textTheme.titleSmall!.poppins.copyWith(
         color: postTheme.whiteA700,
         fontSize: 10.v,
@@ -189,7 +189,7 @@ class CustomTextStyles {
         color: AppColors.gray40001,
         fontWeight: FontWeight.w500,
       );
-       static get titleMediumPoppinsGray40002 =>
+  static get titleMediumPoppinsGray40002 =>
       theme.textTheme.titleSmall!.poppins.copyWith(
         color: AppColors.gray40001,
         fontSize: 14,
@@ -209,6 +209,18 @@ class CustomTextStyles {
         fontWeight: FontWeight.w800,
         fontFamily: 'Poppins',
         color: AppColors.indigoA400,
+      );
+      static get displayMedium25 => theme.textTheme.displayMedium!.copyWith(
+        fontSize: 25.fSize,
+        fontWeight: FontWeight.w800,
+        fontFamily: 'Poppins',
+        color: AppColors.indigoA400,
+      );
+  static get displayMedium30 => theme.textTheme.displayMedium!.copyWith(
+        fontSize: 33.fSize,
+        fontWeight: FontWeight.w800,
+        fontFamily: 'Poppins',
+        color: AppColors.black900,
       );
 
   static get titleMediumPoppinsff2a2a2a =>

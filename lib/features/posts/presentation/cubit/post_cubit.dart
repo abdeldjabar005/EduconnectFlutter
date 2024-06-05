@@ -25,21 +25,88 @@ class PostCubit extends Cubit<PostState> {
     required this.checkIfPostIsLikedUseCase,
     required this.postRepository,
   }) : super(PostInitial());
+  
+Future<void> getPosts(int page, String type) async {
+  emit(PostLoading());
+  final response = await getPostsUseCase(Params(page: page, type: type));
+  emit(response.fold(
+    (failure) => PostError(message: _mapFailureToMessage(failure)),
+    (posts) {
+      final hasReachedMax = posts.length < 6;
+      if (state is PostLoaded) {
+        final loadedState = state as PostLoaded;
+        switch (type) {
+          case 'explore':
+            return loadedState.copyWith(
+              explorePosts: [...loadedState.explorePosts, ...posts],
+              hasReachedMax: hasReachedMax,
+            );
+          case 'school':
+            return loadedState.copyWith(
+              schoolPosts: [...loadedState.schoolPosts, ...posts],
+              hasReachedMax: hasReachedMax,
+            );
+          case 'class':
+            return loadedState.copyWith(
+              classPosts: [...loadedState.classPosts, ...posts],
+              hasReachedMax: hasReachedMax,
+            );
+          case 'bookmarks':
+            return loadedState.copyWith(
+              bookmarksPosts: [...loadedState.bookmarksPosts, ...posts],
+              hasReachedMax: hasReachedMax,
+            );
+          default:
+            return loadedState;
+        }
+      }
+      switch (type) {
+        case 'explore':
+          return PostLoaded(
+            explorePosts: posts,
+            schoolPosts: [],
+            classPosts: [],
+            bookmarksPosts: [],
+            hasReachedMax: hasReachedMax,
+          );
+        case 'school':
+          return PostLoaded(
+            explorePosts: [],
+            schoolPosts: posts,
+            classPosts: [],
+            bookmarksPosts: [],
+            hasReachedMax: hasReachedMax,
+          );
+        case 'class':
+          return PostLoaded(
+            explorePosts: [],
+            schoolPosts: [],
+            classPosts: posts,
+            bookmarksPosts: [],
+            hasReachedMax: hasReachedMax,
+          );
+        case 'bookmarks':
+          return PostLoaded(
+            explorePosts: [],
+            schoolPosts: [],
+            classPosts: [],
+            bookmarksPosts: posts,
+            hasReachedMax: hasReachedMax,
+          );
+        default:
+          return PostLoaded(
+            explorePosts: [],
+            schoolPosts: [],
+            classPosts: [],
+            bookmarksPosts: [],
+            hasReachedMax: hasReachedMax,
+          );
+      }
+    },
+  ));
+}
 
-  Future<void> getPosts(int page) async {
-    emit(PostLoading());
-    final response = await getPostsUseCase(Params(page: page));
-    emit(response.fold(
-      (failure) => PostError(message: _mapFailureToMessage(failure)),
-      (posts) {
-         final hasReachedMax = posts.length < 6;
-        return PostLoaded(
-          posts: posts,
-          hasReachedMax: hasReachedMax,
-        );
-      },
-    ));
-  }
+
 
   Future<void> getPost(int id) async {
     // emit(PostLoading());

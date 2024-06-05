@@ -54,6 +54,7 @@ class ImageConstant {
   static String cap = '$imagePath/cap.svg';
 
   static String imgBookmarkOrange300 = '$imagePath/img_bookmark_orange_300.png';
+  static String imglockOrange = '$imagePath/lock.png';
 
   static String imgBoldDuotoneEssentional =
       '$imagePath/img_bold_duotone_essentional.png';

@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:educonnect/config/routes/app_routes.dart';
 import 'package:educonnect/core/utils/app_colors.dart';
 import 'package:educonnect/core/utils/constants.dart';
 import 'package:educonnect/core/widgets/Tab_Cubit.dart';
-import 'package:educonnect/core/widgets/custom_bottom_bar.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -61,7 +59,7 @@ class _HomeScreenBodyState extends State<_HomeScreenBody>
                 ],
               ),
               bottom: PreferredSize(
-                preferredSize: Size.fromHeight(kToolbarHeight),
+                preferredSize: const Size.fromHeight(kToolbarHeight),
                 child: AnimatedBuilder(
                   animation: _tabController.animation!,
                   builder: (BuildContext context, Widget? child) {

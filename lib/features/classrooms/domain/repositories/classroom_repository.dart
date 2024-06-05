@@ -34,4 +34,5 @@ abstract class ClassroomRepository {
   Future<Either<Failure, void>> sendJoinRequest(int id);
   Future<Either<Failure, List<ChildModel>>> getStudents(int id, String type);
   Future<Either<Failure, List<RequestModel>>> getRequests(int id, String type);
+  Future<Either<Failure, List<String>>> generateCodes(String type, int id, int number);
 }

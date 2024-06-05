@@ -1,5 +1,6 @@
 // post_item.dart
 
+import 'package:educonnect/core/api/end_points.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -50,7 +51,7 @@ class ReplyItem extends StatelessWidget {
                     color: AppColors.gray200,
                     width: 1.h,
                   ),
-                  imagePath: reply.profilePicture,
+                  imagePath: '${EndPoints.storage}${reply.profilePicture}',
                   height: 33.adaptSize,
                   width: 33.adaptSize,
                   radius: BorderRadius.circular(

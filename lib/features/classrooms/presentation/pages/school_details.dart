@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:educonnect/features/classrooms/presentation/cubit/post2_cubit.dart';
+import 'package:educonnect/features/classrooms/presentation/widgets/code_generation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -273,38 +274,17 @@ class _SchoolDetailsState extends State<SchoolDetails>
                           }
                         }
                         break;
-                         case 'Invite':
+                      case 'Invite':
                         if (user.id == widget.school.adminId) {
                           if (context.mounted) {
-                            showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return AlertDialog(
-                                  title: Text(AppLocalizations.of(context)!
-                                      .translate('invite_users')!),
-                                  content: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: <Widget>[
-                                      Text(AppLocalizations.of(context)!
-                                          .translate('to_invite_school')!),
-                                      SizedBox(height: 10),
-                                      SelectableText(
-                                        widget.school.code!,
-                                        style: CustomTextStyles.displayMedium45,
-                                      ),
-                                    ],
-                                  ),
-                                  actions: <Widget>[
-                                    TextButton(
-                                      child: Text(AppLocalizations.of(context)!
-                                          .translate('close')!),
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                      },
-                                    ),
-                                  ],
-                                );
-                              },
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => CodeGenerationScreen(
+                                  schoolId: widget.school.id,
+                                  type: 'school',
+                                ),
+                              ),
                             );
                           }
                         }
@@ -460,9 +440,9 @@ class _SchoolDetailsState extends State<SchoolDetails>
                               .translate('school_requests')!),
                         ),
                       ),
-                       if (user.id == widget.school.adminId)
+                    if (user.id == widget.school.adminId)
                       PopupMenuItem<String>(
-                        value: 'Invite',  
+                        value: 'Invite',
                         child: ListTile(
                           contentPadding: EdgeInsets.zero,
                           leading: Icon(Icons.add, color: AppColors.indigoA200),

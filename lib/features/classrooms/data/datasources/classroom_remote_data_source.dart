@@ -37,8 +37,9 @@ abstract class ClassroomRemoteDataSource {
   Future<void> associateStudent(int studentId, int schoolId, String type);
   Future<void> leave(int id, String type);
   Future<void> sendJoinRequest(int id);
-  Future<List<ChildModel> > getStudents(int id, String type);
+  Future<List<ChildModel>> getStudents(int id, String type);
   Future<List<RequestModel>> getRequests(int id, String type);
+  Future<List<String>> generateCodes(String type, int id, int number);
 }
 
 class ClassroomRemoteDataSourceImpl implements ClassroomRemoteDataSource {
@@ -144,6 +145,7 @@ class ClassroomRemoteDataSourceImpl implements ClassroomRemoteDataSource {
         .map((i) => MemberModel.fromJson(i))
         .toList();
   }
+
   @override
   Future<List<ChildModel>> getStudents(int id, String type) async {
     String endpoint;
@@ -370,6 +372,7 @@ class ClassroomRemoteDataSourceImpl implements ClassroomRemoteDataSource {
       throw ServerException();
     }
   }
+
   @override
   Future<List<RequestModel>> getRequests(int id, String type) async {
     String endpoint;
@@ -384,6 +387,25 @@ class ClassroomRemoteDataSourceImpl implements ClassroomRemoteDataSource {
     }
     return (response['data'] as List)
         .map((i) => RequestModel.fromJson(i))
+        .toList();
+  }
+
+  @override
+  Future<List<String>> generateCodes(String type, int id, int number) async {
+    String endpoint;
+    if (type == 'school') {
+      endpoint = EndPoints.generateCodes("schools", id);
+    } else {
+      endpoint = EndPoints.generateCodes("classes", id);
+    }
+    final response = await apiConsumer.post(endpoint, body: {
+      'number': number,
+    });
+    if (response['statusCode'] != 200) {
+      throw ServerException();
+    }
+    return (response['data']['codes'] as List)
+        .map((i) => i.toString())
         .toList();
   }
 }

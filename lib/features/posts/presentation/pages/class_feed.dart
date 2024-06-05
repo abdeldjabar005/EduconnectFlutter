@@ -10,18 +10,19 @@ import 'package:educonnect/features/posts/presentation/widgets/post_item.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:educonnect/injection_container.dart';
 
-class PostScreen extends StatefulWidget {
-  const PostScreen({super.key});
+class ClassFeed extends StatefulWidget {
+  const ClassFeed({super.key});
 
   @override
-  _PostScreenState createState() => _PostScreenState();
+  _ClassFeedState createState() => _ClassFeedState();
 }
 
-class _PostScreenState extends State<PostScreen>
+class _ClassFeedState extends State<ClassFeed>
     with AutomaticKeepAliveClientMixin {
   final _pagingController = PagingController<int, PostModel>(
     firstPageKey: 1,
   );
+  final GlobalKey<NavigatorState> _navigatorKey3 = GlobalKey<NavigatorState>();
 
   @override
   bool get wantKeepAlive => true;
@@ -30,7 +31,7 @@ class _PostScreenState extends State<PostScreen>
   void initState() {
     super.initState();
     _pagingController.addPageRequestListener((pageKey) {
-      context.read<PostCubit>().getPosts(pageKey, 'explore');
+      context.read<PostCubit>().getPosts(pageKey, 'class');
     });
   }
 
@@ -57,8 +58,8 @@ class _PostScreenState extends State<PostScreen>
             listener: (context, state) {
               if (state is PostLoaded) {
                 final isLastPage = state.hasReachedMax;
-                String type = 'explore';
-                List<PostModel> postsOfType = state.explorePosts;
+                String type = 'class';
+                List<PostModel> postsOfType = state.classPosts;
                 if (postsOfType.isNotEmpty) {
                   if (isLastPage) {
                     _pagingController.appendLastPage(postsOfType);
@@ -73,27 +74,31 @@ class _PostScreenState extends State<PostScreen>
                 _pagingController.error = state.message;
               }
             },
-            child: PagedListView<int, PostModel>(
-              pagingController: _pagingController,
-              builderDelegate: PagedChildBuilderDelegate<PostModel>(
-                noItemsFoundIndicatorBuilder: (context) => Center(
-                  child: Text(
-                    AppLocalizations.of(context)!.translate("no_posts")!,
-                    style: const TextStyle(fontSize: 18),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-                itemBuilder: (context, post, index) => GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            PostDetailPage(post: post, type: 'post'),
+            child: Navigator(
+              key: _navigatorKey3,
+              onGenerateRoute: (settings) => MaterialPageRoute(
+                builder: (context) => PagedListView<int, PostModel>(
+                  pagingController: _pagingController,
+                  builderDelegate: PagedChildBuilderDelegate<PostModel>(
+                    noItemsFoundIndicatorBuilder: (context) => Center(
+                      child: Text(
+                        AppLocalizations.of(context)!.translate("no_posts")!,
+                        style: const TextStyle(fontSize: 18),
+                        textAlign: TextAlign.center,
                       ),
-                    );
-                  },
-                  child: PostItem(post: post, type: 'post'),
+                    ),
+                    itemBuilder: (context, post, index) => GestureDetector(
+                      onTap: () {
+                        Navigator.of(context, rootNavigator: true).push(
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                PostDetailPage(post: post, type: 'post'),
+                          ),
+                        );
+                      },
+                      child: PostItem(post: post, type: 'post'),
+                    ),
+                  ),
                 ),
               ),
             ),

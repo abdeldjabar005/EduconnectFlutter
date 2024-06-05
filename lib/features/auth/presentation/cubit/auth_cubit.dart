@@ -157,7 +157,34 @@ class AuthCubit extends Cubit<AuthState> {
   void emitAuthenticated() {
     emit(AuthAuthenticated(user: currentUser!));
   }
-
+  void updateUserProfilePicture(String newProfilePictureUrl) {
+    final currentState = state;
+    if (currentState is AuthAuthenticated) {
+      final updatedUser = currentState.user.copyWith(
+        profilePicture: newProfilePictureUrl,
+      );
+      emit(AuthAuthenticated(user: updatedUser));
+    }
+  }
+Future<void> updateUserInformation({
+  String? firstName,
+  String? lastName,
+  String? bio,
+  String? contactInformation,
+  String? profilepicture,
+}) async {
+  final currentState = state;
+  if (currentState is AuthAuthenticated) {
+    final updatedUser = currentState.user.copyWith(
+      firstName: firstName ?? currentState.user.firstName,
+      lastName: lastName ?? currentState.user.lastName,
+      bio: bio ?? currentState.user.bio,
+      contactInformation: contactInformation ?? currentState.user.contactInformation,
+      profilePicture: profilepicture ?? currentState.user.profilePicture,
+    );
+    emit(AuthAuthenticated(user: updatedUser));
+  }
+}
   void _eitherLoadedOrErrorState(Either<Failure, User> failureOrUser) {
     emit(
       failureOrUser.fold(
@@ -326,4 +353,5 @@ class AuthCubit extends Cubit<AuthState> {
         return 'Unexpected error';
     }
   }
+
 }

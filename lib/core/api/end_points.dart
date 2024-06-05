@@ -7,13 +7,18 @@ class EndPoints {
 
   static const String chatifyUrl = 'http://127.0.0.1:8000/chatify/api/';
 
+  static const String updateProfile = '${baseUrl}user';
   static const String auth = '${chatifyUrl}chat/auth';
 
   static const String randomQuote = '${baseUrl}quotes/random';
   static const String login = '${baseUrl}login';
   static const String signUp = '${baseUrl}register';
+  static const String changePassword = '${baseUrl}change-password';
   // static const String posts = '${baseUrl}posts/class/16';
   static const String posts = '${baseUrl}posts/user/posts';
+  static const String schoolPosts = '${baseUrl}posts/user/schools';
+  static const String classPosts = '${baseUrl}posts/user/classes';
+  static const String bookmarkPosts = '${baseUrl}posts/saved-posts';
 
   static String post(int id) => '${baseUrl}posts/$id';
 
@@ -75,4 +80,7 @@ class EndPoints {
   static String getSchoolRequests(int id) =>
       '${baseUrl}school-join-requests/$id';
   static String getClassRequests(int id) => '${baseUrl}join-requests/$id';
+
+  static String generateCodes(String type, int id) =>
+      '$baseUrl$type/$id/generate-code';
 }

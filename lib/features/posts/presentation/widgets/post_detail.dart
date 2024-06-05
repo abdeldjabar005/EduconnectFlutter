@@ -2,6 +2,7 @@
 import 'dart:math';
 import 'dart:developer' as dev;
 
+import 'package:educonnect/core/utils/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:educonnect/config/locale/app_localizations.dart';
@@ -34,6 +35,8 @@ class PostDetails extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     bool isRtl = Localizations.localeOf(context).languageCode == 'ar';
+    vLog(post.profilePicture);
+
     return Container(
       decoration: const BoxDecoration(
         color: Colors.white,
@@ -58,7 +61,9 @@ class PostDetails extends StatelessWidget {
                     color: AppColors.gray200,
                     width: 1.h,
                   ),
-                  imagePath: post.profilePicture,
+                  // imagePath: post.profilePicture,
+                  imagePath: '${EndPoints.storage}${post.profilePicture}',
+
                   height: 40.adaptSize,
                   width: 40.adaptSize,
                   radius: BorderRadius.circular(
@@ -397,8 +402,6 @@ class PostDetails extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-        
-
               Expanded(
                 child: InkWell(
                   onTap: () {
@@ -422,8 +425,7 @@ class PostDetails extends StatelessWidget {
                           ),
                           SizedBox(width: 5.v),
                           Text(
-                            AppLocalizations.of(context)!
-                              .translate("likes")!,
+                            AppLocalizations.of(context)!.translate("likes")!,
                             style: theme.textTheme.bodyMedium?.copyWith(
                               color: post.isLiked ? Colors.blue : null,
                             ),
@@ -466,8 +468,7 @@ class PostDetails extends StatelessWidget {
                     // ),
                     SizedBox(width: 5.v),
                     Text(
-                      AppLocalizations.of(context)!
-                              .translate("comments")!,
+                      AppLocalizations.of(context)!.translate("comments")!,
                       style: theme.textTheme.bodyMedium,
                     ),
                   ],
@@ -483,8 +484,7 @@ class PostDetails extends StatelessWidget {
                     ),
                     SizedBox(width: 5.v),
                     Text(
-                      AppLocalizations.of(context)!
-                              .translate("saves")!,
+                      AppLocalizations.of(context)!.translate("saves")!,
                       style: theme.textTheme.bodyMedium,
                     ),
                   ],

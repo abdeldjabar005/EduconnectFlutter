@@ -9,6 +9,8 @@ class InvalidCredentialsFailure extends Failure {}
 
 class EmailAlreadyExistsFailure extends Failure {}
 
+class OldPasswordWrongFailure extends Failure {}
+
 class EmailDoesNotExistFailure extends Failure {}
 
 class ServerFailure extends Failure {}

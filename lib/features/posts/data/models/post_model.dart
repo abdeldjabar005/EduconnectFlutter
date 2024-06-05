@@ -110,7 +110,7 @@ class PostModel extends Post {
       lastName: json["last_name"],
       profilePicture: json["profile_picture"]?.isNotEmpty == true
           ? json["profile_picture"]
-          : 'assets/images/edu.png',
+          : 'users-avatar/avatar.png',
       classname: json["classname"],
       isSaved: json["isSaved"],
       content: content,

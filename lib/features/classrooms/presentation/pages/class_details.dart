@@ -1,4 +1,5 @@
 import 'package:educonnect/features/classrooms/presentation/cubit/post2_cubit.dart';
+import 'package:educonnect/features/classrooms/presentation/widgets/code_generation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:educonnect/config/locale/app_localizations.dart';
@@ -266,36 +267,17 @@ class _ClassDetailsState extends State<ClassDetails>
                       case 'Invite':
                         if (user.id == widget.classe.teacherId) {
                           if (context.mounted) {
-                            showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return AlertDialog(
-                                  title: Text(AppLocalizations.of(context)!
-                                      .translate('invite_users')!),
-                                  content: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: <Widget>[
-                                      Text(AppLocalizations.of(context)!
-                                          .translate('to_invite')!),
-                                      SizedBox(height: 10),
-                                      SelectableText(
-                                        widget.classe.code!,
-                                        style: CustomTextStyles.displayMedium45,
-                                      ),
-                                    ],
+                            if (context.mounted) {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => CodeGenerationScreen(
+                                    schoolId: widget.classe.id,
+                                    type: 'class',
                                   ),
-                                  actions: <Widget>[
-                                    TextButton(
-                                      child: Text(AppLocalizations.of(context)!
-                                          .translate('close')!),
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                      },
-                                    ),
-                                  ],
-                                );
-                              },
-                            );
+                                ),
+                              );
+                            }
                           }
                         }
                         break;

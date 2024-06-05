@@ -350,6 +350,20 @@ class ClassCubit extends Cubit<ClassState> {
       emit(ClassError(e.toString()));
     }
   }
+  Future<void> generateCodes(String type, int id, int number)async{
+
+    emit(ClassLoading());
+    final result = await classroomRepository.generateCodes(type, id, number);
+    result.fold(
+      (failure) {
+        emit(ClassError(_mapFailureToMessage(failure)));
+      },
+      (codes) {
+        emit(CodesGenerated(codes));
+      },
+    );
+
+  }
 
   String _mapFailureToMessage(Failure failure) {
     switch (failure.runtimeType) {

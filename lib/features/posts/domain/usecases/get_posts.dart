@@ -12,7 +12,7 @@ class GetPosts implements UseCase<List<PostModel>, Params> {
 
   @override
   Future<Either<Failure, List<PostModel>>> call(Params params) {
-    return postRepository.getPosts(params.page);
+    return postRepository.getPosts(params.page, params.type);
   }
   
 }

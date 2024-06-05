@@ -57,7 +57,7 @@ class CommentDetails extends StatelessWidget {
                     color: AppColors.gray200,
                     width: 1.h,
                   ),
-                  imagePath: comment.profilePicture,
+                  imagePath: '${EndPoints.storage}${comment.profilePicture}',
                   height: 40.adaptSize,
                   width: 40.adaptSize,
                   radius: BorderRadius.circular(

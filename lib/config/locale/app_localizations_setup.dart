@@ -6,6 +6,7 @@ class AppLocalizationsSetup {
   static const Iterable<Locale> supportedLocales = [
     Locale('en'),
     Locale('ar'),
+    Locale('fr'),
   ];
 
   static const Iterable<LocalizationsDelegate<dynamic>> localizationsDelegates =

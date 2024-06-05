@@ -1,5 +1,6 @@
 import 'package:educonnect/core/utils/logger.dart';
 import 'package:educonnect/features/classrooms/data/models/school_nodel.dart';
+import 'package:educonnect/features/profile/presentation/widgets/manage_classes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:educonnect/config/locale/app_localizations.dart';
@@ -253,7 +254,7 @@ class ManageSchool extends StatelessWidget {
                       onTap: () {
                         Navigator.push(context, MaterialPageRoute(
                           builder: (context) {
-                            return DefaultWidget();
+                            return ManageClasses();
                             // return ManageProfile();
                           },
                         ));
@@ -269,7 +270,7 @@ class ManageSchool extends StatelessWidget {
                           icon: ImageConstant.members,
                           fill: IconButtonStyleHelper.blue,
                           profile: AppLocalizations.of(context)!
-                              .translate('manage_members')!,
+                              .translate('manage_classes')!,
                         ),
                       ),
                     ),

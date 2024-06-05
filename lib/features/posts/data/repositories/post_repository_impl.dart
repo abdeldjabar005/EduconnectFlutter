@@ -27,10 +27,10 @@ class PostRepositoryImpl implements PostRepository {
   });
 
   @override
-  Future<Either<Failure, List<PostModel>>> getPosts(int page) async {
+  Future<Either<Failure, List<PostModel>>> getPosts(int page, String type) async {
     if (await networkInfo.isConnected) {
       try {
-        final remotePosts = await remoteDataSource.getPosts(page);
+        final remotePosts = await remoteDataSource.getPosts(page, type);
         return Right(remotePosts);
       } on ServerException {
         return Left(ServerFailure());

@@ -1,3 +1,5 @@
+import 'package:educonnect/features/posts/presentation/pages/class_feed.dart';
+import 'package:educonnect/features/posts/presentation/pages/school_feed.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -6,7 +8,6 @@ import 'package:educonnect/core/utils/app_colors.dart';
 import 'package:educonnect/features/classrooms/presentation/pages/classroom_posts.dart';
 import 'package:educonnect/features/classrooms/presentation/widgets/classes.dart';
 import 'package:educonnect/features/classrooms/presentation/widgets/members.dart';
-import 'package:educonnect/features/posts/presentation/pages/new_post.dart';
 import 'package:educonnect/features/posts/presentation/pages/post_screen.dart';
 
 class Constants {
@@ -137,12 +138,13 @@ class Constants {
   }
 
   static List<Widget> screens = [
-    PostScreen(),
-    // NewPost(),
-    Center(
+    const PostScreen(),
+    // const SchoolFeed(),
+    // const ClassFeed(),
+    const Center(
       child: Text('School Screen'),
     ),
-    Center(
+    const Center(
       child: Text('Class Screen'),
     ),
   ];

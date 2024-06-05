@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:educonnect/config/themes/app_theme.dart';
 import 'package:educonnect/core/utils/app_colors.dart';
 import 'package:educonnect/core/utils/image_constant.dart';
 import 'package:educonnect/core/utils/size_utils.dart';
 import 'package:educonnect/features/posts/presentation/widgets/custom_image_view.dart';
 
 class CustomBottomBar extends StatefulWidget {
-  CustomBottomBar({this.onChanged});
+  CustomBottomBar({super.key, this.onChanged});
 
   Function(BottomBarEnum)? onChanged;
 
@@ -115,6 +114,8 @@ class BottomMenuModel {
 }
 
 class DefaultWidget extends StatelessWidget {
+  const DefaultWidget({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Container(

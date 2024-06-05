@@ -1,11 +1,12 @@
 // Data Layer - Data Sources
 
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:educonnect/core/api/api_consumer.dart';
 import 'package:educonnect/core/api/end_points.dart';
 import 'package:educonnect/core/error/exceptions.dart';
-import 'package:educonnect/core/error/failures.dart';
+import 'package:educonnect/core/utils/logger.dart';
 import 'package:educonnect/features/auth/data/models/user_model.dart';
 
 abstract class AuthRemoteDataSource {
@@ -21,6 +22,7 @@ abstract class AuthRemoteDataSource {
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   ApiConsumer apiConsumer;
+  String _token = '';
 
   AuthRemoteDataSourceImpl({required this.apiConsumer});
 
@@ -115,6 +117,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       throw const ServerException();
     }
   }
+
   @override
   Future<void> forgotPassword(String email) async {
     try {
@@ -123,9 +126,10 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         body: {
           'email': email,
         },
-      ).timeout(const Duration(seconds: 10));
+      );
 
       if (response['statusCode'] == 200) {
+        _token = response['data']['token'];
         return;
       } else if (response['statusCode'] == 404) {
         throw EmailDoesNotExistException();
@@ -136,15 +140,18 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       throw const ServerException();
     }
   }
+
   @override
   Future<void> validateOtp(String code) async {
     try {
+      vLog(_token);
       final response = await apiConsumer.post(
         EndPoints.validateOtp,
         body: {
           'otp': code,
+          'token': _token,
         },
-      ).timeout(const Duration(seconds: 10));
+      );
 
       if (response['statusCode'] == 200) {
         return;
@@ -157,6 +164,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       throw const ServerException();
     }
   }
+
   @override
   Future<void> resetPassword(String password, String confirmPassword) async {
     try {
@@ -165,8 +173,9 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         body: {
           'password': password,
           'password_confirmation': confirmPassword,
+          'token': _token,
         },
-      ).timeout(const Duration(seconds: 10));
+      );
 
       if (response['statusCode'] == 200) {
         return;

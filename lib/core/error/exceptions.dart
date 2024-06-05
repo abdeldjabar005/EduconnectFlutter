@@ -53,6 +53,10 @@ class EmailAlreadyExistsException extends ServerException {
   const EmailAlreadyExistsException([message])
       : super("Email already exists");
 }
+class OldPasswordWrongException extends ServerException {
+  const OldPasswordWrongException([message])
+      : super("Old password is wrong");
+}
 class EmailDoesNotExistException extends ServerException {
   const EmailDoesNotExistException([message])
       : super("Email does not exist");

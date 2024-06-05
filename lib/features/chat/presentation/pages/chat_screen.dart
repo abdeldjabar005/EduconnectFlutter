@@ -106,8 +106,28 @@ class _ChatScreenState extends State<ChatScreen> {
     }
   }
 
-  Future<bool> triggerPusherEvent(PusherEvent event) async {
+  Future<bool>  triggerPusherEvent(PusherEvent event) async {
     try {
+      if (pusher == null) {
+        await pusher.init(
+          apiKey: '302253a19878edcfab21',
+          cluster: 'eu',
+          onEvent: _handleEvent,
+          onAuthorizer: onAuthorizer,
+          onConnectionStateChange: onConnectionStateChange,
+          onError: onError,
+          onSubscriptionSucceeded: onSubscriptionSucceeded,
+          onSubscriptionError: onSubscriptionError,
+          onDecryptionFailure: onDecryptionFailure,
+          onMemberAdded: onMemberAdded,
+          onMemberRemoved: onMemberRemoved,
+          onSubscriptionCount: onSubscriptionCount,
+        );
+      }
+
+      await pusher.connect();
+      await pusher.subscribe(channelName: event.channelName);
+
       await pusher.trigger(event);
       return true;
     } catch (e) {
@@ -310,11 +330,11 @@ class _ChatScreenState extends State<ChatScreen> {
                     PusherEvent(
                         channelName: "private-chatify.$widget.contact.id",
                         eventName: "client-contactItem",
-                        data: {
+                        data: jsonEncode({
                           "from": authCubit.currentUser!.id.toString(),
                           "to": widget.contact.id.toString(),
                           "update": true,
-                        }),
+                        })),
                   );
                   if (!triggered) {
                     vLog(

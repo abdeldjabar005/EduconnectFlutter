@@ -10,7 +10,7 @@ import 'package:educonnect/features/posts/domain/entities/comment.dart';
 import 'package:educonnect/features/posts/domain/entities/like.dart';
 
 abstract class PostRepository {
-  Future<Either<Failure, List<PostModel>>> getPosts(int page);
+  Future<Either<Failure, List<PostModel>>> getPosts(int page, String type);
   Future<Either<Failure, List<Comment>>> getComments(int postId);
   Future<Either<Failure, CommentModel>> getComment(int id);
   Future<Either<Failure, void>> postComment(int postId, String comment);
