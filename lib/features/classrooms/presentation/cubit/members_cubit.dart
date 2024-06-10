@@ -1,7 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:educonnect/core/error/exceptions.dart';
 import 'package:educonnect/core/error/failures.dart';
 import 'package:educonnect/features/classrooms/data/models/member_model.dart';
 import 'package:educonnect/features/classrooms/data/models/request_model.dart';

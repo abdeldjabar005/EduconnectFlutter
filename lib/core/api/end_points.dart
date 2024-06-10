@@ -35,6 +35,10 @@ class EndPoints {
   static const String sendMessage = '${chatifyUrl}sendMessage';
 
   static const String newPost = '${baseUrl}posts';
+  static String removePost(int id) => '${baseUrl}posts/$id';
+  static String removeComment(int id, int postId) => '${baseUrl}posts/$postId/comments/$id';
+  static String removeReply(int id) => '${baseUrl}posts/replies/$id';
+  static String voteOnPoll(int postId) => '${baseUrl}posts/vote/$postId';
 
   static String comments(int postId) => '${baseUrl}posts/$postId/all-comments';
   static String comment(int id) => '${baseUrl}posts/$id/comment';

@@ -68,11 +68,12 @@ class Post2Cubit extends Cubit<Post2State> {
     // }
   }
 
-  Future<void> newPost(
-      PostM post, List<File>? images, String? schoolClass) async {
+  Future<void> newPost(PostM post, List<File>? images, String? schoolClass,
+      String? pollQuestion, List<String>? pollOptions) async {
     emit(Post2Loading());
 
-    final response = await postRepository.newPost(post, images, schoolClass);
+    final response = await postRepository.newPost(
+        post, images, schoolClass, pollQuestion, pollOptions);
     response.fold((failure) => emit(Post2Error(_mapFailureToMessage(failure))),
         (post) {
       if (post != null) {
@@ -91,7 +92,29 @@ class Post2Cubit extends Cubit<Post2State> {
       }
     });
   }
-
+  Future<void> removePost(int postId, int classOrSchoolId) async {
+    emit(Post2Loading());
+  
+    final response = await postRepository.removePost(postId);
+    response.fold(
+      (failure) {
+        emit(Post2Error(_mapFailureToMessage(failure)));
+      },
+      (_) {
+        final posts = postsCache.value[classOrSchoolId];
+        if (posts != null) {
+          final index = posts.indexWhere((post) => post.id == postId);
+          if (index != -1) {
+            posts.removeAt(index);
+            postsCache.value[classOrSchoolId] = posts;
+          }
+        }
+        emit(Post2Loaded(
+            posts: postsCache.value[classOrSchoolId] ?? [],
+            hasReachedMax: maxCache.value[classOrSchoolId] ?? false));
+      },
+    );
+  }
 
   Future<void> associateStudent(
       int studentId, int schoolId, String type) async {
@@ -108,6 +131,31 @@ class Post2Cubit extends Cubit<Post2State> {
       },
       (_) {
         emit(AssociateStudentSuccess());
+      },
+    );
+  }
+
+  Future<void> voteOnPoll(int postId, String option) async {
+    emit(Post2Loading());
+
+    final response = await postRepository.voteOnPoll(postId, option);
+    response.fold(
+      (failure) {
+        emit(Post2Error(_mapFailureToMessage(failure)));
+      },
+      (updatedPost) {
+        final posts = postsCache.value[updatedPost.classOrSchoolId];
+        if (posts != null) {
+          final index = posts.indexWhere((post) => post.id == postId);
+          if (index != -1) {
+            posts[index] = updatedPost;
+            postsCache.value[updatedPost.classOrSchoolId] = posts;
+          }
+        }
+        emit(Post2Loaded(
+            posts: postsCache.value[updatedPost.classOrSchoolId] ?? [],
+            hasReachedMax:
+                maxCache.value[updatedPost.classOrSchoolId] ?? false));
       },
     );
   }

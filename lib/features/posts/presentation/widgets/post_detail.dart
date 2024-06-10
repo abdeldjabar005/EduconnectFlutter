@@ -3,6 +3,7 @@ import 'dart:math';
 import 'dart:developer' as dev;
 
 import 'package:educonnect/core/utils/logger.dart';
+import 'package:educonnect/features/classrooms/presentation/cubit/post2_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:educonnect/config/locale/app_localizations.dart';
@@ -16,6 +17,7 @@ import 'package:educonnect/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:educonnect/features/classrooms/presentation/pages/class_details.dart';
 import 'package:educonnect/features/classrooms/presentation/pages/school_details.dart';
 import 'package:educonnect/features/posts/domain/entities/post.dart';
+import 'package:flutter_polls/flutter_polls.dart';
 import 'package:intl/intl.dart';
 import 'package:educonnect/features/posts/presentation/cubit/comment_cubit.dart';
 import 'package:educonnect/features/posts/presentation/cubit/like_cubit.dart';
@@ -174,128 +176,118 @@ class PostDetails extends StatelessWidget {
                                 '${EndPoints.storage}${post.content[0]['url']}',
                           ),
                         )
-                      : post.content.length == 1
-                          ? GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => ImageDetailPage(
-                                      imageUrls: post.content
-                                          .map((item) => item['url'] as String?)
-                                          .toList(),
-                                      initialIndex: 0,
-                                    ),
-                                    fullscreenDialog: true,
-                                  ),
+                      : post.type == 'poll'
+                          ? FlutterPolls(
+                              pollId: post.content[0]['id'].toString(),
+                              pollTitle: Text(post.content[0]['question']),
+                              hasVoted: post.content[0]['user_vote'] != null,
+                              pollOptions:
+                                  (post.content[0]['options'] as List<String>)
+                                      .map((option) {
+                                final votes = (post.content[0]['results']
+                                        as Map<String, dynamic>)[option] ??
+                                    0;
+                                return PollOption(
+                                  id: option,
+                                  title: Text(option),
+                                  votes: votes,
                                 );
+                              }).toList(),
+                              userVotedOptionId: post.content[0]['user_vote'],
+                              onVoted: (option, index) async {
+                                await context.read<Post2Cubit>().voteOnPoll(
+                                      post.content[0]['id'],
+                                      option.id!,
+                                    );
+                                return true;
                               },
-                              child: Hero(
-                                // tag: post.content[0],
-                                tag: '${post.content[0]['url']}_0',
-                                child: Material(
-                                  color: Colors.transparent,
-                                  child: CustomImageView(
-                                    fit: BoxFit.cover,
-                                    imagePath:
-                                        '${EndPoints.storage}${post.content[0]['url']}',
-                                    // height: 183.h,
-                                    // width: 329.h,
-                                    radius: BorderRadius.circular(
-                                      15.h,
+                            )
+                          : post.content.length == 1
+                              ? GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => ImageDetailPage(
+                                          imageUrls: post.content
+                                              .map((item) =>
+                                                  item['url'] as String?)
+                                              .toList(),
+                                          initialIndex: 0,
+                                        ),
+                                        fullscreenDialog: true,
+                                      ),
+                                    );
+                                  },
+                                  child: Hero(
+                                    // tag: post.content[0],
+                                    tag: '${post.content[0]['url']}_0',
+                                    child: Material(
+                                      color: Colors.transparent,
+                                      child: CustomImageView(
+                                        fit: BoxFit.cover,
+                                        imagePath:
+                                            '${EndPoints.storage}${post.content[0]['url']}',
+                                        // height: 183.h,
+                                        // width: 329.h,
+                                        radius: BorderRadius.circular(
+                                          15.h,
+                                        ),
+                                      ),
                                     ),
                                   ),
-                                ),
-                              ),
-                            )
-                          : LayoutBuilder(
-                              builder: (BuildContext context,
-                                  BoxConstraints constraints) {
-                                int crossAxisCount =
-                                    post.content.length >= 2 ? 2 : 1;
-                                return GridView.count(
-                                  physics: const NeverScrollableScrollPhysics(),
-                                  shrinkWrap: true,
-                                  crossAxisCount: crossAxisCount,
-                                  crossAxisSpacing: 8,
-                                  mainAxisSpacing: 8,
-                                  childAspectRatio: 700 / 500,
-                                  children: List<Widget>.generate(
-                                      min(post.content.length, 4), (index) {
-                                    String? imageUrl =
-                                        post.content[index]['url'];
+                                )
+                              : LayoutBuilder(
+                                  builder: (BuildContext context,
+                                      BoxConstraints constraints) {
+                                    int crossAxisCount =
+                                        post.content.length >= 2 ? 2 : 1;
+                                    return GridView.count(
+                                      physics:
+                                          const NeverScrollableScrollPhysics(),
+                                      shrinkWrap: true,
+                                      crossAxisCount: crossAxisCount,
+                                      crossAxisSpacing: 8,
+                                      mainAxisSpacing: 8,
+                                      childAspectRatio: 700 / 500,
+                                      children: List<Widget>.generate(
+                                          min(post.content.length, 4), (index) {
+                                        String? imageUrl =
+                                            post.content[index]['url'];
 
-                                    // If its the last image
-                                    if (index == 3) {
-                                      // Check how many more images are left
-                                      int remaining = post.content.length - 4;
+                                        // If its the last image
+                                        if (index == 3) {
+                                          // Check how many more images are left
+                                          int remaining =
+                                              post.content.length - 4;
 
-                                      // If no more are remaining return a simple image widget
-                                      if (remaining == 0) {
-                                        return GestureDetector(
-                                          onTap: () {
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    ImageDetailPage(
-                                                  imageUrls: post.content
-                                                      .map((item) => item['url']
-                                                          as String?)
-                                                      .toList(),
-                                                  initialIndex: index,
-                                                ),
-                                                fullscreenDialog: true,
-                                              ),
-                                            );
-                                          },
-                                          child: Hero(
-                                            tag:
-                                                '${post.content[index]['url']}_$index',
-                                            // tag: imageUrl,
-                                            child: Material(
-                                              color: Colors.transparent,
-                                              child: CustomImageView(
-                                                fit: BoxFit.cover,
-                                                imagePath:
-                                                    '${EndPoints.storage}$imageUrl',
-                                                radius: BorderRadius.circular(
-                                                  15.h,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        );
-                                      } else {
-                                        // Create the facebook like effect for the last image with number of remaining  images
-                                        return GestureDetector(
-                                          onTap: () {
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    ImageDetailPage(
-                                                  imageUrls: post.content
-                                                      .map((item) => item['url']
-                                                          as String?)
-                                                      .toList(),
-                                                  initialIndex: index,
-                                                ),
-                                                fullscreenDialog: true,
-                                              ),
-                                            );
-                                          },
-                                          child: Hero(
-                                            tag:
-                                                '${post.content[index]['url']}_$index',
-                                            // tag: imageUrl,
-                                            child: Material(
-                                              color: Colors.transparent,
-                                              child: Stack(
-                                                clipBehavior: Clip.hardEdge,
-                                                fit: StackFit.expand,
-                                                children: [
-                                                  CustomImageView(
+                                          // If no more are remaining return a simple image widget
+                                          if (remaining == 0) {
+                                            return GestureDetector(
+                                              onTap: () {
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        ImageDetailPage(
+                                                      imageUrls: post.content
+                                                          .map((item) =>
+                                                              item['url']
+                                                                  as String?)
+                                                          .toList(),
+                                                      initialIndex: index,
+                                                    ),
+                                                    fullscreenDialog: true,
+                                                  ),
+                                                );
+                                              },
+                                              child: Hero(
+                                                tag:
+                                                    '${post.content[index]['url']}_$index',
+                                                // tag: imageUrl,
+                                                child: Material(
+                                                  color: Colors.transparent,
+                                                  child: CustomImageView(
                                                     fit: BoxFit.cover,
                                                     imagePath:
                                                         '${EndPoints.storage}$imageUrl',
@@ -304,72 +296,117 @@ class PostDetails extends StatelessWidget {
                                                       15.h,
                                                     ),
                                                   ),
-                                                  if (remaining > 0)
-                                                    Container(
-                                                      alignment:
-                                                          Alignment.center,
-                                                      decoration: BoxDecoration(
-                                                        color: Colors.black54,
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(
+                                                ),
+                                              ),
+                                            );
+                                          } else {
+                                            // Create the facebook like effect for the last image with number of remaining  images
+                                            return GestureDetector(
+                                              onTap: () {
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        ImageDetailPage(
+                                                      imageUrls: post.content
+                                                          .map((item) =>
+                                                              item['url']
+                                                                  as String?)
+                                                          .toList(),
+                                                      initialIndex: index,
+                                                    ),
+                                                    fullscreenDialog: true,
+                                                  ),
+                                                );
+                                              },
+                                              child: Hero(
+                                                tag:
+                                                    '${post.content[index]['url']}_$index',
+                                                // tag: imageUrl,
+                                                child: Material(
+                                                  color: Colors.transparent,
+                                                  child: Stack(
+                                                    clipBehavior: Clip.hardEdge,
+                                                    fit: StackFit.expand,
+                                                    children: [
+                                                      CustomImageView(
+                                                        fit: BoxFit.cover,
+                                                        imagePath:
+                                                            '${EndPoints.storage}$imageUrl',
+                                                        radius: BorderRadius
+                                                            .circular(
                                                           15.h,
                                                         ),
                                                       ),
-                                                      child: Text(
-                                                        '+$remaining',
-                                                        style: TextStyle(
-                                                            fontSize: 32,
-                                                            color: AppColors
-                                                                .whiteA700),
-                                                      ),
-                                                    ),
-                                                ],
+                                                      if (remaining > 0)
+                                                        Container(
+                                                          alignment:
+                                                              Alignment.center,
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            color:
+                                                                Colors.black54,
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                              15.h,
+                                                            ),
+                                                          ),
+                                                          child: Text(
+                                                            '+$remaining',
+                                                            style: TextStyle(
+                                                                fontSize: 32,
+                                                                color: AppColors
+                                                                    .whiteA700),
+                                                          ),
+                                                        ),
+                                                    ],
+                                                  ),
+                                                ),
                                               ),
-                                            ),
-                                          ),
-                                        );
-                                      }
-                                    } else {
-                                      return GestureDetector(
-                                        onTap: () {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  ImageDetailPage(
-                                                imageUrls: post.content
-                                                    .map((item) =>
-                                                        item['url'] as String?)
-                                                    .toList(),
-                                                initialIndex: index,
+                                            );
+                                          }
+                                        } else {
+                                          return GestureDetector(
+                                            onTap: () {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      ImageDetailPage(
+                                                    imageUrls: post.content
+                                                        .map((item) =>
+                                                            item['url']
+                                                                as String?)
+                                                        .toList(),
+                                                    initialIndex: index,
+                                                  ),
+                                                  fullscreenDialog: true,
+                                                ),
+                                              );
+                                            },
+                                            child: Hero(
+                                              tag:
+                                                  '${post.content[index]['url']}_$index',
+                                              // tag: imageUrl,
+                                              child: Material(
+                                                color: Colors.transparent,
+                                                child: CustomImageView(
+                                                  fit: BoxFit.cover,
+                                                  imagePath:
+                                                      '${EndPoints.storage}$imageUrl',
+                                                  radius: BorderRadius.circular(
+                                                    15.h,
+                                                  ),
+                                                ),
                                               ),
-                                              fullscreenDialog: true,
                                             ),
                                           );
-                                        },
-                                        child: Hero(
-                                          tag:
-                                              '${post.content[index]['url']}_$index',
-                                          // tag: imageUrl,
-                                          child: Material(
-                                            color: Colors.transparent,
-                                            child: CustomImageView(
-                                              fit: BoxFit.cover,
-                                              imagePath:
-                                                  '${EndPoints.storage}$imageUrl',
-                                              radius: BorderRadius.circular(
-                                                15.h,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      );
-                                    }
-                                  }),
-                                );
-                              },
-                            )
+                                        }
+                                      }),
+                                    );
+                                  },
+                                )
               : const SizedBox.shrink(),
 
           SizedBox(height: 12.v),

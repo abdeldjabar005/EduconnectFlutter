@@ -27,7 +27,8 @@ class PostRepositoryImpl implements PostRepository {
   });
 
   @override
-  Future<Either<Failure, List<PostModel>>> getPosts(int page, String type) async {
+  Future<Either<Failure, List<PostModel>>> getPosts(
+      int page, String type) async {
     if (await networkInfo.isConnected) {
       try {
         final remotePosts = await remoteDataSource.getPosts(page, type);
@@ -41,10 +42,17 @@ class PostRepositoryImpl implements PostRepository {
   }
 
   @override
-  Future<Either<Failure, PostModel>> newPost(PostM post, List<File>? images, String? schoolClass) async {
+  Future<Either<Failure, PostModel>> newPost(
+    PostM post,
+    List<File>? images,
+    String? schoolClass,
+    String? pollQuestion,
+    List<String>? pollOptions,
+  ) async {
     if (await networkInfo.isConnected) {
       try {
-        final remotePost = await remoteDataSource.newPost(post, images, schoolClass);
+        final remotePost =
+            await remoteDataSource.newPost(post, images, schoolClass, pollQuestion, pollOptions);
         return Right(remotePost);
       } on ServerException {
         return Left(ServerFailure());
@@ -54,6 +62,19 @@ class PostRepositoryImpl implements PostRepository {
     }
   }
 
+  @override
+  
+  Future<Either<Failure, void>> removePost(int id) async {
+    if (await networkInfo.isConnected) {
+      try {
+        return Right(remoteDataSource.removePost(id));
+      } on ServerException {
+        return Left(ServerFailure());
+      }
+    } else {
+      return Left(NetworkFailure());
+    }
+  }  
   @override
   Future<Either<Failure, List<Comment>>> getComments(int postId) async {
     if (await networkInfo.isConnected) {
@@ -67,6 +88,7 @@ class PostRepositoryImpl implements PostRepository {
       return Left(NetworkFailure());
     }
   }
+
   @override
   Future<Either<Failure, CommentModel>> getComment(int id) async {
     if (await networkInfo.isConnected) {
@@ -93,6 +115,7 @@ class PostRepositoryImpl implements PostRepository {
       return Left(NetworkFailure());
     }
   }
+
   @override
   Future<Either<Failure, void>> postReply(int id, String reply) async {
     if (await networkInfo.isConnected) {
@@ -105,6 +128,7 @@ class PostRepositoryImpl implements PostRepository {
       return Left(NetworkFailure());
     }
   }
+
   @override
   Future<Either<Failure, PostModel>> getPost(int id) async {
     if (await networkInfo.isConnected) {
@@ -118,6 +142,7 @@ class PostRepositoryImpl implements PostRepository {
       return Left(NetworkFailure());
     }
   }
+
   @override
   Future<Either<Failure, LikePostResponse>> likePost(int id) async {
     if (await networkInfo.isConnected) {
@@ -131,6 +156,7 @@ class PostRepositoryImpl implements PostRepository {
       return Left(NetworkFailure());
     }
   }
+
   @override
   Future<Either<Failure, LikePostResponse>> likeComment(int id) async {
     if (await networkInfo.isConnected) {
@@ -144,7 +170,8 @@ class PostRepositoryImpl implements PostRepository {
       return Left(NetworkFailure());
     }
   }
-  @override 
+
+  @override
   Future<Either<Failure, LikePostResponse>> likeReply(int id) async {
     if (await networkInfo.isConnected) {
       try {
@@ -157,12 +184,53 @@ class PostRepositoryImpl implements PostRepository {
       return Left(NetworkFailure());
     }
   }
+
   @override
-  Future<Either<Failure, LikePostResponse>> checkIfPostIsLiked(int postId) async {
+  Future<Either<Failure, void>> removeComment(int id, int postId) async {
+    if (await networkInfo.isConnected) {
+      try {
+        return Right(remoteDataSource.removeComment(id, postId));
+      } on ServerException {
+        return Left(ServerFailure());
+      }
+    } else {
+      return Left(NetworkFailure());
+    }
+  }
+  @override
+  Future<Either<Failure, void>> removeReply(int id) async {
+    if (await networkInfo.isConnected) {
+      try {
+        return Right(remoteDataSource.removeReply(id));
+      } on ServerException {
+        return Left(ServerFailure());
+      }
+    } else {
+      return Left(NetworkFailure());
+    }
+  }
+  @override
+  Future<Either<Failure, LikePostResponse>> checkIfPostIsLiked(
+      int postId) async {
     if (await networkInfo.isConnected) {
       try {
         final remoteLike = await remoteDataSource.checkIfPostIsLiked(postId);
         return Right(remoteLike);
+      } on ServerException {
+        return Left(ServerFailure());
+      }
+    } else {
+      return Left(NetworkFailure());
+    }
+  }
+
+  @override
+  Future<Either<Failure, PostModel>> voteOnPoll(
+      int postId, String option) async {
+    if (await networkInfo.isConnected) {
+      try {
+        final remotePost = await remoteDataSource.voteOnPoll(postId, option);
+        return Right(remotePost);
       } on ServerException {
         return Left(ServerFailure());
       }

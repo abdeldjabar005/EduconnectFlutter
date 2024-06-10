@@ -1,4 +1,6 @@
 // post_model.dart
+import 'dart:convert';
+
 import 'package:educonnect/features/posts/data/models/comment_model.dart';
 import 'package:educonnect/features/posts/domain/entities/post.dart';
 
@@ -47,17 +49,22 @@ class PostModel extends Post {
     List<Map<String, dynamic>> content = [];
     switch (json['type']) {
       case 'poll':
-        content = (json['poll'] as List)
-            .map((item) => item is Map
-                ? {
-                    'url': item['url'].toString(),
-                    'name': item['name'].toString()
-                  }
-                : null)
-            .where((item) => item != null)
-            .toList()
-            .cast<Map<String, dynamic>>();
+        final poll = json['poll'] as Map<String, dynamic>;
+        content = [
+          {
+            'id': poll['id'],
+            'post_id': poll['post_id'],
+            'question': poll['question'].toString(),
+            'options': List<String>.from(jsonDecode(poll['options'])),
+            'results': (jsonDecode(poll['results']) as Map<String, dynamic>)
+                .map((key, value) => MapEntry(key, value as int)),
+            'user_vote': poll['user_vote']?.toString(),
+            'created_at': DateTime.parse(poll['created_at']),
+            'updated_at': DateTime.parse(poll['updated_at']),
+          }
+        ];
         break;
+
       case 'picture':
         content = (json['pictures'] as List)
             .map((item) => item is Map

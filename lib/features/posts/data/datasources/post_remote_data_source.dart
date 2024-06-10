@@ -19,11 +19,20 @@ abstract class PostRemoteDataSource {
   Future<void> postReply(int id, String reply);
   Future<PostModel> getPost(int id);
   Future<PostModel> newPost(
-      PostM post, List<File>? images, String? schoolClass);
+    PostM post,
+    List<File>? images,
+    String? schoolClass,
+    String? pollQuestion,
+    List<String>? pollOptions,
+  );
   Future<LikePostResponse> likePost(int id);
   Future<LikePostResponse> likeComment(int id);
   Future<LikePostResponse> likeReply(int postId);
   Future<LikePostResponse> checkIfPostIsLiked(int postId);
+  Future<PostModel> voteOnPoll(int postId, String option);
+  Future<void> removePost(int id);
+  Future<void> removeComment(int id, int postId);
+  Future<void> removeReply(int id);
 }
 
 class PostRemoteDataSourceImpl implements PostRemoteDataSource {
@@ -50,7 +59,7 @@ class PostRemoteDataSourceImpl implements PostRemoteDataSource {
       default:
         throw Exception('Invalid post type');
     }
-  
+
     final response = await apiConsumer.get("$endPoint?page=$page");
     return (response['data']['data'] as List)
         .map((i) => PostModel.fromJson(i))
@@ -105,7 +114,12 @@ class PostRemoteDataSourceImpl implements PostRemoteDataSource {
 
   @override
   Future<PostModel> newPost(
-      PostM post, List<File>? images, String? schoolClass) async {
+    PostM post,
+    List<File>? images,
+    String? schoolClass,
+    String? pollQuestion,
+    List<String>? pollOptions,
+  ) async {
     FormData formData;
     if (images != null && images.isNotEmpty && post.type != 'text') {
       List<MultipartFile> multipartImageList = [];
@@ -138,6 +152,13 @@ class PostRemoteDataSourceImpl implements PostRemoteDataSource {
       }
     }
 
+    if (pollQuestion != null && pollOptions != null) {
+      formData.fields.add(MapEntry('question', pollQuestion));
+      for (var i = 0; i < pollOptions.length; i++) {
+        formData.fields.add(MapEntry('options[]', pollOptions[i]));
+      }
+    }
+
     final response = await apiConsumer.post2(
       EndPoints.newPost,
       body: formData,
@@ -148,6 +169,27 @@ class PostRemoteDataSourceImpl implements PostRemoteDataSource {
     } else {
       throw ServerException();
     }
+  }
+
+  @override
+  Future<void> removePost(int id) async {
+    await apiConsumer.delete(
+      EndPoints.removePost(id),
+    );
+  }
+
+  @override
+  Future<void> removeComment(int id, int postId) async {
+    await apiConsumer.delete(
+      EndPoints.removeComment(id,postId),
+    );
+  }
+
+  @override
+  Future<void> removeReply(int id) async {
+    await apiConsumer.delete(
+      EndPoints.removeReply(id),
+    );
   }
 
   @override
@@ -199,6 +241,22 @@ class PostRemoteDataSourceImpl implements PostRemoteDataSource {
     if (response['statusCode'] == 200) {
       // final body = json.decode(response['data']['data']);
       return LikePostResponse.fromJson(response['data']);
+    } else {
+      throw Exception('Unexpected response code: ${response.statusCode}');
+    }
+  }
+
+  @override
+  Future<PostModel> voteOnPoll(int postId, String option) async {
+    final response = await apiConsumer.post(
+      EndPoints.voteOnPoll(postId),
+      body: {
+        'option': option,
+      },
+    );
+
+    if (response['statusCode'] == 200) {
+      return PostModel.fromJson(response['data']['data']);
     } else {
       throw Exception('Unexpected response code: ${response.statusCode}');
     }

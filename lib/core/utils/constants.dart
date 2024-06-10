@@ -139,14 +139,14 @@ class Constants {
 
   static List<Widget> screens = [
     const PostScreen(),
-    // const SchoolFeed(),
-    // const ClassFeed(),
-    const Center(
-      child: Text('School Screen'),
-    ),
-    const Center(
-      child: Text('Class Screen'),
-    ),
+    const SchoolFeed(),
+    const ClassFeed(),
+    // const Center(
+    //   child: Text('School Screen'),
+    // ),
+    // const Center(
+    //   child: Text('Class Screen'),
+    // ),
   ];
   static List<Widget> screens2(int id, String name) {
     return [

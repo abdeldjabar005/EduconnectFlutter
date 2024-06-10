@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:educonnect/config/locale/app_localizations.dart';
 import 'package:educonnect/core/api/end_points.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:educonnect/config/themes/custom_text_style.dart';
@@ -30,17 +31,35 @@ class NewPost extends StatefulWidget {
 
 class _NewPostState extends State<NewPost> {
   final _textController = TextEditingController();
+  final _questionController = TextEditingController();
+
   List<XFile>? images;
   String type = "text";
   String errorMessage = '';
   String? selectedClassName;
   int? selectedClassId;
   final _formKey = GlobalKey<FormState>();
+  List<TextEditingController> _pollOptionControllers = [
+    TextEditingController(),
+    TextEditingController(),
+  ];
 
   @override
   void dispose() {
     _textController.dispose();
     super.dispose();
+  }
+
+  Future<void> pickDocument() async {
+    final result = await FilePicker.platform.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: ['pdf', 'doc', 'docx', 'txt']);
+    if (result != null) {
+      setState(() {
+        images = result.paths.map((path) => XFile(path!)).toList();
+        type = 'attachment';
+      });
+    }
   }
 
   void removeImage(XFile image) {
@@ -124,9 +143,6 @@ class _NewPostState extends State<NewPost> {
                                 ),
                                 imagePath:
                                     '${EndPoints.storage}${user.profilePicture}',
-
-                                // imagePath: '${EndPoints.storage}${user.profilePicture}',
-
                                 height: 60.adaptSize,
                                 width: 60.adaptSize,
                                 radius: BorderRadius.circular(
@@ -161,56 +177,6 @@ class _NewPostState extends State<NewPost> {
                                 ),
                               ),
                               SizedBox(width: 20.h),
-                              // (widget.id == null || widget.name == null)
-                              //     ? Flexible(
-                              //         child: Container(
-                              //           height: 60,
-                              //           width: 150,
-                              //           child: DropdownButtonFormField<String>(
-                              //             value: selectedClassId?.toString(),
-                              //             decoration: InputDecoration(
-                              //               border: OutlineInputBorder(),
-                              //               labelText:
-                              //                   AppLocalizations.of(context)!
-                              //                       .translate('select_class')!,
-                              //               labelStyle: TextStyle(
-                              //                   color: Colors.black,
-                              //                   fontSize: 14.h),
-                              //             ),
-                              //             dropdownColor: AppColors.whiteA700,
-                              //             style: TextStyle(color: Colors.black),
-                              //             items: classes.map((classItem) {
-                              //               return DropdownMenuItem<String>(
-                              //                 value: classItem.id.toString(),
-                              //                 child: Text(classItem.name),
-                              //               );
-                              //             }).toList(),
-                              //             onChanged: (String? newValue) {
-                              //               setState(() {
-                              //                 selectedClassId =
-                              //                     int.tryParse(newValue ?? '');
-                              //                 selectedClassName = classes
-                              //                     .firstWhere((classItem) =>
-                              //                         classItem.id
-                              //                             ?.toString() ==
-                              //                         newValue)
-                              //                     .name;
-                              //               });
-                              //             },
-                              //             validator: (value) {
-                              //               if (value == null ||
-                              //                   value.isEmpty) {
-                              //                 return AppLocalizations.of(
-                              //                         context)!
-                              //                     .translate(
-                              //                         'please_select_class')!;
-                              //               }
-                              //               return null;
-                              //             },
-                              //           ),
-                              //         ),
-                              //       )
-                              //     :
                               Container(
                                 height: 50,
                                 width: 130,
@@ -247,6 +213,7 @@ class _NewPostState extends State<NewPost> {
                           ),
                         ),
                         SizedBox(height: 70.v),
+                        if (type == 'poll') _buildPollOptions(),
                         if (images != null && images!.isNotEmpty)
                           Container(
                             height: 100.v,
@@ -257,6 +224,7 @@ class _NewPostState extends State<NewPost> {
                                 final image = images![index];
                                 final isVideo =
                                     image.path.toLowerCase().endsWith('.mp4');
+                                final isDocument = type == 'attachment';
 
                                 return Stack(
                                   children: [
@@ -267,12 +235,18 @@ class _NewPostState extends State<NewPost> {
                                               image.path.split('/').last,
                                               style: TextStyle(fontSize: 16),
                                             )
-                                          : Image.file(
-                                              File(image.path),
-                                              height: 100.v,
-                                              width: 100.h,
-                                              fit: BoxFit.cover,
-                                            ),
+                                          : isDocument
+                                              ? Text(
+                                                  image.path.split('/').last,
+                                                  style:
+                                                      TextStyle(fontSize: 16),
+                                                )
+                                              : Image.file(
+                                                  File(image.path),
+                                                  height: 100.v,
+                                                  width: 100.h,
+                                                  fit: BoxFit.cover,
+                                                ),
                                     ),
                                     Positioned(
                                       top: 0,
@@ -305,195 +279,84 @@ class _NewPostState extends State<NewPost> {
                         Column(
                           children: [
                             GestureDetector(
-                              onTap: () async {
-                                final ImagePicker _picker = ImagePicker();
-                                bool pickImage = true;
-                                if (images == null || images!.isEmpty) {
-                                  // Ask the user if they want to pick a picture or a video.
-                                  pickImage = await showDialog(
-                                        context: context,
-                                        builder: (BuildContext context) {
-                                          return AlertDialog(
-                                            title: Text(AppLocalizations.of(
-                                                    context)!
-                                                .translate(
-                                                    'pick_pictures_video')!),
-                                            actions: <Widget>[
-                                              TextButton(
-                                                child: Text(AppLocalizations.of(
-                                                        context)!
-                                                    .translate('picture')!),
-                                                onPressed: () {
-                                                  Navigator.of(context)
-                                                      .pop(true);
-                                                },
-                                              ),
-                                              TextButton(
-                                                child: Text(AppLocalizations.of(
-                                                        context)!
-                                                    .translate('video')!),
-                                                onPressed: () {
-                                                  Navigator.of(context)
-                                                      .pop(false);
-                                                },
-                                              ),
-                                            ],
-                                          );
-                                        },
-                                      ) ??
-                                      true; // Default to picking a picture.
-                                } else {
-                                  pickImage = type == 'picture';
-                                }
-                                if (pickImage) {
-                                  // Let the user pick multiple pictures.
-                                  final List<XFile> pickedImages =
-                                      await _picker.pickMultiImage();
-                                  if (pickedImages.isNotEmpty) {
-                                    setState(() {
-                                      images = [...?images, ...pickedImages];
-                                      type = 'picture';
-                                    });
-                                  }
-                                } else {
-                                  // Let the user pick a video.
-                                  final XFile? video = await _picker.pickVideo(
-                                      source: ImageSource.gallery);
-                                  if (video != null) {
-                                    setState(() {
-                                      images = [video];
-                                      type = 'video';
-                                    });
-                                  }
-                                }
-                              },
-                              child: Row(
-                                children: [
-                                  CustomImageView(
-                                    imagePath: ImageConstant.gallery,
-                                    height: 33.adaptSize,
-                                    width: 33.adaptSize,
-                                    margin: EdgeInsets.symmetric(vertical: 3.v),
-                                  ),
-                                  SizedBox(width: 17.h),
-                                  Text(
-                                    AppLocalizations.of(context)!
-                                        .translate('photo_video')!,
-                                    style: CustomTextStyles
-                                        .bodyMediumRobotoGray9002,
-                                  ),
-                                ],
-                              ),
-                            ),
-                            SizedBox(height: 13.v),
-                            GestureDetector(
-                              onTap: () async {
-                                final ImagePicker _picker = ImagePicker();
-                                bool takePicture = true;
-                                if (images == null || images!.isEmpty) {
-                                  // Ask the user if they want to take a picture or a video.
-                                  takePicture = await showDialog(
-                                        context: context,
-                                        builder: (BuildContext context) {
-                                          return AlertDialog(
-                                            title: Text(
-                                                AppLocalizations.of(context)!
-                                                    .translate(
-                                                        'take_picture_video')!),
-                                            actions: <Widget>[
-                                              TextButton(
-                                                child: Text(AppLocalizations.of(
-                                                        context)!
-                                                    .translate('picture')!),
-                                                onPressed: () {
-                                                  Navigator.of(context)
-                                                      .pop(true);
-                                                },
-                                              ),
-                                              TextButton(
-                                                child: Text(AppLocalizations.of(
-                                                        context)!
-                                                    .translate('video')!),
-                                                onPressed: () {
-                                                  Navigator.of(context)
-                                                      .pop(false);
-                                                },
-                                              ),
-                                            ],
-                                          );
-                                        },
-                                      ) ??
-                                      true; // Default to taking a picture.
-                                } else {
-                                  takePicture = type == 'picture';
-                                }
-                                if (takePicture) {
-                                  // Let the user take a picture.
-                                  final XFile? picture = await _picker
-                                      .pickImage(source: ImageSource.camera);
-                                  if (picture != null) {
-                                    setState(() {
-                                      images = [...?images, picture];
-                                      type = 'picture';
-                                    });
-                                  }
-                                } else {
-                                  // Let the user record a video.
-                                  final XFile? video = await _picker.pickVideo(
-                                      source: ImageSource.camera);
-                                  if (video != null) {
-                                    setState(() {
-                                      images = [video];
-                                      type = 'video';
-                                    });
-                                  }
-                                }
-                              },
-                              child: Row(
-                                children: [
-                                  CustomImageView(
-                                    imagePath: ImageConstant.camera,
-                                    height: 33.adaptSize,
-                                    width: 33.adaptSize,
-                                    margin: EdgeInsets.symmetric(vertical: 3.v),
-                                  ),
-                                  SizedBox(width: 17.h),
-                                  Text(
-                                    AppLocalizations.of(context)!
-                                        .translate('camera')!,
-                                    style: CustomTextStyles
-                                        .bodyMediumRobotoGray9002,
-                                  ),
-                                ],
-                              ),
-                            ),
-                            SizedBox(height: 13.v),
-                            Row(
-                              children: [
-                                CustomImageView(
-                                  imagePath: ImageConstant.attachment,
-                                  height: 33.adaptSize,
-                                  width: 33.adaptSize,
-                                  margin: EdgeInsets.symmetric(vertical: 3.v),
-                                ),
-                                SizedBox(width: 17.h),
-                                Text(
-                                  AppLocalizations.of(context)!
-                                      .translate('attachment')!,
-                                  style:
-                                      CustomTextStyles.bodyMediumRobotoGray9002,
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: 13.v),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Row(
+                              onTap: type == 'attachment'
+                                  ? null
+                                  : () async {
+                                      final ImagePicker _picker = ImagePicker();
+                                      bool pickImage = true;
+                                      if (images == null || images!.isEmpty) {
+                                        // Ask the user if they want to pick a picture or a video.
+                                        pickImage = await showDialog(
+                                              context: context,
+                                              builder: (BuildContext context) {
+                                                return AlertDialog(
+                                                  title: Text(AppLocalizations
+                                                          .of(context)!
+                                                      .translate(
+                                                          'pick_pictures_video')!),
+                                                  actions: <Widget>[
+                                                    TextButton(
+                                                      child: Text(
+                                                          AppLocalizations.of(
+                                                                  context)!
+                                                              .translate(
+                                                                  'picture')!),
+                                                      onPressed: () {
+                                                        Navigator.of(context)
+                                                            .pop(true);
+                                                      },
+                                                    ),
+                                                    TextButton(
+                                                      child: Text(
+                                                          AppLocalizations.of(
+                                                                  context)!
+                                                              .translate(
+                                                                  'video')!),
+                                                      onPressed: () {
+                                                        Navigator.of(context)
+                                                            .pop(false);
+                                                      },
+                                                    ),
+                                                  ],
+                                                );
+                                              },
+                                            ) ??
+                                            true; // Default to picking a picture.
+                                      } else {
+                                        pickImage = type == 'picture';
+                                      }
+                                      if (pickImage) {
+                                        // Let the user pick multiple pictures.
+                                        final List<XFile> pickedImages =
+                                            await _picker.pickMultiImage();
+                                        if (pickedImages.isNotEmpty) {
+                                          setState(() {
+                                            images = [
+                                              ...?images,
+                                              ...pickedImages
+                                            ];
+                                            type = 'picture';
+                                          });
+                                        }
+                                      } else {
+                                        // Let the user pick a video.
+                                        final XFile? video =
+                                            await _picker.pickVideo(
+                                                source: ImageSource.gallery);
+                                        if (video != null) {
+                                          setState(() {
+                                            images = [video];
+                                            type = 'video';
+                                          });
+                                        }
+                                      }
+                                    },
+                              child: Opacity(
+                                opacity: type == 'attachment' ? 0.5 : 1.0,
+                                child: Row(
                                   children: [
                                     CustomImageView(
-                                      imagePath:
-                                          ImageConstant.poll, // purple Poll
+                                      imagePath: ImageConstant.gallery,
                                       height: 33.adaptSize,
                                       width: 33.adaptSize,
                                       margin:
@@ -502,11 +365,166 @@ class _NewPostState extends State<NewPost> {
                                     SizedBox(width: 17.h),
                                     Text(
                                       AppLocalizations.of(context)!
-                                          .translate('poll')!,
+                                          .translate('photo_video')!,
                                       style: CustomTextStyles
                                           .bodyMediumRobotoGray9002,
                                     ),
                                   ],
+                                ),
+                              ),
+                            ),
+                            SizedBox(height: 13.v),
+                            GestureDetector(
+                              onTap: type == 'attachment'
+                                  ? null
+                                  : () async {
+                                      final ImagePicker _picker = ImagePicker();
+                                      bool takePicture = true;
+                                      if (images == null || images!.isEmpty) {
+                                        // Ask the user if they want to take a picture or a video.
+                                        takePicture = await showDialog(
+                                              context: context,
+                                              builder: (BuildContext context) {
+                                                return AlertDialog(
+                                                  title: Text(AppLocalizations
+                                                          .of(context)!
+                                                      .translate(
+                                                          'take_picture_video')!),
+                                                  actions: <Widget>[
+                                                    TextButton(
+                                                      child: Text(
+                                                          AppLocalizations.of(
+                                                                  context)!
+                                                              .translate(
+                                                                  'picture')!),
+                                                      onPressed: () {
+                                                        Navigator.of(context)
+                                                            .pop(true);
+                                                      },
+                                                    ),
+                                                    TextButton(
+                                                      child: Text(
+                                                          AppLocalizations.of(
+                                                                  context)!
+                                                              .translate(
+                                                                  'video')!),
+                                                      onPressed: () {
+                                                        Navigator.of(context)
+                                                            .pop(false);
+                                                      },
+                                                    ),
+                                                  ],
+                                                );
+                                              },
+                                            ) ??
+                                            true; // Default to taking a picture.
+                                      } else {
+                                        takePicture = type == 'picture';
+                                      }
+                                      if (takePicture) {
+                                        // Let the user take a picture.
+                                        final XFile? picture =
+                                            await _picker.pickImage(
+                                                source: ImageSource.camera);
+                                        if (picture != null) {
+                                          setState(() {
+                                            images = [...?images, picture];
+                                            type = 'picture';
+                                          });
+                                        }
+                                      } else {
+                                        // Let the user record a video.
+                                        final XFile? video =
+                                            await _picker.pickVideo(
+                                                source: ImageSource.camera);
+                                        if (video != null) {
+                                          setState(() {
+                                            images = [video];
+                                            type = 'video';
+                                          });
+                                        }
+                                      }
+                                    },
+                              child: Opacity(
+                                opacity: type == 'attachment' ? 0.5 : 1.0,
+                                child: Row(
+                                  children: [
+                                    CustomImageView(
+                                      imagePath: ImageConstant.camera,
+                                      height: 33.adaptSize,
+                                      width: 33.adaptSize,
+                                      margin:
+                                          EdgeInsets.symmetric(vertical: 3.v),
+                                    ),
+                                    SizedBox(width: 17.h),
+                                    Text(
+                                      AppLocalizations.of(context)!
+                                          .translate('camera')!,
+                                      style: CustomTextStyles
+                                          .bodyMediumRobotoGray9002,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            SizedBox(height: 13.v),
+                            GestureDetector(
+                              onTap: type == 'picture' || type == 'video'
+                                  ? null
+                                  : () async {
+                                      await pickDocument();
+                                    },
+                              child: Row(
+                                children: [
+                                  CustomImageView(
+                                    imagePath: ImageConstant.attachment,
+                                    height: 33.adaptSize,
+                                    width: 33.adaptSize,
+                                    margin: EdgeInsets.symmetric(vertical: 3.v),
+                                  ),
+                                  SizedBox(width: 17.h),
+                                  Text(
+                                    AppLocalizations.of(context)!
+                                        .translate('attachment')!,
+                                    style: CustomTextStyles
+                                        .bodyMediumRobotoGray9002,
+                                  ),
+                                ],
+                              ),
+                            ),
+                            SizedBox(height: 13.v),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      type = 'poll';
+                                      images = null;
+                                      _pollOptionControllers = [
+                                        TextEditingController(),
+                                        TextEditingController(),
+                                      ];
+                                    });
+                                  },
+                                  child: Row(
+                                    children: [
+                                      CustomImageView(
+                                        imagePath: ImageConstant.poll,
+                                        height: 33.adaptSize,
+                                        width: 33.adaptSize,
+                                        margin:
+                                            EdgeInsets.symmetric(vertical: 3.v),
+                                      ),
+                                      SizedBox(width: 17.h),
+                                      Text(
+                                        AppLocalizations.of(context)!
+                                            .translate('poll')!,
+                                        style: CustomTextStyles
+                                            .bodyMediumRobotoGray9002,
+                                      ),
+                                    ],
+                                  ),
                                 ),
                                 _buildButton2(
                                     context,
@@ -531,6 +549,50 @@ class _NewPostState extends State<NewPost> {
     } else {
       return Container();
     }
+  }
+
+  Widget _buildPollOptions() {
+    return Column(
+      children: [
+        TextFormField(
+          controller: _questionController,
+          decoration: InputDecoration(
+            labelText: 'Poll Question',
+          ),
+          validator: (value) {
+            if (value!.isEmpty) {
+              return 'Please enter a question';
+            }
+            return null;
+          },
+        ),
+        ..._pollOptionControllers.asMap().entries.map((entry) {
+          int index = entry.key;
+          TextEditingController controller = entry.value;
+          return TextFormField(
+            controller: controller,
+            decoration: InputDecoration(
+              labelText: 'Option ${index + 1}',
+            ),
+            validator: (value) {
+              if (value!.isEmpty) {
+                return 'Please enter option ${index + 1}';
+              }
+              return null;
+            },
+          );
+        }).toList(),
+        if (_pollOptionControllers.length < 5)
+          TextButton(
+            onPressed: () {
+              setState(() {
+                _pollOptionControllers.add(TextEditingController());
+              });
+            },
+            child: Text('Add Option'),
+          ),
+      ],
+    );
   }
 
   Widget _buildThirtyNine(BuildContext context, state) {
@@ -560,51 +622,95 @@ class _NewPostState extends State<NewPost> {
       width: 127.h,
       onPressed: () {
         String text = _textController.text;
-        if (text.isEmpty) {
-          setState(() {
-            errorMessage =
-                AppLocalizations.of(context)!.translate('fill_text_fields')!;
-          });
-          print('Please enter some text.');
+        if (type == 'poll') {
+          if (text.isEmpty) {
+            setState(() {
+              errorMessage = AppLocalizations.of(context)!.translate('text_post')!;
+            });
+            return;
+          } else if (_questionController.text.isEmpty) {
+            setState(() {
+              errorMessage = AppLocalizations.of(context)!.translate('question_poll')!;
+            });
+            return;
+          }
+          List<String> pollOptions = _pollOptionControllers
+              .map((controller) => controller.text)
+              .where((option) => option.isNotEmpty)
+              .toList();
+          if (pollOptions.length < 2) {
+            setState(() {
+              errorMessage = AppLocalizations.of(context)!.translate('at_least_2_options')!;
+            });
+            return;
+          }
+          // Submit poll post
+          context.read<Post2Cubit>().newPost(
+                PostM(text: text, classOrSchoolId: widget.id, type: 'poll'),
+                null,
+                widget.schoolClass,
+                _questionController.text,
+                pollOptions,
+              );
         } else {
-          if (widget.id == null || widget.name == null) {
+          if (text.isEmpty) {
             setState(() {
-              errorMessage = '';
+              errorMessage =
+                  AppLocalizations.of(context)!.translate('fill_text_fields')!;
             });
-            if (images == null || images!.isEmpty) {
-              context.read<Post2Cubit>().newPost(
-                  PostM(
-                      text: text, classOrSchoolId: selectedClassId, type: type),
-                  null,
-                  widget.schoolClass);
-            } else {
-              List<File> files =
-                  images?.map((xFile) => File(xFile.path)).toList() ?? [];
-
-              context.read<Post2Cubit>().newPost(
-                  PostM(
-                      text: text, classOrSchoolId: selectedClassId, type: type),
-                  files,
-                  widget.schoolClass);
-            }
+            print('Please enter some text.');
           } else {
-            setState(() {
-              errorMessage = '';
-            });
-            if (images == null || images!.isEmpty) {
-              context.read<Post2Cubit>().newPost(
-                  PostM(text: text, classOrSchoolId: widget.id, type: type),
-                  null,
-                  widget.schoolClass);
-            } else {
-              List<File> imagePaths = [];
-              for (XFile file in images!) {
-                imagePaths.add(File(file.path));
+            if (widget.id == null || widget.name == null) {
+              setState(() {
+                errorMessage = '';
+              });
+              if (images == null || images!.isEmpty) {
+                context.read<Post2Cubit>().newPost(
+                    PostM(
+                        text: text,
+                        classOrSchoolId: selectedClassId,
+                        type: type),
+                    null,
+                    widget.schoolClass,
+                    null,
+                    null);
+              } else {
+                List<File> files =
+                    images?.map((xFile) => File(xFile.path)).toList() ?? [];
+
+                context.read<Post2Cubit>().newPost(
+                    PostM(
+                        text: text,
+                        classOrSchoolId: selectedClassId,
+                        type: type),
+                    files,
+                    widget.schoolClass,
+                    null,
+                    null);
               }
-              context.read<Post2Cubit>().newPost(
-                  PostM(text: text, classOrSchoolId: widget.id, type: type),
-                  imagePaths,
-                  widget.schoolClass);
+            } else {
+              setState(() {
+                errorMessage = '';
+              });
+              if (images == null || images!.isEmpty) {
+                context.read<Post2Cubit>().newPost(
+                    PostM(text: text, classOrSchoolId: widget.id, type: type),
+                    null,
+                    widget.schoolClass,
+                    null,
+                    null);
+              } else {
+                List<File> imagePaths = [];
+                for (XFile file in images!) {
+                  imagePaths.add(File(file.path));
+                }
+                context.read<Post2Cubit>().newPost(
+                    PostM(text: text, classOrSchoolId: widget.id, type: type),
+                    imagePaths,
+                    widget.schoolClass,
+                    null,
+                    null);
+              }
             }
           }
         }

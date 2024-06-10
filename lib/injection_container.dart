@@ -80,7 +80,7 @@ Future<void> init() async {
       postCommentUseCase: sl(),
       postReplyUseCase: sl(),
       authCubit: sl(),
-      postCubit: sl()));
+      postCubit: sl(),));
   sl.registerFactory<LikeCubit>(() => LikeCubit(
       likePostUseCase: sl(), likeCommentUseCase: sl(), likeReplyUseCase: sl()));
   sl.registerFactory<ClassCubit>(() => ClassCubit(
