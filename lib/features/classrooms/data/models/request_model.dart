@@ -16,9 +16,11 @@ class RequestModel extends Request {
         );
 
   factory RequestModel.fromJson(Map<String, dynamic> json) {
+        var name = json["name"] ?? json["class_name"];
+
     return RequestModel(
       id: json['id'],
-      name: json['class_name'],
+      name: name,
       firstName: json['first_name'],
       lastName: json['last_name'],
       profilePicture: json['profile_picture'],

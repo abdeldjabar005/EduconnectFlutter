@@ -17,7 +17,7 @@ class Post extends Equatable {
   final String lastName;
   final String profilePicture;
   final String classname;
-  final bool isSaved;
+   bool isSaved;
   final  List<Map<String, dynamic>> content;
 
   Post({

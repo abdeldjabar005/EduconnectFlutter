@@ -515,15 +515,21 @@ class PostDetails extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
-                      '0', // TODO: Replace with actual bookmarks count
-                      style: theme.textTheme.bodyLarge,
-                    ),
+                    // Text(
+                    //   '0', // TODO: Replace with actual bookmarks count
+                    //   style: theme.textTheme.bodyLarge,
+                    // ),
                     SizedBox(width: 5.v),
-                    Text(
+                     InkWell(
+                onTap: () {
+                  context.read<Post2Cubit>().savePost(post.id);
+                },
+                child: Text(
                       AppLocalizations.of(context)!.translate("saves")!,
                       style: theme.textTheme.bodyMedium,
                     ),
+              ),
+                    
                   ],
                 ),
               ),

@@ -415,15 +415,17 @@ class _ClassDetailsState extends State<ClassDetails>
                               .translate('associate_student')!),
                         ),
                       ),
-                    PopupMenuItem<String>(
-                      value: 'Students',
-                      child: ListTile(
-                        contentPadding: EdgeInsets.zero,
-                        leading: Icon(Icons.group, color: AppColors.indigoA200),
-                        title: Text(AppLocalizations.of(context)!
-                            .translate('students')!),
+                    if (user.id == widget.classe.teacherId)
+                      PopupMenuItem<String>(
+                        value: 'Students',
+                        child: ListTile(
+                          contentPadding: EdgeInsets.zero,
+                          leading:
+                              Icon(Icons.group, color: AppColors.indigoA200),
+                          title: Text(AppLocalizations.of(context)!
+                              .translate('students')!),
+                        ),
                       ),
-                    ),
                     if (user.id == widget.classe.teacherId)
                       PopupMenuItem<String>(
                         value: 'Class Requests',

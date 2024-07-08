@@ -1,5 +1,6 @@
 // post_item.dart
 
+import 'package:educonnect/config/locale/app_localizations.dart';
 import 'package:educonnect/core/api/end_points.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -89,7 +90,8 @@ class CommentItem extends StatelessWidget {
                       ),
                       SizedBox(height: 3.v),
                       Text(
-                        comment.lastName,
+                        AppLocalizations.of(context)!
+                                        .translate('user')!,
                         style: theme.textTheme.bodyMedium!.copyWith(
                           color: AppColors.gray500,
                         ),

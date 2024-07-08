@@ -177,4 +177,24 @@ class PostModel extends Post {
         "isSaved": isSaved,
         "content": content,
       };
+
+  factory PostModel.fromPost(Post post) {
+    return PostModel(
+      id: post.id,
+      userId: post.userId,
+      classOrSchoolId: post.classOrSchoolId,
+      text: post.text,
+      type: post.type,
+      createdAt: post.createdAt,
+      commentsCount: post.commentsCount,
+      likesCount: post.likesCount,
+      isLiked: post.isLiked,
+      firstName: post.firstName,
+      lastName: post.lastName,
+      profilePicture: post.profilePicture,
+      classname: post.classname,
+      isSaved: post.isSaved,
+      content: post.content,
+    );
+  }
 }

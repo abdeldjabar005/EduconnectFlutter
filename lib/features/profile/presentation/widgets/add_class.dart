@@ -193,10 +193,18 @@ class _AddClassState extends State<AddClass> {
                               .translate('select_grade_level')!,
                           hintStyle:
                               CustomTextStyles.titleMediumPoppinsGray40001,
-                          items: grade,
+                          items: grade
+                              .map((gradeKey) => AppLocalizations.of(context)!
+                                  .translate(gradeKey)!)
+                              .toList(),
                           onChanged: (String newValue) {
                             setState(() {
-                              selectedGrade = newValue;
+                              String englishGrade = grade.firstWhere(
+                                  (gradeKey) =>
+                                      AppLocalizations.of(context)!
+                                          .translate(gradeKey)! ==
+                                      newValue);
+                              selectedGrade = englishGrade;
                             });
                           },
                         ),

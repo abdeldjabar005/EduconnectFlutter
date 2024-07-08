@@ -1,3 +1,4 @@
+import 'package:educonnect/features/posts/presentation/pages/search_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -66,7 +67,8 @@ class _HomeScreenBodyState extends State<_HomeScreenBody>
                     double tabIndex = _tabController.animation!.value;
                     int roundedTabIndex = tabIndex.round();
                     return TabBar(
-                      tabs: Constants.getHomeScreenTabs(roundedTabIndex, context),
+                      tabs:
+                          Constants.getHomeScreenTabs(roundedTabIndex, context),
                       controller: _tabController,
                       onTap: (index) {
                         context.read<TabCubit>().changeTab(index);
@@ -96,9 +98,13 @@ class _HomeScreenBodyState extends State<_HomeScreenBody>
       );
 
   Widget _buildSearchWidget() => InkWell(
-        // onTap: () {
-        //   Navigator.of(context).pushNamed(SearchScreen.routeName);
-        // },
+        onTap: () {
+          // Navigator.of(context).pushNamed(SearchScreen.routeName);
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => SearchPage()),
+          );
+        },
         child: Padding(
           padding: const EdgeInsets.symmetric(
             horizontal: 7,

@@ -1,5 +1,3 @@
-
-
 import 'package:educonnect/features/chat/domain/entities/contact.dart';
 
 class ContactModel extends Contact {
@@ -10,6 +8,8 @@ class ContactModel extends Contact {
     required String email,
     String? profilePicture,
     required bool activeStatus,
+    required String? lastMessage,
+    required DateTime? updatedAt,
   }) : super(
           id: id,
           firstName: firstName,
@@ -17,6 +17,8 @@ class ContactModel extends Contact {
           email: email,
           profilePicture: profilePicture,
           activeStatus: activeStatus,
+          lastMessage: lastMessage,
+          updatedAt: updatedAt,
         );
 
   factory ContactModel.fromJson(Map<String, dynamic> json) {
@@ -27,6 +29,8 @@ class ContactModel extends Contact {
       email: json['email'],
       profilePicture: json['profile_picture'],
       activeStatus: json['active_status'],
+      lastMessage: json['last_message'],
+      updatedAt: DateTime.parse(json['last_message_updated_at']),
     );
   }
 
@@ -38,6 +42,8 @@ class ContactModel extends Contact {
       'email': email,
       'profile_picture': profilePicture,
       'active_status': activeStatus,
+      'last_message': lastMessage,
+      'updated_at': updatedAt?.toIso8601String() ,
     };
   }
 }

@@ -7,6 +7,8 @@ class Contact extends Equatable {
   final String email;
   final String? profilePicture;
   final bool activeStatus;
+  final String? lastMessage;
+  final DateTime? updatedAt;
 
   const Contact({
     required this.id,
@@ -15,6 +17,8 @@ class Contact extends Equatable {
     required this.email,
     this.profilePicture,
     required this.activeStatus,
+    required this.lastMessage,
+    required this.updatedAt,
   });
 
   @override

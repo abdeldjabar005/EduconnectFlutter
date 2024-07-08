@@ -1,7 +1,6 @@
 // Data Layer - Data Sources
 
 import 'dart:async';
-import 'dart:developer';
 
 import 'package:educonnect/core/api/api_consumer.dart';
 import 'package:educonnect/core/api/end_points.dart';

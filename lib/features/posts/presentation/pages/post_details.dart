@@ -34,6 +34,7 @@ class _PostDetailPageState extends State<PostDetailPage> {
     });
   }
 
+
   @override
   Widget build(BuildContext context) {
     bool isRtl = Localizations.localeOf(context).languageCode == 'ar';

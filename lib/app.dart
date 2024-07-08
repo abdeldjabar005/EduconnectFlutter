@@ -1,6 +1,7 @@
 import 'package:educonnect/core/utils/app_colors.dart';
 import 'package:educonnect/features/chat/presentation/cubit/contacts_cubit.dart';
 import 'package:educonnect/features/chat/presentation/cubit/messages_cubit.dart';
+import 'package:educonnect/features/posts/presentation/cubit/search_cubit.dart';
 import 'package:educonnect/features/profile/presentation/cubit/profile_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -39,6 +40,7 @@ class EduApp extends StatelessWidget {
           BlocProvider(create: (context) => di.sl<ContactsCubit>()),
           BlocProvider(create: (context) => di.sl<MessagesCubit>()),
           BlocProvider(create: (context) => di.sl<ProfileCubit>()),
+          BlocProvider(create: (context) => di.sl<SearchCubit>()),
         ],
         child: BlocBuilder<LocaleCubit, LocaleState>(
           buildWhen: (previousState, currentState) {

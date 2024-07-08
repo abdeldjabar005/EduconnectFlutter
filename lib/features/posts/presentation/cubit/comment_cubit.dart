@@ -45,23 +45,23 @@ class CommentsCubit extends Cubit<CommentsState> {
         emit(NoComments(message: "No comments found"));
       }
     } else {
-      emit(CommentsLoading());
-      final response = await getCommentsUseCase(Params1(postId: postId));
-      emit(response.fold(
-        (failure) => CommentsError(message: _mapFailureToMessage(failure)),
-        (comments) {
-          commentsCache.value[postId] = comments;
-          if (comments.isNotEmpty) {
-            for (var comment in comments) {
-              repliesCache.value[comment.id] = comment.replies;
-            }
-            return (CommentsLoaded(
-                comments: comments, commentsCount: comments.length));
-          } else {
-            return (NoComments(message: "No comments found"));
+    emit(CommentsLoading());
+    final response = await getCommentsUseCase(Params1(postId: postId));
+    emit(response.fold(
+      (failure) => CommentsError(message: _mapFailureToMessage(failure)),
+      (comments) {
+        commentsCache.value[postId] = comments;
+        if (comments.isNotEmpty) {
+          for (var comment in comments) {
+            repliesCache.value[comment.id] = comment.replies;
           }
-        },
-      ));
+          return (CommentsLoaded(
+              comments: comments, commentsCount: comments.length));
+        } else {
+          return (NoComments(message: "No comments found"));
+        }
+      },
+    ));
     }
   }
 
@@ -76,29 +76,29 @@ class CommentsCubit extends Cubit<CommentsState> {
   }
 
   Future<void> postComment(int postId, String comment) async {
-    final user = (authCubit.state as AuthAuthenticated).user;
+    // final user = (authCubit.state as AuthAuthenticated).user;
 
     final failureOrVoid =
         await postCommentUseCase(Params(postId: postId, comment: comment));
 
     failureOrVoid.fold(
       (failure) => emit(CommentsError(message: _mapFailureToMessage(failure))),
-      (_) {
-        final newComment = CommentModel(
-          id: commentsCache.value[postId]!.length + 1,
-          postId: postId,
-          userId: user.id,
-          text: comment,
-          createdAt: DateTime.now(),
-          updatedAt: DateTime.now(),
-          likesCount: 0,
-          repliesCount: 0,
-          isLiked: false,
-          replies: [],
-          firstName: user.firstName,
-          lastName: user.lastName,
-          profilePicture: user.profilePicture ?? 'assets/images/edu.png',
-        );
+      (newComment) {
+        // final newComment = CommentModel(
+        //   id: commentsCache.value[postId]!.length + 1,
+        //   postId: postId,
+        //   userId: user.id,
+        //   text: comment,
+        //   createdAt: DateTime.now(),
+        //   updatedAt: DateTime.now(),
+        //   likesCount: 0,
+        //   repliesCount: 0,
+        //   isLiked: false,
+        //   replies: [],
+        //   firstName: user.firstName,
+        //   lastName: user.lastName,
+        //   profilePicture: user.profilePicture ?? 'assets/images/edu.png',
+        // );
         commentsCache.value[postId]!.add(newComment);
 
         commentsCache.notifyListeners();
@@ -121,29 +121,29 @@ class CommentsCubit extends Cubit<CommentsState> {
 
     failureOrVoid.fold(
       (failure) => emit(CommentsError(message: _mapFailureToMessage(failure))),
-      (_) {
+      (newReply) {
         final comment = commentsCache.value.values
             .expand((i) => i)
             .firstWhere((comment) => comment.id == commentId);
 
-        final newReply = CommentModel(
-          id: comment.repliesCount + 1,
-          postId: commentId,
-          userId: user.id,
-          text: reply,
-          createdAt: DateTime.now(),
-          updatedAt: DateTime.now(),
-          likesCount: 0,
-          repliesCount: 0,
-          replies: [],
-          isLiked: false,
-          firstName: user.firstName,
-          lastName: user.lastName,
-          profilePicture: user.profilePicture ?? 'assets/images/edu.png',
-        );
+        // final newReply = CommentModel(
+        //   id: comment.repliesCount + 1,
+        //   postId: commentId,
+        //   userId: user.id,
+        //   text: reply,
+        //   createdAt: DateTime.now(),
+        //   updatedAt: DateTime.now(),
+        //   likesCount: 0,
+        //   repliesCount: 0,
+        //   replies: [],
+        //   isLiked: false,
+        //   firstName: user.firstName,
+        //   lastName: user.lastName,
+        //   profilePicture: user.profilePicture ?? 'assets/images/edu.png',
+        // );
 
-        // comment.replies.add(newReply);
-        // comment.repliesCount++;
+        comment.replies.add(newReply);
+        comment.repliesCount++;
         if (!comment.replies.contains(newReply)) {
           log(comment.repliesCount.toString());
 

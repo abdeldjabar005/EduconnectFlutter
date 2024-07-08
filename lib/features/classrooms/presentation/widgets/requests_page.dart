@@ -70,13 +70,15 @@ class _RequestsPageState extends State<RequestsPage> {
                             IconButton(
                               icon: const Icon(Icons.check),
                               onPressed: () {
-                                // Add your function to accept the request
+                                context.read<MembersCubit>().acceptMember(
+                                    request.id, widget.id, widget.type);
                               },
                             ),
                             IconButton(
                               icon: const Icon(Icons.close),
                               onPressed: () {
-                                // Add your function to refuse the request
+                                context.read<MembersCubit>().refuseMember(
+                                    request.id, widget.id, widget.type);
                               },
                             ),
                           ],
@@ -87,6 +89,11 @@ class _RequestsPageState extends State<RequestsPage> {
                 },
               );
             } else if (state is NoRequests) {
+              return Center(
+                child: Text(
+                    AppLocalizations.of(context)!.translate('no_requests')!),
+              );
+            } else if (state is MembersLoaded) {
               return Center(
                 child: Text(
                     AppLocalizations.of(context)!.translate('no_requests')!),

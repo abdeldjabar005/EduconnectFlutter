@@ -136,7 +136,8 @@ class _ManageClassesState extends State<ManageClasses> {
                             },
                           );
                         } else if (state is NoClasses) {
-                          return Center(child: Text(state.message));
+                          return Center(child: Text(AppLocalizations.of(context)!
+                                    .translate('no_classes2')!));
                         } else if (state is ClassError) {
                           return Center(child: Text(state.message));
                         } else if (state is ClassLoading) {

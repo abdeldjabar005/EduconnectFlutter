@@ -2,6 +2,7 @@
 import 'dart:developer';
 
 import 'package:educonnect/config/locale/app_localizations.dart';
+import 'package:educonnect/core/api/end_points.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:educonnect/config/themes/app_decoration.dart';
@@ -128,6 +129,7 @@ class _ClassroomPostsState extends State<ClassroomPosts>
 
   Widget _buildWriteNewPost(BuildContext context) {
     bool isRtl = Localizations.localeOf(context).languageCode == 'ar';
+    final user = (context.read<AuthCubit>().state as AuthAuthenticated).user;
 
     return Directionality(
       textDirection: isRtl ? TextDirection.rtl : TextDirection.ltr,
@@ -159,7 +161,9 @@ class _ClassroomPostsState extends State<ClassroomPosts>
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               CustomImageView(
-                imagePath: ImageConstant.imgRectangle17,
+                // imagePath: ImageConstant.imgRectangle17,
+                imagePath: '${EndPoints.storage}${user.profilePicture}',
+
                 height: 40.v,
                 width: 38.h,
                 radius: BorderRadius.circular(

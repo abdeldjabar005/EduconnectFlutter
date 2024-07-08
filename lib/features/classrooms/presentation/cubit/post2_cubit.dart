@@ -92,9 +92,10 @@ class Post2Cubit extends Cubit<Post2State> {
       }
     });
   }
+
   Future<void> removePost(int postId, int classOrSchoolId) async {
     emit(Post2Loading());
-  
+
     final response = await postRepository.removePost(postId);
     response.fold(
       (failure) {
@@ -156,6 +157,42 @@ class Post2Cubit extends Cubit<Post2State> {
             posts: postsCache.value[updatedPost.classOrSchoolId] ?? [],
             hasReachedMax:
                 maxCache.value[updatedPost.classOrSchoolId] ?? false));
+      },
+    );
+  }
+
+  Future<void> savePost(int postId) async {
+    emit(Post2Loading());
+    final response = await postRepository.savePost(postId);
+    response.fold(
+      (failure) {
+        emit(Post2Error(_mapFailureToMessage(failure)));
+      },
+      (_) {
+        int? classOrSchoolId;
+        PostModel? postToSave;
+        postsCache.value.forEach((key, posts) {
+          final postIndex = posts.indexWhere((post) => post.id == postId);
+          if (postIndex != -1) {
+            classOrSchoolId = key;
+            postToSave = posts[postIndex];
+          }
+        });
+  
+        if (postToSave != null && classOrSchoolId != null) {
+          postToSave!.isSaved = !postToSave!.isSaved;
+          final posts = postsCache.value[classOrSchoolId];
+          if (posts != null) {
+            final index = posts.indexWhere((post) => post.id == postId);
+            if (index != -1) {
+              posts[index] = postToSave!;
+              postsCache.value[classOrSchoolId!] = posts;
+            }
+          }
+          emit(Post2Loaded(
+              posts: postsCache.value[classOrSchoolId!] ?? [],
+              hasReachedMax: maxCache.value[classOrSchoolId!] ?? false));
+        }
       },
     );
   }

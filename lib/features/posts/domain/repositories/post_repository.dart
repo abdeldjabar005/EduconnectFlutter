@@ -6,6 +6,7 @@ import 'package:educonnect/core/error/failures.dart';
 import 'package:educonnect/features/posts/data/models/comment_model.dart';
 import 'package:educonnect/features/posts/data/models/post_m.dart';
 import 'package:educonnect/features/posts/data/models/post_model.dart';
+import 'package:educonnect/features/posts/data/models/search_model.dart';
 import 'package:educonnect/features/posts/domain/entities/comment.dart';
 import 'package:educonnect/features/posts/domain/entities/like.dart';
 
@@ -13,8 +14,8 @@ abstract class PostRepository {
   Future<Either<Failure, List<PostModel>>> getPosts(int page, String type);
   Future<Either<Failure, List<Comment>>> getComments(int postId);
   Future<Either<Failure, CommentModel>> getComment(int id);
-  Future<Either<Failure, void>> postComment(int postId, String comment);
-  Future<Either<Failure, void>> postReply(int id, String reply);
+  Future<Either<Failure, CommentModel>> postComment(int postId, String comment);
+  Future<Either<Failure, CommentModel>> postReply(int id, String reply);
   Future<Either<Failure, PostModel>> getPost(int id);
   Future<Either<Failure, PostModel>> newPost(
     PostM post,
@@ -31,4 +32,7 @@ abstract class PostRepository {
   Future<Either<Failure, void>> removePost(int id);
   Future<Either<Failure, void>> removeComment(int id, int postId);
   Future<Either<Failure, void>> removeReply(int id);
+  Future<Either<Failure, List<SearchModel>>> search(String query);
+  Future<Either<Failure, void>> joinSchoolRequest(int id);
+  Future<Either<Failure, void>> savePost(int id);
 }

@@ -420,15 +420,17 @@ class _SchoolDetailsState extends State<SchoolDetails>
                               .translate('associate_student')!),
                         ),
                       ),
-                    PopupMenuItem<String>(
-                      value: 'Students',
-                      child: ListTile(
-                        contentPadding: EdgeInsets.zero,
-                        leading: Icon(Icons.group, color: AppColors.indigoA200),
-                        title: Text(AppLocalizations.of(context)!
-                            .translate('students')!),
+                    if (user.id == widget.school.adminId)
+                      PopupMenuItem<String>(
+                        value: 'Students',
+                        child: ListTile(
+                          contentPadding: EdgeInsets.zero,
+                          leading:
+                              Icon(Icons.group, color: AppColors.indigoA200),
+                          title: Text(AppLocalizations.of(context)!
+                              .translate('students')!),
+                        ),
                       ),
-                    ),
                     if (user.id == widget.school.adminId)
                       PopupMenuItem<String>(
                         value: 'School Requests',
@@ -512,17 +514,40 @@ class _SchoolDetailsState extends State<SchoolDetails>
                               width: MediaQuery.of(context).size.width,
                             ),
                             SizedBox(height: 10.v),
-                            Text(
-                              widget.school.name,
-                              style: CustomTextStyles.titleMediumPoppinsBlack2,
-                              textAlign: TextAlign.center,
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Column(
+                                  children: [
+                                    Text(
+                                      widget.school.name,
+                                      style: CustomTextStyles
+                                          .titleMediumPoppinsBlack2,
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    SizedBox(height: 10.v),
+                                    Text(
+                                      "${widget.school.membersCount} ${AppLocalizations.of(context)!.translate('members')!}",
+                                      style: CustomTextStyles
+                                          .bodyMediumRobotoGray900,
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(width: 5.h),
+                                if (widget.school.isVerified)
+                                  Icon(
+                                    FontAwesomeIcons.check,
+                                    color: AppColors.gold,
+                                  )
+                              ],
                             ),
-                            SizedBox(height: 10.v),
-                            Text(
-                              "${widget.school.membersCount} ${AppLocalizations.of(context)!.translate('members')!}",
-                              style: CustomTextStyles.bodyMediumRobotoGray900,
-                              textAlign: TextAlign.center,
-                            ),
+                            // SizedBox(height: 10.v),
+                            // Text(
+                            //   "${widget.school.membersCount} ${AppLocalizations.of(context)!.translate('members')!}",
+                            //   style: CustomTextStyles.bodyMediumRobotoGray900,
+                            //   textAlign: TextAlign.center,
+                            // ),
                             SizedBox(height: 10.v),
                             PreferredSize(
                               preferredSize:

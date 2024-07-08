@@ -16,6 +16,8 @@ class ImageConstant {
   static String img32Chat = '$imagePath/img_32_chat.svg';
 
   static String imgBookmark = '$imagePath/img_bookmark.svg';
+    static String imgBookmark2 = '$imagePath/bookmark.svg';
+
 
   static String imgAvatarSmall = '$imagePath/img_avatar_small.png';
 

@@ -96,7 +96,7 @@ class _BookMarksState extends State<BookMarks>
               builderDelegate: PagedChildBuilderDelegate<PostModel>(
                 noItemsFoundIndicatorBuilder: (context) => Center(
                   child: Text(
-                    AppLocalizations.of(context)!.translate("a")!,
+                    AppLocalizations.of(context)!.translate("no_saved_posts")!,
                     style: const TextStyle(fontSize: 18),
                     textAlign: TextAlign.center,
                   ),

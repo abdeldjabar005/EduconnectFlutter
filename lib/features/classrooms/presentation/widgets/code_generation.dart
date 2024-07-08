@@ -18,7 +18,8 @@ class CodeGenerationScreen extends StatefulWidget {
   _CodeGenerationScreenState createState() => _CodeGenerationScreenState();
 }
 
-class _CodeGenerationScreenState extends State<CodeGenerationScreen> with AutomaticKeepAliveClientMixin {
+class _CodeGenerationScreenState extends State<CodeGenerationScreen>
+    with AutomaticKeepAliveClientMixin {
   int? _selectedNumber = 1;
 
   @override
@@ -106,7 +107,8 @@ class _CodeGenerationScreenState extends State<CodeGenerationScreen> with Automa
                 backgroundColor:
                     MaterialStateProperty.all(AppColors.indigoA300),
               ),
-              text: AppLocalizations.of(context)!.translate("generate_name")!,
+              text: AppLocalizations.of(context)!.translate("generate_name") ??
+                  'انشاء الرموز',
               margin: EdgeInsets.only(left: 20.h, right: 10.h),
               buttonTextStyle: CustomTextStyles.titleMediumPoppins,
             ),

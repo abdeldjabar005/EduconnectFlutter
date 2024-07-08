@@ -5,6 +5,8 @@ import 'dart:developer' as dev;
 import 'package:educonnect/config/locale/app_localizations.dart';
 import 'package:educonnect/core/utils/logger.dart';
 import 'package:educonnect/features/classrooms/presentation/cubit/post2_cubit.dart';
+import 'package:educonnect/features/posts/data/models/post_model.dart';
+import 'package:educonnect/features/posts/presentation/cubit/search_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:educonnect/config/themes/app_decoration.dart';
@@ -39,8 +41,8 @@ class PostItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     bool isRtl = Localizations.localeOf(context).languageCode == 'ar';
-    final user = (context.read<AuthCubit>().state as AuthAuthenticated).user;
-
+    // final user = (context.read<AuthCubit>().state as AuthAuthenticated).user;
+    bool isSaved = post.isSaved;
     final items = <ActionItems, String>{
       ActionItems.delete: isRtl ? 'حذف' : 'Delete',
       ActionItems.update: isRtl ? 'تحديث' : 'Update',
@@ -609,11 +611,27 @@ class PostItem extends StatelessWidget {
               //     color: post.isSaved ? Colors.yellow : Colors.grey,
               //   ),
               // ),
-              CustomImageView(
-                imagePath: ImageConstant.imgBookmark,
-                height: 32.adaptSize,
-                width: 32.adaptSize,
-                margin: EdgeInsets.only(left: 8.h),
+              InkWell(
+                onTap: () {
+                  isSaved = !isSaved;
+                  context.read<Post2Cubit>().savePost(post.id);
+                },
+                child: BlocBuilder<Post2Cubit, Post2State>(
+                  builder: (context, state) {
+                    if (state is Post2Loaded) {
+                      post = state.posts.firstWhere((p) => p.id == post.id,
+                          orElse: () => PostModel.fromPost(post));
+                    }
+                    return CustomImageView(
+                      imagePath: isSaved
+                          ? ImageConstant.imgBookmark2
+                          : ImageConstant.imgBookmark,
+                      height: 32.adaptSize,
+                      width: 32.adaptSize,
+                      margin: EdgeInsets.only(left: 8.h),
+                    );
+                  },
+                ),
               ),
             ],
           ),

@@ -2,7 +2,6 @@
 import 'package:educonnect/config/locale/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:educonnect/config/themes/custom_text_style.dart';
 import 'package:educonnect/core/api/end_points.dart';
 import 'package:educonnect/core/utils/app_colors.dart';
@@ -12,6 +11,7 @@ import 'package:educonnect/features/classrooms/data/models/member_model.dart';
 import 'package:educonnect/features/classrooms/presentation/cubit/members_cubit.dart';
 import 'package:educonnect/features/posts/presentation/widgets/custom_image_view.dart';
 import 'package:educonnect/features/profile/data/models/child2_model.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class MembersScreen extends StatefulWidget {
   final int id;
@@ -22,6 +22,8 @@ class MembersScreen extends StatefulWidget {
   @override
   _MembersScreenState createState() => _MembersScreenState();
 }
+
+enum ActionItems { delete, update }
 
 class _MembersScreenState extends State<MembersScreen>
     with AutomaticKeepAliveClientMixin {
@@ -76,7 +78,9 @@ class _MembersScreenState extends State<MembersScreen>
     final currentUser =
         (context.read<AuthCubit>().state as AuthAuthenticated).user;
     bool isRtl = Localizations.localeOf(context).languageCode == 'ar';
-
+    final items = <ActionItems, String>{
+      ActionItems.delete: isRtl ? 'حذف' : 'Delete',
+    };
     return GestureDetector(
       onTap: () {
         showModalBottomSheet(
@@ -285,6 +289,75 @@ class _MembersScreenState extends State<MembersScreen>
                 },
                 child: const Icon(FontAwesomeIcons.message),
               ),
+              // child: PopupMenuButton<ActionItems>(
+              //     shape: RoundedRectangleBorder(
+              //       borderRadius: BorderRadius.circular(16),
+              //     ),
+              //     onSelected: (value) async {
+              //       switch (value) {
+              //         case ActionItems.delete:
+              //           final confirm = await showDialog(
+              //             context: context,
+              //             builder: (BuildContext context) {
+              //               return AlertDialog(
+              //                 shape: RoundedRectangleBorder(
+              //                   borderRadius: BorderRadius.circular(20),
+              //                 ),
+              //                 title: Text(
+              //                   AppLocalizations.of(context)!
+              //                       .translate('confirm')!,
+              //                   style: TextStyle(
+              //                       color: AppColors.indigoA200,
+              //                       fontWeight: FontWeight.bold),
+              //                 ),
+              //                 content: Text(
+              //                   AppLocalizations.of(context)!
+              //                       .translate('confirm_remove_member')!,
+              //                   style: TextStyle(color: Colors.black54),
+              //                 ),
+              //                 actions: <Widget>[
+              //                   TextButton(
+              //                     onPressed: () =>
+              //                         Navigator.of(context).pop(true),
+              //                     child: Text(
+              //                       AppLocalizations.of(context)!
+              //                           .translate('remove')!,
+              //                       style: TextStyle(color: Colors.red),
+              //                     ),
+              //                   ),
+              //                   TextButton(
+              //                     onPressed: () =>
+              //                         Navigator.of(context).pop(false),
+              //                     child: Text(
+              //                       AppLocalizations.of(context)!
+              //                           .translate('cancel')!,
+              //                       style: TextStyle(color: Colors.blue),
+              //                     ),
+              //                   ),
+              //                 ],
+              //               );
+              //             },
+              //           );
+              //           if (confirm == true) {
+              //             context
+              //                 .read<MembersCubit>()
+              //                 .removeMember(widget.id, member.id, widget.type);
+              //           }
+              //           break;
+              //       }
+              //     },
+              //     itemBuilder: (context) => [
+              //           if (member.id != currentUser.id)
+              //             PopupMenuItem<ActionItems>(
+              //               value: ActionItems.delete,
+              //               child: ListTile(
+              //                 contentPadding: EdgeInsets.zero,
+              //                 leading: Icon(Icons.delete,
+              //                     color: AppColors.indigoA200),
+              //                 title: Text('delete'),
+              //               ),
+              //             ),
+              //         ]),
             ),
           ],
         ),

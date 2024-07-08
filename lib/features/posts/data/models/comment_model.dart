@@ -33,9 +33,14 @@ class CommentModel extends Comment {
         );
 
   factory CommentModel.fromJson(Map<String, dynamic> json) {
+      var postId = json["post_id"] ?? json["comment_id"];
+  if (postId is String) {
+    postId = int.parse(postId);
+  }
+
     return CommentModel(
       id: json["id"],
-      postId: json["post_id"] ?? json["comment_id"],
+      postId: postId,
       userId: json["user_id"],
       text: json["text"],
       createdAt: DateTime.parse(json["created_at"]),

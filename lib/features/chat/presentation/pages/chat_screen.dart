@@ -54,22 +54,21 @@ class _ChatScreenState extends State<ChatScreen> {
         cluster: 'eu',
         onEvent: _handleEvent,
         onAuthorizer: onAuthorizer,
-        onConnectionStateChange: onConnectionStateChange,
-        onError: onError,
-        onSubscriptionSucceeded: onSubscriptionSucceeded,
-        onSubscriptionError: onSubscriptionError,
-        onDecryptionFailure: onDecryptionFailure,
-        onMemberAdded: onMemberAdded,
-        onMemberRemoved: onMemberRemoved,
-        onSubscriptionCount: onSubscriptionCount,
+        // onConnectionStateChange: onConnectionStateChange,
+        // onError: onError,
+        // onSubscriptionSucceeded: onSubscriptionSucceeded,
+        // onSubscriptionError: onSubscriptionError,
+        // onDecryptionFailure: onDecryptionFailure,
+        // onMemberAdded: onMemberAdded,
+        // onMemberRemoved: onMemberRemoved,
+        // onSubscriptionCount: onSubscriptionCount,
       );
 
       await pusher.connect();
       await listenChatChannel(userid);
 
-      // Trigger event after successful subscription
       PusherEvent event = PusherEvent(
-        channelName: "private-chatify.$userid",
+        channelName: "private-chatify.${widget.contact.id}",
         eventName: "client-seen",
         data: jsonEncode({
           "from_id": authCubit.currentUser!.id,
@@ -78,10 +77,10 @@ class _ChatScreenState extends State<ChatScreen> {
         }),
       );
 
-      bool triggered = await triggerPusherEvent(event);
-      if (!triggered) {
-        vLog("Failed to trigger event: channel not subscribed or null");
-      }
+      // bool triggered = await triggerPusherEvent(event);
+      // if (!triggered) {
+      //   vLog("Failed to trigger event: channel not subscribed or null");
+      // }
     } catch (e) {
       vLog("Error in initialization: $e");
     }
@@ -93,8 +92,12 @@ class _ChatScreenState extends State<ChatScreen> {
     }
 
     try {
-      final myChannel = await pusher.subscribe(
+      await pusher.subscribe(
         channelName: 'private-chatify.$id',
+        onEvent: _handleEvent,
+      );
+      await pusher.subscribe(
+        channelName: 'private-chatify.$widget.contact.id',
         onEvent: _handleEvent,
       );
       setState(() {
@@ -106,7 +109,7 @@ class _ChatScreenState extends State<ChatScreen> {
     }
   }
 
-  Future<bool>  triggerPusherEvent(PusherEvent event) async {
+  Future<bool> triggerPusherEvent(PusherEvent event) async {
     try {
       if (pusher == null) {
         await pusher.init(
@@ -114,19 +117,19 @@ class _ChatScreenState extends State<ChatScreen> {
           cluster: 'eu',
           onEvent: _handleEvent,
           onAuthorizer: onAuthorizer,
-          onConnectionStateChange: onConnectionStateChange,
-          onError: onError,
-          onSubscriptionSucceeded: onSubscriptionSucceeded,
-          onSubscriptionError: onSubscriptionError,
-          onDecryptionFailure: onDecryptionFailure,
-          onMemberAdded: onMemberAdded,
-          onMemberRemoved: onMemberRemoved,
-          onSubscriptionCount: onSubscriptionCount,
+          // onConnectionStateChange: onConnectionStateChange,
+          // onError: onError,
+          // onSubscriptionSucceeded: onSubscriptionSucceeded,
+          // onSubscriptionError: onSubscriptionError,
+          // onDecryptionFailure: onDecryptionFailure,
+          // onMemberAdded: onMemberAdded,
+          // onMemberRemoved: onMemberRemoved,
+          // onSubscriptionCount: onSubscriptionCount,
         );
       }
 
-      await pusher.connect();
-      await pusher.subscribe(channelName: event.channelName);
+      // await pusher.connect();
+      // await pusher.subscribe(channelName: event.channelName);
 
       await pusher.trigger(event);
       return true;
@@ -142,7 +145,6 @@ class _ChatScreenState extends State<ChatScreen> {
     final tokenProvider = TokenProvider(secureStorage: storage);
     String? token = await tokenProvider.getToken();
 
-    vLog(token);
     var authUrl = "http://127.0.0.1:8000/chatify/api/chat/auth";
     var result = await http.post(
       Uri.parse(authUrl),
@@ -162,6 +164,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
   dynamic _handleEvent(dynamic event) {
     if (event is PusherEvent) {
+      vLog("Received event: ${event.eventName} data: ${event.data} ${event}");
       if (event.data == null || event.data.isEmpty) {
         return;
       }
@@ -182,41 +185,6 @@ class _ChatScreenState extends State<ChatScreen> {
     } else {
       vLog("Received event is not of type PusherEvent");
     }
-  }
-
-  void onSubscriptionSucceeded(String channelName, dynamic data) {
-    vLog("onSubscriptionSucceeded: $channelName data: $data");
-    final me = pusher.getChannel(channelName)?.me;
-    vLog("Me: $me");
-  }
-
-  void onSubscriptionError(String message, dynamic e) {
-    vLog("onSubscriptionError: $message Exception: $e");
-  }
-
-  void onDecryptionFailure(String event, String reason) {
-    vLog("onDecryptionFailure: $event reason: $reason");
-  }
-
-  void onMemberAdded(String channelName, PusherMember member) {
-    vLog("onMemberAdded: $channelName user: $member");
-  }
-
-  void onMemberRemoved(String channelName, PusherMember member) {
-    vLog("onMemberRemoved: $channelName user: $member");
-  }
-
-  void onSubscriptionCount(String channelName, int subscriptionCount) {
-    vLog(
-        "onSubscriptionCount: $channelName subscriptionCount: $subscriptionCount");
-  }
-
-  void onConnectionStateChange(dynamic currentState, dynamic previousState) {
-    vLog("Connection: $currentState");
-  }
-
-  void onError(String message, int? code, dynamic e) {
-    vLog("onError: $message code: $code exception: $e");
   }
 
   Future<void> leaveChatChannel(int id) async {
@@ -328,7 +296,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
                   bool triggered = await triggerPusherEvent(
                     PusherEvent(
-                        channelName: "private-chatify.$widget.contact.id",
+                        channelName: "private-chatify.$userid",
                         eventName: "client-contactItem",
                         data: jsonEncode({
                           "from": authCubit.currentUser!.id.toString(),

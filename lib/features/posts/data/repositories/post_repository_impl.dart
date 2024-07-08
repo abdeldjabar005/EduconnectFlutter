@@ -10,6 +10,7 @@ import 'package:educonnect/features/posts/data/datasources/post_remote_data_sour
 import 'package:educonnect/features/posts/data/models/comment_model.dart';
 import 'package:educonnect/features/posts/data/models/post_m.dart';
 import 'package:educonnect/features/posts/data/models/post_model.dart';
+import 'package:educonnect/features/posts/data/models/search_model.dart';
 import 'package:educonnect/features/posts/domain/entities/comment.dart';
 import 'package:educonnect/features/posts/domain/entities/like.dart';
 import 'package:educonnect/features/posts/domain/entities/post.dart';
@@ -51,8 +52,8 @@ class PostRepositoryImpl implements PostRepository {
   ) async {
     if (await networkInfo.isConnected) {
       try {
-        final remotePost =
-            await remoteDataSource.newPost(post, images, schoolClass, pollQuestion, pollOptions);
+        final remotePost = await remoteDataSource.newPost(
+            post, images, schoolClass, pollQuestion, pollOptions);
         return Right(remotePost);
       } on ServerException {
         return Left(ServerFailure());
@@ -63,7 +64,6 @@ class PostRepositoryImpl implements PostRepository {
   }
 
   @override
-  
   Future<Either<Failure, void>> removePost(int id) async {
     if (await networkInfo.isConnected) {
       try {
@@ -74,7 +74,8 @@ class PostRepositoryImpl implements PostRepository {
     } else {
       return Left(NetworkFailure());
     }
-  }  
+  }
+
   @override
   Future<Either<Failure, List<Comment>>> getComments(int postId) async {
     if (await networkInfo.isConnected) {
@@ -104,10 +105,13 @@ class PostRepositoryImpl implements PostRepository {
   }
 
   @override
-  Future<Either<Failure, void>> postComment(int postId, String comment) async {
+  Future<Either<Failure, CommentModel>> postComment(
+      int postId, String comment) async {
     if (await networkInfo.isConnected) {
       try {
-        return Right(remoteDataSource.postComment(postId, comment));
+        final commentModel =
+            await remoteDataSource.postComment(postId, comment);
+        return Right(commentModel);
       } on ServerException {
         return Left(ServerFailure());
       }
@@ -117,10 +121,11 @@ class PostRepositoryImpl implements PostRepository {
   }
 
   @override
-  Future<Either<Failure, void>> postReply(int id, String reply) async {
+  Future<Either<Failure, CommentModel>> postReply(int id, String reply) async {
     if (await networkInfo.isConnected) {
       try {
-        return Right(remoteDataSource.postReply(id, reply));
+        final remoteComment = await remoteDataSource.postReply(id, reply);
+        return Right(remoteComment);
       } on ServerException {
         return Left(ServerFailure());
       }
@@ -197,6 +202,7 @@ class PostRepositoryImpl implements PostRepository {
       return Left(NetworkFailure());
     }
   }
+
   @override
   Future<Either<Failure, void>> removeReply(int id) async {
     if (await networkInfo.isConnected) {
@@ -209,6 +215,7 @@ class PostRepositoryImpl implements PostRepository {
       return Left(NetworkFailure());
     }
   }
+
   @override
   Future<Either<Failure, LikePostResponse>> checkIfPostIsLiked(
       int postId) async {
@@ -231,6 +238,43 @@ class PostRepositoryImpl implements PostRepository {
       try {
         final remotePost = await remoteDataSource.voteOnPoll(postId, option);
         return Right(remotePost);
+      } on ServerException {
+        return Left(ServerFailure());
+      }
+    } else {
+      return Left(NetworkFailure());
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<SearchModel>>> search(String query) async {
+    if (await networkInfo.isConnected) {
+      try {
+        final remoteSearch = await remoteDataSource.search(query);
+        return Right(remoteSearch);
+      } on ServerException {
+        return Left(ServerFailure());
+      }
+    } else {
+      return Left(NetworkFailure());
+    }
+  }
+
+  Future<Either<Failure, void>> joinSchoolRequest(int id) async {
+    if (await networkInfo.isConnected) {
+      try {
+        return Right(remoteDataSource.joinSchoolRequest(id));
+      } on ServerException {
+        return Left(ServerFailure());
+      }
+    } else {
+      return Left(NetworkFailure());
+    }
+  }
+  Future<Either<Failure, void>> savePost(int id) async {
+    if (await networkInfo.isConnected) {
+      try {
+        return Right(remoteDataSource.savePost(id));
       } on ServerException {
         return Left(ServerFailure());
       }

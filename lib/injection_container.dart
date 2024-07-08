@@ -4,6 +4,7 @@ import 'package:educonnect/features/chat/data/repositories/chat_repository_impl.
 import 'package:educonnect/features/chat/domain/repositories/chat_repository.dart';
 import 'package:educonnect/features/chat/presentation/cubit/contacts_cubit.dart';
 import 'package:educonnect/features/chat/presentation/cubit/messages_cubit.dart';
+import 'package:educonnect/features/posts/presentation/cubit/search_cubit.dart';
 import 'package:educonnect/features/profile/presentation/cubit/profile_cubit.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
@@ -112,6 +113,7 @@ Future<void> init() async {
         profileRepository: sl(),
         authCubit: sl(),
       ));
+  sl.registerFactory<SearchCubit>(() => SearchCubit(postRepository: sl()));
   // Use cases
   sl.registerLazySingleton<GetSavedLangUseCase>(
       () => GetSavedLangUseCase(langRepository: sl()));

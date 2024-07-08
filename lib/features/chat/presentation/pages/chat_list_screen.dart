@@ -1,3 +1,4 @@
+import 'package:educonnect/config/locale/app_localizations.dart';
 import 'package:educonnect/features/auth/data/repositories/token_repository.dart';
 import 'package:educonnect/features/chat/data/models/contact_model.dart';
 import 'package:educonnect/features/chat/presentation/cubit/contacts_cubit.dart';
@@ -25,6 +26,8 @@ class ChatListScreen extends StatefulWidget {
 class _ChatListScreenState extends State<ChatListScreen> {
   @override
   Widget build(BuildContext context) {
+    bool isRtl = Localizations.localeOf(context).languageCode == 'ar';
+
     final authCubit = context.read<AuthCubit>();
     final currentUser = authCubit.currentUser!;
     final messagesCubit = context.read<MessagesCubit>();
@@ -46,9 +49,9 @@ class _ChatListScreenState extends State<ChatListScreen> {
           title: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text("Contacts"),
+              Text(AppLocalizations.of(context)!.translate("contacts")!),
               Text(
-                "User name : ${currentUser.firstName}",
+                "${AppLocalizations.of(context)!.translate("username")!} ${currentUser.firstName}",
                 style: const TextStyle(
                   fontSize: 14.0,
                   fontWeight: FontWeight.w400,
@@ -66,8 +69,11 @@ class _ChatListScreenState extends State<ChatListScreen> {
             builder: (context, state) {
               if (state is ContactsLoaded) {
                 if (state.contacts.isEmpty) {
-                  return const Center(
-                    child: Text("No chat available"),
+                  return Center(
+                    child: Text(AppLocalizations.of(context)!
+                            .translate("no_chat_available")!
+                        // "No chat available"
+                        ),
                   );
                 }
 
@@ -95,8 +101,9 @@ class _ChatListScreenState extends State<ChatListScreen> {
               } else if (state is ContactsError) {
                 return Center(child: Text(state.message));
               } else {
-                return const Center(
-                  child: Text("No chat available"),
+                return Center(
+                  child: Text(AppLocalizations.of(context)!
+                      .translate("no_chat_available")!),
                 );
               }
             },
@@ -126,20 +133,20 @@ class _ChatListScreenState extends State<ChatListScreen> {
       context: context,
       delegate: SearchPage<ContactModel>(
         items: users,
-        searchLabel: 'Search people',
-        suggestion: const Center(
+        searchLabel: AppLocalizations.of(context)!.translate("search_people")!,
+        suggestion: Center(
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: const [
-              Icon(
+            children: [
+              const Icon(
                 Icons.search,
                 size: 25.0,
                 color: Colors.grey,
               ),
               Text(
-                'Search users by username',
+                AppLocalizations.of(context)!.translate("search_user_by_name")!,
                 textAlign: TextAlign.center,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 20.0,
                   fontWeight: FontWeight.w400,
                   color: Colors.grey,
@@ -148,10 +155,10 @@ class _ChatListScreenState extends State<ChatListScreen> {
             ],
           ),
         ),
-        failure: const Center(
+        failure: Center(
           child: Text(
-            'No person found :(',
-            style: TextStyle(
+            AppLocalizations.of(context)!.translate("no_user_found")!,
+            style: const TextStyle(
               fontSize: 20.0,
               fontWeight: FontWeight.w400,
               color: Colors.grey,

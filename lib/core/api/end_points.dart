@@ -22,6 +22,9 @@ class EndPoints {
 
   static String post(int id) => '${baseUrl}posts/$id';
 
+  static String search(String query) =>
+      '${baseUrl}schools/search?search=$query';
+
   static const String resendEmail = '${baseUrl}resendotp';
   static const String users = '${baseUrl}users';
   static const String verifyEmail = '${baseUrl}verify';
@@ -36,9 +39,13 @@ class EndPoints {
 
   static const String newPost = '${baseUrl}posts';
   static String removePost(int id) => '${baseUrl}posts/$id';
-  static String removeComment(int id, int postId) => '${baseUrl}posts/$postId/comments/$id';
+  static String removeComment(int id, int postId) =>
+      '${baseUrl}posts/$postId/comments/$id';
   static String removeReply(int id) => '${baseUrl}posts/replies/$id';
   static String voteOnPoll(int postId) => '${baseUrl}posts/vote/$postId';
+
+  static String removeMember1(int id, int id2) => '${baseUrl}schools/$id/members/$id2';
+  static String removeMember2(int id, int id2) => '${baseUrl}classes/$id/members/$id2';
 
   static String comments(int postId) => '${baseUrl}posts/$postId/all-comments';
   static String comment(int id) => '${baseUrl}posts/$id/comment';
@@ -50,7 +57,10 @@ class EndPoints {
   static String checkIfPostIsLiked(int postId) =>
       '${baseUrl}posts/$postId/isliked';
 
+  static String savePost(int postId) => '${baseUrl}posts/$postId/toggle-save';
+
   static const String joinSchool = '${baseUrl}school-join-requests/join-school';
+  static const String joinSchoolRequest = '${baseUrl}school-join-requests';
   static const String joinClass = '${baseUrl}join-requests/class/join';
   static const String sendJoinRequest = '${baseUrl}join-requests';
   static String getClass(int id) => '${baseUrl}posts/class/$id';
@@ -60,6 +70,13 @@ class EndPoints {
   static String getClassStudents(int id) => '${baseUrl}classes/$id/students';
   static String associateStudent(int id) => '${baseUrl}schools/$id/associate';
   static String associateStudent2(int id) => '${baseUrl}classes/$id/associate';
+
+  static String acceptSchool(int id) =>
+      '${baseUrl}school-join-requests/$id/approve';
+  static String acceptClass(int id) => '${baseUrl}join-requests/$id/approve';
+  static String refuseSchool(int id) =>
+      '${baseUrl}school-join-requests/$id/reject';
+  static String refuseClass(int id) => '${baseUrl}join-requests/$id/reject';
 
   static String getClassMembers(int id) => '${baseUrl}classes/$id/members';
 

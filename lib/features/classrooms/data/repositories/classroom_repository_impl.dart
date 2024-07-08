@@ -105,6 +105,21 @@ class ClassroomRepositoryImpl implements ClassroomRepository {
       return Left(NetworkFailure());
     }
   }
+  @override
+  Future<Either<Failure, void>> removeMember(int id, int id2, String type) async {
+    if (await networkInfo.isConnected) {
+      try {
+        final remoteResponse = await remoteDataSource.removeMember(id, id2,type);
+        return Right(remoteResponse);
+      } on JoinedException {
+        return Left(JoinedFailure());
+      } on ServerException {
+        return Left(ServerFailure());
+      }
+    } else {
+      return Left(NetworkFailure());
+    }
+  }
 
   @override
   Future<Either<Failure, List<ClassMemberModel>>> getClasses(int id) async {
@@ -286,6 +301,32 @@ class ClassroomRepositoryImpl implements ClassroomRepository {
     if (await networkInfo.isConnected) {
       try {
         final remoteResponse = await remoteDataSource.generateCodes(type, id, number);
+        return Right(remoteResponse);
+      } on ServerException {
+        return Left(ServerFailure());
+      }
+    } else {
+      return Left(NetworkFailure());
+    }
+  }
+  @override
+  Future<Either<Failure, MemberModel>> accept(int id, String type) async {
+    if (await networkInfo.isConnected) {
+      try {
+        final remoteResponse = await remoteDataSource.accept(id, type);
+        return Right(remoteResponse);
+      } on ServerException {
+        return Left(ServerFailure());
+      }
+    } else {
+      return Left(NetworkFailure());
+    }
+  }
+  @override
+  Future<Either<Failure, void>> refuse(int id, String type) async {
+    if (await networkInfo.isConnected) {
+      try {
+        final remoteResponse = await remoteDataSource.refuse(id, type);
         return Right(remoteResponse);
       } on ServerException {
         return Left(ServerFailure());

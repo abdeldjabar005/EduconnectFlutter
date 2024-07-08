@@ -39,7 +39,10 @@ abstract class ClassroomRemoteDataSource {
   Future<void> sendJoinRequest(int id);
   Future<List<ChildModel>> getStudents(int id, String type);
   Future<List<RequestModel>> getRequests(int id, String type);
+  Future<MemberModel> accept(int id, String type);
+  Future<void> refuse(int id, String type);
   Future<List<String>> generateCodes(String type, int id, int number);
+  Future<void> removeMember(int id, int id2, String type);
 }
 
 class ClassroomRemoteDataSourceImpl implements ClassroomRemoteDataSource {
@@ -390,6 +393,48 @@ class ClassroomRemoteDataSourceImpl implements ClassroomRemoteDataSource {
         .toList();
   }
 
+  @override
+  Future<MemberModel> accept(int id, String type) async {
+    String endpoint;
+    if (type == 'school') {
+      endpoint = EndPoints.acceptSchool(id);
+    } else {
+      endpoint = EndPoints.acceptClass(id);
+    }
+    final response = await apiConsumer.post(endpoint);
+    if (response['statusCode'] != 200) {
+      throw ServerException();
+    }
+    return MemberModel.fromJson(response['data']);
+  }
+
+  @override
+  Future<void> refuse(int id, String type) async {
+    String endpoint;
+    if (type == 'school') {
+      endpoint = EndPoints.refuseSchool(id);
+    } else {
+      endpoint = EndPoints.refuseClass(id);
+    }
+    final response = await apiConsumer.post(endpoint);
+    if (response['statusCode'] != 200) {
+      throw ServerException();
+    }
+  }
+
+  @override
+  Future<void> removeMember(int id,int id2, String type) async {
+    String endpoint;
+    if (type == 'school') {
+      endpoint = EndPoints.removeMember1(id, id2);
+    } else {
+      endpoint = EndPoints.removeMember2(id, id2);
+    }
+    final response = await apiConsumer.delete(endpoint);
+    if (response['statusCode'] != 200) {
+      throw ServerException();
+    }
+  }
   @override
   Future<List<String>> generateCodes(String type, int id, int number) async {
     String endpoint;

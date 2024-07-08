@@ -9,14 +9,15 @@ import 'package:educonnect/core/error/exceptions.dart';
 import 'package:educonnect/features/posts/data/models/comment_model.dart';
 import 'package:educonnect/features/posts/data/models/post_m.dart';
 import 'package:educonnect/features/posts/data/models/post_model.dart';
+import 'package:educonnect/features/posts/data/models/search_model.dart';
 import 'package:educonnect/features/posts/domain/entities/like.dart';
 
 abstract class PostRemoteDataSource {
   Future<List<PostModel>> getPosts(int page, String type);
   Future<List<CommentModel>> getComments(int postId);
   Future<CommentModel> getComment(int postId);
-  Future<void> postComment(int postId, String comment);
-  Future<void> postReply(int id, String reply);
+  Future<CommentModel> postComment(int postId, String comment);
+  Future<CommentModel> postReply(int id, String reply);
   Future<PostModel> getPost(int id);
   Future<PostModel> newPost(
     PostM post,
@@ -33,6 +34,9 @@ abstract class PostRemoteDataSource {
   Future<void> removePost(int id);
   Future<void> removeComment(int id, int postId);
   Future<void> removeReply(int id);
+  Future<List<SearchModel>> search(String query);
+  Future<void> joinSchoolRequest(int id);
+  Future<void> savePost(int id);
 }
 
 class PostRemoteDataSourceImpl implements PostRemoteDataSource {
@@ -85,23 +89,33 @@ class PostRemoteDataSourceImpl implements PostRemoteDataSource {
   }
 
   @override
-  Future<void> postComment(int postId, String comment) async {
-    await apiConsumer.post(
+  Future<CommentModel> postComment(int postId, String comment) async {
+    final response = await apiConsumer.post(
       EndPoints.postComment(postId),
       body: {
         'text': comment,
       },
     );
+    if (response['statusCode'] != 201) {
+      throw ServerException();
+    }
+
+    return CommentModel.fromJson(response['data']);
   }
 
   @override
-  Future<void> postReply(int id, String reply) async {
-    await apiConsumer.post(
+  Future<CommentModel> postReply(int id, String reply) async {
+    final response = await apiConsumer.post(
       EndPoints.postReply(id),
       body: {
         'text': reply,
       },
     );
+
+    if (response['statusCode'] != 201) {
+      throw ServerException();
+    }
+    return CommentModel.fromJson(response['data']['data']);
   }
 
   @override
@@ -181,7 +195,7 @@ class PostRemoteDataSourceImpl implements PostRemoteDataSource {
   @override
   Future<void> removeComment(int id, int postId) async {
     await apiConsumer.delete(
-      EndPoints.removeComment(id,postId),
+      EndPoints.removeComment(id, postId),
     );
   }
 
@@ -261,4 +275,31 @@ class PostRemoteDataSourceImpl implements PostRemoteDataSource {
       throw Exception('Unexpected response code: ${response.statusCode}');
     }
   }
+
+  @override
+  Future<List<SearchModel>> search(String query) async {
+    final response = await apiConsumer.get(
+      EndPoints.search(query),
+    );
+    return (response['data'] as List)
+        .map((i) => SearchModel.fromJson(i))
+        .toList();
+  }
+
+  @override
+  Future<void> joinSchoolRequest(int id) async {
+    await apiConsumer.post(
+      EndPoints.joinSchoolRequest,
+      body: {
+        'school_id': id,
+      },
+    );
+  }
+  @override
+  Future<void> savePost(int id) async {
+    await apiConsumer.post(
+      EndPoints.savePost(id),
+    );
+  }
+  
 }

@@ -557,11 +557,11 @@ class _NewPostState extends State<NewPost> {
         TextFormField(
           controller: _questionController,
           decoration: InputDecoration(
-            labelText: 'Poll Question',
+            labelText: AppLocalizations.of(context)!.translate('poll_question')!,
           ),
           validator: (value) {
             if (value!.isEmpty) {
-              return 'Please enter a question';
+              return AppLocalizations.of(context)!.translate('please_enter_question')!;
             }
             return null;
           },
@@ -572,7 +572,7 @@ class _NewPostState extends State<NewPost> {
           return TextFormField(
             controller: controller,
             decoration: InputDecoration(
-              labelText: 'Option ${index + 1}',
+              labelText: '${AppLocalizations.of(context)!.translate('option')!} ${index + 1}',
             ),
             validator: (value) {
               if (value!.isEmpty) {
