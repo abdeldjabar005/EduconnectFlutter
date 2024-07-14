@@ -12,32 +12,31 @@
 
 [https://educonnectdz.azurewebsites.net/](https://educonnectdz.azurewebsites.net/)
 
-
 <h2>Project Screenshots:</h2>
 
-<img src="https://raw.githubusercontent.com/abdeldjabar005/EduconnectFlutter/main/images/login.PNG" alt="project-screenshot" width="440" height="400/">
+<img src="https://raw.githubusercontent.com/abdeldjabar005/EduconnectFlutter/main/images/login.PNG" alt="project-screenshot" width="550" height="500/">
 
-<img src="https://raw.githubusercontent.com/abdeldjabar005/EduconnectFlutter/main/images/ForgotPasswrod1.PNG" alt="project-screenshot" width="440" height="400/">
+<img src="https://raw.githubusercontent.com/abdeldjabar005/EduconnectFlutter/main/images/ForgotPasswrod1.PNG" alt="project-screenshot" width="660" height="500/">
 
-<img src="https://raw.githubusercontent.com/abdeldjabar005/EduconnectFlutter/main/images/ForgotPasswrod2.PNG" alt="project-screenshot" width="440" height="400/">
+<img src="https://raw.githubusercontent.com/abdeldjabar005/EduconnectFlutter/main/images/ForgotPasswrod2.PNG" alt="project-screenshot" width="660" height="500/">
 
-<img src="https://raw.githubusercontent.com/abdeldjabar005/EduconnectFlutter/main/images/Signup.PNG" alt="project-screenshot" width="440" height="400/">
+<img src="https://raw.githubusercontent.com/abdeldjabar005/EduconnectFlutter/main/images/Signup.PNG" alt="project-screenshot" width="660" height="500/">
 
-<img src="https://raw.githubusercontent.com/abdeldjabar005/EduconnectFlutter/main/images/Post.PNG" alt="project-screenshot" width="440" height="400/">
+<img src="https://raw.githubusercontent.com/abdeldjabar005/EduconnectFlutter/main/images/Post.PNG" alt="project-screenshot" width="660" height="500/">
 
-<img src="https://raw.githubusercontent.com/abdeldjabar005/EduconnectFlutter/main/images/classroom.PNG" alt="project-screenshot" width="440" height="400/">
+<img src="https://raw.githubusercontent.com/abdeldjabar005/EduconnectFlutter/main/images/classroom.PNG" alt="project-screenshot" width="660" height="500/">
 
-<img src="https://raw.githubusercontent.com/abdeldjabar005/EduconnectFlutter/main/images/create.PNG" alt="project-screenshot" width="440" height="400/">
+<img src="https://raw.githubusercontent.com/abdeldjabar005/EduconnectFlutter/main/images/create.PNG" alt="project-screenshot" width="660" height="500/">
 
-<img src="https://raw.githubusercontent.com/abdeldjabar005/EduconnectFlutter/main/images/manage.PNG" alt="project-screenshot" width="440" height="400/">
+<img src="https://raw.githubusercontent.com/abdeldjabar005/EduconnectFlutter/main/images/manage.PNG" alt="project-screenshot" width="660" height="500/">
 
 <img src="https://raw.githubusercontent.com/abdeldjabar005/EduconnectFlutter/main/images/newPost.PNG" alt="project-screenshot" width="180" height="400/">
 
-<img src="https://raw.githubusercontent.com/abdeldjabar005/EduconnectFlutter/main/images/class.PNG" alt="project-screenshot" width="440" height="400/">
+<img src="https://raw.githubusercontent.com/abdeldjabar005/EduconnectFlutter/main/images/class.PNG" alt="project-screenshot" width="460" height="400/">
 
-<img src="https://raw.githubusercontent.com/abdeldjabar005/EduconnectFlutter/main/images/schools.PNG" alt="project-screenshot" width="440" height="400/">
+<img src="https://raw.githubusercontent.com/abdeldjabar005/EduconnectFlutter/main/images/schools.PNG" alt="project-screenshot" width="660" height="500/">
 
-<img src="https://raw.githubusercontent.com/abdeldjabar005/EduconnectFlutter/main/images/profile.PNG" alt="project-screenshot" width="440" height="400/">
+<img src="https://raw.githubusercontent.com/abdeldjabar005/EduconnectFlutter/main/images/profile.PNG" alt="project-screenshot" width="660" height="500/">
 
   
   
